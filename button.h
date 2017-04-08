@@ -2,7 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
-#include "gtest/gtest_prod.h"
 
 namespace SlidingTiles {
 
