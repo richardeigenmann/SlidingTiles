@@ -26,5 +26,5 @@ script:
   - mkdir -p build
   - cd build
   - cmake -DWIN32=false ..
-  - make
+  - make unit-tests
   - make test
