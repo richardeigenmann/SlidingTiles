@@ -16,10 +16,9 @@ addons:
     - g++-4.9
 
 script:
-  - ls /usr/bin/g*
-  - export CXX=g++-4.9
   - mkdir -p build
   - cd build
+  - export CXX=/usr/bin/g++-4.9
   - cmake ..
   - make
   - make test
