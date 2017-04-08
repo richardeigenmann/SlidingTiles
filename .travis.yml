@@ -1,0 +1,23 @@
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+env:
+
+cache:
+  - apt
+
+sudo: false
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libsfml-dev
+
+script:
+  - mkdir -p build
+  - cd build
+  - cmake ..
+  - make
+  - make test
