@@ -6,15 +6,15 @@ compiler:
   - gcc
   - clang
 
-#before_install:
-#  - sudo apt-get -qq update
-#  - sudo apt-get install -y libsfml-dev
+env:
+    COMPILER=g++-6
 
 addons:
   apt:
     packages:
     - libsfml-dev
     - lcov
+    - g++-6
 
 script:
   - mkdir -p build

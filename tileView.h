@@ -43,15 +43,6 @@ namespace SlidingTiles {
         bool transition(const sf::Vector2i & newTileCoordinates);
 
         /**
-         * @brief settor for a texture of the tile
-         * @param newType the new type of the tile. Will figure out the correct texture from the TexturesSingleton
-         *
-        void setTexture(const TileType & newType) {
-            //setTexture(TexturesSingleton::getInstance().getTexturesMap()[newType]);
-            setTexture(TexturesSingleton::getInstance().getTexture(newType));
-        };*/
-
-        /**
          * @brief settor for the tile type
          * @param newType the new type of the tile. Will figure out the correct texture from the TexturesSingleton
          */
@@ -107,18 +98,6 @@ namespace SlidingTiles {
         sf::Color tileColor;
 
         /**
-         * @brief The texture for the tile
-         *
-        sf::Texture tileTexture; */
-
-        /**
-         * @brief settor for the Texture
-         *
-        void setTexture(const sf::Texture & newTexture) {
-            tileTexture = newTexture;
-        };"/"
-
-        /**
          * @brief a bool to tell us if the tile is part of the solution path or not
          */
         bool winner{false};
@@ -128,7 +107,4 @@ namespace SlidingTiles {
         */
         TileType tileType {TileType::Empty};
     };
-
-
-
 } // namespace SlidingTiles
