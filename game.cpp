@@ -19,9 +19,14 @@ namespace SlidingTiles {
 
     Game::Game() {
         // read a JSON file
-        std::ifstream i("assets/sliding-tiles.json");
+        const std::string CONFIG_FILENAME = "assets/sliding-tiles.json";
+        std::ifstream in(CONFIG_FILENAME);
+        if (! in) {
+            std::cerr <<  "Could not read configuration file: "
+                << CONFIG_FILENAME << std::endl;
+        }
         json j;
-        i >> j;
+        in >> j;
         levelsArray = j["levels"];
         loadLevel();
 
@@ -89,7 +94,7 @@ namespace SlidingTiles {
                 } else if (event.type == sf::Event::TextEntered) {
                     if (event.text.unicode == 114) { //r
                         doRandomGame();
-                    } else if (event.text.unicode == 112) { //p 
+                    } else if (event.text.unicode == 112) { //p
                         gameBoard.printGame();
                     } else if (event.text.unicode == 110) { //n
                         doLevelUp();
