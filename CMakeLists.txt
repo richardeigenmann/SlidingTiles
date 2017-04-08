@@ -91,6 +91,7 @@ set( UNIT_TESTS
     tileType.tests.cpp
     gameBoard.tests.cpp
     puzzleSolver.tests.cpp
+    button.tests.cpp
 )
 
 ADD_EXECUTABLE(sliding-tiles main.cpp ${SOURCE_FILES})
@@ -168,7 +169,7 @@ IF (UNIX)
     SET(CHECK_COVERAGE ON)
 ENDIF (UNIX)
 if (CHECK_COVERAGE)
-    SET(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
     include(CodeCoverage)
     setup_target_for_coverage(${PROJECT_NAME}_coverage unit-tests coverage)
 ENDIF (CHECK_COVERAGE)
