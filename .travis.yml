@@ -6,8 +6,8 @@ compiler:
   - gcc
   - clang
 
-#env:
-#    COMPILER=g++-6
+env:
+    COMPILER=gcc-4.9
 
 addons:
   apt:
