@@ -4,7 +4,6 @@ sudo: false
 
 compiler:
   - gcc
-  #- clang
 
 addons:
   apt:
@@ -13,12 +12,12 @@ addons:
     packages:
     - libsfml-dev
     - lcov
-    - g++-4.9
+    - g++-5
 
 script:
   - mkdir -p build
   - cd build
-  - export CXX=/usr/bin/g++-4.9
+  - export CXX=/usr/bin/g++-5
   - cmake ..
   - make
   - make test
