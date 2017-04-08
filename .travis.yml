@@ -31,4 +31,5 @@ script:
   - cd build
   - cmake ..
   - make
-  - ./unit-tests
+#  - ./unit-tests
+  - catchsegv ./unit-tests -o hai
