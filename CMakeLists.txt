@@ -96,7 +96,9 @@ set( UNIT_TESTS
 ADD_EXECUTABLE(sliding-tiles main.cpp ${SOURCE_FILES})
 
 ADD_CUSTOM_COMMAND( TARGET sliding-tiles POST_BUILD
+  MESSAGE(STATUS "Creating Asset Directory: $<TARGET_FILE_DIR:sliding-tiles>/assets")
   COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:sliding-tiles>/assets
+  MESSAGE(STATUS "Copying Assets with copy_if_different: ${sliding-tiles-assets} $<TARGET_FILE_DIR:sliding-tiles>/assets")
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${sliding-tiles-assets} $<TARGET_FILE_DIR:sliding-tiles>/assets/
 )
