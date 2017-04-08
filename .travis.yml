@@ -27,4 +27,4 @@ script:
   - cd build
   - cmake -DWIN32=false ..
   - make unit-tests
-  - make test
+  - ./unit-tests
