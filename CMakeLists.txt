@@ -99,8 +99,8 @@ ADD_CUSTOM_COMMAND( TARGET sliding-tiles POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E echo About to make target asset directory
   COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:sliding-tiles>/assets
   COMMAND ${CMAKE_COMMAND} -E echo About to copy assets to target with copy_if_different
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${sliding-tiles-assets} $<TARGET_FILE_DIR:sliding-tiles>/assets/
+  #COMMAND ${CMAKE_COMMAND} -E copy_if_different ${sliding-tiles-assets} $<TARGET_FILE_DIR:sliding-tiles>/assets/
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${sliding-tiles_assets_dir} $<TARGET_FILE_DIR:sliding-tiles>/assets/
 )
 
 TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
