@@ -4,6 +4,7 @@ sudo: false
 
 compiler:
   - gcc
+  - clang
 
 addons:
   apt:
@@ -24,7 +25,6 @@ install:
 script:
   - mkdir -p build
   - cd build
-#  - export CXX=/usr/bin/g++-5
   - cmake -DWIN32=false ..
   - make
   - make test
