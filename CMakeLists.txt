@@ -105,7 +105,7 @@ TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}
     ${SFML_INCLUDE_DIR}
-    ${SFGUI_INCLUDE_DIR} 
+    ${SFGUI_INCLUDE_DIR}
 )
 
 TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
@@ -113,14 +113,14 @@ TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
     ${SFGUI_LIBRARY}
 )
 
-IF (WIN32)
-  ADD_CUSTOM_COMMAND( TARGET sliding-tiles POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-      ${SFML_ROOT}/bin $<TARGET_FILE_DIR:sliding-tiles>
-  )
-  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sliding-tiles)
-  set_target_properties(sliding-tiles PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY $(Configuration))
-ENDIF (WIN32)
+#IF (WIN32)
+#  ADD_CUSTOM_COMMAND( TARGET sliding-tiles POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy_directory
+#      ${SFML_ROOT}/bin $<TARGET_FILE_DIR:sliding-tiles>
+#  )
+#  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sliding-tiles)
+#  set_target_properties(sliding-tiles PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY $(Configuration))
+#ENDIF (WIN32)
 
 
 # Download and unpack googletest at configure time
@@ -153,7 +153,7 @@ TARGET_INCLUDE_DIRECTORIES( unit-tests PUBLIC
     ${CMAKE_SOURCE_DIR}
     ${SFML_INCLUDE_DIR}
 )
-target_link_libraries( unit-tests LINK_PUBLIC 
+target_link_libraries( unit-tests LINK_PUBLIC
     gtest gmock ${SFML_LIBRARIES}
 )
 
