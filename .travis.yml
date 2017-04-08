@@ -1,15 +1,19 @@
 language: cpp
 dist: trusty
-sudo: required
+sudo: false
 
 compiler:
   - gcc
   - clang
 
-before_install:
-#  - sudo add-apt-repository ppa:george-edison55/cmake-3.x
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libsfml-dev
+#before_install:
+#  - sudo apt-get -qq update
+#  - sudo apt-get install -y libsfml-dev
+
+addons:
+  apt:
+    packages:
+    - libsfml-dev
 
 script:
   - mkdir -p build
