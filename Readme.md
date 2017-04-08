@@ -1,5 +1,7 @@
 # Sliding Tiles
 
+[![Build Status](https://travis-ci.org/richardeigenmann/SlidingTiles.svg?branch=master)](https://travis-ci.org/richardeigenmann/SlidingTiles)
+
 ## Screenshot
 ![Screenshot](http://opentechschool-zurich.github.io/cpp-co-learning/topics/games/monkey-keg/Richard/sliding-tiles/doc/Screenshot.png)
 
