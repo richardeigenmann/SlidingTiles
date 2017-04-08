@@ -9,15 +9,22 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - llvm-toolchain-trusty
     packages:
     - libsfml-dev
     - lcov
     - g++-5
+    - gcc-5
+    - clang-3.7
+
+install:
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
+    - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
 
 script:
   - mkdir -p build
   - cd build
-  - export CXX=/usr/bin/g++-5
-  - cmake ..
+#  - export CXX=/usr/bin/g++-5
+  - cmake -DWIN32=false ..
   - make
   - make test
