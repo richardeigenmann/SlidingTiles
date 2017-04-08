@@ -6,15 +6,15 @@ compiler:
   - gcc
   - clang
 
-env:
-    COMPILER=g++-6
+#env:
+#    COMPILER=g++-6
 
 addons:
   apt:
     packages:
     - libsfml-dev
     - lcov
-    - gcc-6
+    - gcc-4.9
 
 script:
   - mkdir -p build
