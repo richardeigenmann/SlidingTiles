@@ -14,7 +14,7 @@ addons:
     packages:
     - libsfml-dev
     - lcov
-    - g++-6
+    - gcc-6
 
 script:
   - mkdir -p build
