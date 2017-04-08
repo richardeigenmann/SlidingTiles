@@ -16,6 +16,7 @@ addons:
     - g++-4.9
 
 script:
+  - ls /usr/bin/g*
   - export CXX=g++-4.9
   - mkdir -p build
   - cd build
