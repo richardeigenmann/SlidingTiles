@@ -1,16 +1,10 @@
 language: cpp
+dist: trusty
+sudo: required
 
 compiler:
   - gcc
   - clang
-
-env:
-
-cache:
-  - apt
-
-dist: trusty
-sudo: required
 
 before_install:
 #  - sudo add-apt-repository ppa:george-edison55/cmake-3.x
