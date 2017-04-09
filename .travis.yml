@@ -22,14 +22,27 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y clang-3.8
 
+
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++-5"; fi
     - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.8"; fi
+    # Checking versions
+    - lcov --version
+    - g++ --version
 
 script:
-  - mkdir -p build
-  - cd build
-  - cmake ..
-  - make
+    - mkdir -p build
+    - cd build
+    - cmake ..
+    - make
 #  - ./unit-tests
-  - catchsegv ./unit-tests -o hai
+#  - catchsegv ./unit-tests -o hai
+
+after_success:
+    # Creating report
+  - cd ${TRAVIS_BUILD_DIR}
+  - lcov --directory . --capture --output-file coverage.info # capture coverage info
+  - lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
+  - lcov --list coverage.info #debug info
+  # Uploading report to CodeCov
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
