@@ -78,6 +78,7 @@ SET(SOURCE_FILES
     button.cpp
     label.cpp
     randomSoundPlayer.cpp
+    winnerBlingBling.cpp
 )
 
 set( UNIT_TESTS
@@ -173,3 +174,16 @@ if (CHECK_COVERAGE)
     include(CodeCoverage)
     setup_target_for_coverage(${PROJECT_NAME}_coverage unit-tests coverage)
 ENDIF (CHECK_COVERAGE)
+
+
+ADD_EXECUTABLE(levelGenerator levelGenerator.cpp ${SOURCE_FILES})
+TARGET_INCLUDE_DIRECTORIES(levelGenerator PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}
+    ${SFML_INCLUDE_DIR}
+    ${SFGUI_INCLUDE_DIR}
+)
+TARGET_LINK_LIBRARIES(levelGenerator LINK_PUBLIC
+    ${SFML_LIBRARIES}
+    ${SFGUI_LIBRARY}
+)

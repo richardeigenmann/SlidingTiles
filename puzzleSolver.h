@@ -56,9 +56,16 @@ namespace SlidingTiles {
         int hasASolution(const MoveNode & node);
         
         /**
+         * @brief generates a single fame Game
+         * @param emptyTilesthe number of empty tiles
+         * @param maxDepth The maximum depth for a solution
+         */
+        void generateGame(std::size_t emptyTiles, std::size_t maxDepth);
+        
+        /**
          * @brief generates a series of games
          */
-        void generateGames(int games);
+        void generateGames(std::size_t games);
 
     private:
                 /**

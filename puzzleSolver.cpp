@@ -101,23 +101,37 @@ int PuzzleSolver::hasASolution(const MoveNode & node) {
     return -1;
 }
 
-void PuzzleSolver::generateGames(int games) {
+void PuzzleSolver::generateGame(std::size_t emptyTiles, std::size_t maxDepth) {
     GameBoard gameBoard{};
     PuzzleSolver puzzleSolver;
-    while (--games >= 0) {
-        int emptyTiles = (rand() % 13) + 1;
-        int count{0};
-        std::cout << "trying a game: " << ++count << " with empty tiles: " << emptyTiles << " max moves: 4";
-        do {
-            gameBoard.randomGame(emptyTiles);
-            MoveNode rootNode = puzzleSolver.getTree(gameBoard.serialiseGame(), 4);
-            std::cout << ".";
-            
-            int solutionDepth = puzzleSolver.hasASolution(rootNode);
-            if (solutionDepth > -1) {
-                std::cout << "\nEmpty Tiles: " << emptyTiles << " Solution Depth: " << solutionDepth << " Game Board: " << gameBoard.serialiseGameToString() << "\n";
-                count = -1;
+    int count{0};
+    //std::cout << "trying a game: " << ++count << " with emptyTiles: " << emptyTiles << " maxDepth: " << maxDepth;
+    do {
+        gameBoard.randomGame(emptyTiles);
+        MoveNode rootNode = puzzleSolver.getTree(gameBoard.serialiseGame(), maxDepth);
+        //std::cout << ".";
+
+        int solutionDepth = puzzleSolver.hasASolution(rootNode);
+        if (solutionDepth > 0) {
+            std::size_t difficulty{0};
+            if (solutionDepth > 3) {
+                ++difficulty;
             }
-        } while (count > -1);
+            if (solutionDepth > 5) {
+                ++difficulty;
+            }
+            std::cout << "\n{\n\t\"SerializedGame\": \""
+                    << gameBoard.serialiseGameToString()
+                    << "\",\n\t\"Difficulty\": " << difficulty 
+                    << ",\n\t\"Par\": " << solutionDepth << "\n},\n";
+            count = -1;
+        }
+    } while (count > -1);
+}
+
+void PuzzleSolver::generateGames(std::size_t games) {
+    while (--games >= 0) {
+        std::size_t emptyTiles = (rand() % 13) + 1;
+        generateGame(emptyTiles, 6);
     }
 }

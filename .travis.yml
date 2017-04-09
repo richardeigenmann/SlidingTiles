@@ -36,7 +36,7 @@ script:
     - cmake ..
     - make
 #  - ./unit-tests
-#  - catchsegv ./unit-tests -o hai
+  - catchsegv ./unit-tests -o hai
 
 after_success:
     # Creating report

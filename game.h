@@ -7,6 +7,7 @@
 #include "label.h"
 #include "json.hpp"
 #include "randomSoundPlayer.h"
+#include "winnerBlingBling.h"
 
 namespace SlidingTiles {
 
@@ -56,6 +57,18 @@ namespace SlidingTiles {
          */
         void doMouseReleased(const sf::Vector2i & mousePosition);
 
+        
+       /**
+        * @brief increment the move count and update the label
+        */
+        void incrementMoves();
+    
+        /**
+         * Sets the move counter and updates the moves label
+         * @param newMoves the new number of moves
+         */
+        void setMoves(std::size_t newMoves);
+        
         /**
          * @brief advance to the next level
          */
@@ -74,6 +87,11 @@ namespace SlidingTiles {
          * @brief the state of the current game
          */
         GameState gameState{GameState::Initializing};
+        
+        /**
+         * @brief the winner bling bling
+         */
+        WinnerBlingBling winnerBlingBling{};
 
     private:
         /**
@@ -119,7 +137,7 @@ namespace SlidingTiles {
         /**
          * @brief The number of tiles in each direction
          */
-        static constexpr float VICTORY_ROLL_TIME{1.0f};
+        static constexpr float VICTORY_ROLL_TIME{1.5f};
 
         /**
          *@brief The amount of time left for the victory roll in seconds.  
@@ -165,10 +183,6 @@ namespace SlidingTiles {
          */
         Label parLabel;
 
-        /**
-         * an object with winner sounds to be played randomly when a game is won 
-         */
-        RandomSoundPlayer winnerSounds;
         /**
          * an object with attitude sounds to be played randomly when the users is taking too long or restarts a level
          */

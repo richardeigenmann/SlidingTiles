@@ -33,7 +33,7 @@ namespace SlidingTiles {
         gameView.setGameBoard(&gameBoard);
 
         json winnerSoundBitesArray = j["winnerSoundBites"];
-        winnerSounds.loadSounds(winnerSoundBitesArray);
+        winnerBlingBling.loadSounds(winnerSoundBitesArray);
 
         json attitudeSoundBitesArray = j["attitudeSoundBites"];
         attitudeSounds.loadSounds(attitudeSoundBitesArray);
@@ -59,7 +59,8 @@ namespace SlidingTiles {
                 gameBoard.setWinnerTiles(solutionPath);
                 gameState = GameState::VictoryRolling;
                 victoryRollingTime = VICTORY_ROLL_TIME;
-                winnerSounds.playRandomSound();
+                winnerBlingBling.startBlingBling(VICTORY_ROLL_TIME, moves, par);
+                winnerBlingBling.update(dt);
             } else {
                 gameBoard.clearWinnerTiles();
             }
@@ -112,12 +113,7 @@ namespace SlidingTiles {
                     doLevelUp();
                     gameState = GameState::Playing;
                 }
-                // Load a sprite to display
-                sf::Texture texture;
-                texture.loadFromFile("assets/trophy.png");
-                sf::Sprite sprite(texture);
-                sprite.setPosition(10, 10);
-                RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
+                winnerBlingBling.render();
             }
             levelLabel.render();
             movesLabel.render();
@@ -163,6 +159,7 @@ namespace SlidingTiles {
         int deltaX = mousePosition.x - mousePositionPressed.x;
         int deltaY = mousePosition.y - mousePositionPressed.y;
         if (abs(deltaX) > 2 || abs(deltaY) > 2) {
+            incrementMoves();
             SlidingTiles::Tile movingTile = gameBoard.tiles[movingTilePosition.x][movingTilePosition.y];
             if (abs(deltaX) > abs(deltaY)) {
                 // horizontal movement
@@ -185,25 +182,36 @@ namespace SlidingTiles {
             }
         }
     }
+    
+    void Game::incrementMoves() {
+        setMoves(moves + 1);
+    }
+    
+    void Game::setMoves(std::size_t newMoves) {
+        moves = newMoves;
+
+        std::ostringstream movesText;
+        movesText << "Moves: " << moves;
+        movesLabel.setText(movesText.str());
+    }
 
     void Game::loadLevel() {
         std::ostringstream levelText;
         levelText << "Level: " << level;
         levelLabel.setText(levelText.str());
 
-        std::ostringstream movesText;
-        movesText << "Moves: " << moves;
-        movesLabel.setText(movesText.str());
-
-
-        std::ostringstream parText;
-        parText << "Par: " << par;
-        parLabel.setText(parText.str());
+        setMoves(0);
 
         json jsonLevel = levelsArray[level];
         std::string serializedGame = jsonLevel["SerializedGame"].get<std::string>();
         gameBoard.loadGame(serializedGame);
         gameState = GameState::Playing;
+
+        par = jsonLevel["Par"].get<int>();
+        std::ostringstream parText;
+        parText << "Par: " << par;
+        parLabel.setText(parText.str());
+        
     }
 
     void Game::doLevelUp() {
