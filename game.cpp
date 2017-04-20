@@ -21,9 +21,9 @@ namespace SlidingTiles {
         // read a JSON file
         const std::string CONFIG_FILENAME = "assets/sliding-tiles.json";
         std::ifstream in(CONFIG_FILENAME);
-        if (! in) {
-            std::cerr <<  "Could not read configuration file: "
-                << CONFIG_FILENAME << std::endl;
+        if (!in) {
+            std::cerr << "Could not read configuration file: "
+                    << CONFIG_FILENAME << std::endl;
         }
         json j;
         in >> j;
@@ -182,11 +182,11 @@ namespace SlidingTiles {
             }
         }
     }
-    
+
     void Game::incrementMoves() {
         setMoves(moves + 1);
     }
-    
+
     void Game::setMoves(std::size_t newMoves) {
         moves = newMoves;
 
@@ -211,7 +211,7 @@ namespace SlidingTiles {
         std::ostringstream parText;
         parText << "Par: " << par;
         parLabel.setText(parText.str());
-        
+
     }
 
     void Game::doLevelUp() {

@@ -20,7 +20,16 @@ namespace SlidingTiles {
          * @brief sets the tile position to the supplied game board position
          */
         void setTilePosition(const sf::Vector2i & newGameBoardPosition) {
+            myPosition = newGameBoardPosition;
             tileView.setCoordinates(RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition));
+        }
+
+        /**
+         * @brief returns the tile position
+         * @return The position in the gameboard
+         */
+        sf::Vector2i getTilePosition() {
+            return myPosition;
         }
 
         /**
@@ -66,6 +75,13 @@ namespace SlidingTiles {
          * @brief settor for the winner flag
          */
         void setWinner(const bool & status);
+        
+        /**
+         * @brief gettor for the winner flag
+         */
+        bool isWinner() {
+            return winner;
+        }
 
     private:
         /**
@@ -82,6 +98,11 @@ namespace SlidingTiles {
          * @brief a bool to tell us if the tile is part of the solution path or not
          */
         bool winner{false};
+
+        /**
+         * @brief the game board position of the tile
+         */
+        sf::Vector2i myPosition{-1, -1};
     };
 
 } // namespace SlidingTiles

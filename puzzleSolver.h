@@ -54,21 +54,21 @@ namespace SlidingTiles {
          * @return the depth at which the node was found or -1 is no solution
          */
         int hasASolution(const MoveNode & node);
-        
+
         /**
          * @brief generates a single fame Game
          * @param emptyTilesthe number of empty tiles
          * @param maxDepth The maximum depth for a solution
          */
         void generateGame(std::size_t emptyTiles, std::size_t maxDepth);
-        
+
         /**
          * @brief generates a series of games
          */
         void generateGames(std::size_t games);
 
     private:
-                /**
+        /**
          * @brief The number of tiles in each direction
          */
         static const int DEFAULT_DEPTH{3};

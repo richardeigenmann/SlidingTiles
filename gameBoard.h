@@ -88,7 +88,7 @@ namespace SlidingTiles {
         /**
          *  @brief returns the start tile on the gameboard. If none is found it returns -1,-1
          */
-        sf::Vector2i findStartTile();
+        const Tile findStartTile();
 
         /**
          *  @brief returns the start tile on the gameboard. If none is found it returns -1,-1

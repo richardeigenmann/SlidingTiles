@@ -605,3 +605,108 @@ TEST(GameBoard, isNotSolved4) {
     std::vector<sf::Vector2i> result = gameBoard.isSolved();
     ASSERT_THAT(0, result.size());
 }
+
+TEST(GameBoard, findStartTile) {
+    GameBoard gameBoard{};
+    gameBoard.loadGame("|┘ -|├-┳┘- | |-|");
+    Tile startTile = gameBoard.findStartTile();
+    sf::Vector2i startTilePos = startTile.getTilePosition();
+    ASSERT_THAT(1, startTilePos.x);
+    ASSERT_THAT(1, startTilePos.y);
+}
+
+TEST(GameBoard, findStartTileMissing) {
+    GameBoard gameBoard{};
+    gameBoard.loadGame("                ");
+    Tile startTile = gameBoard.findStartTile();
+    sf::Vector2i startTilePos = startTile.getTilePosition();
+    ASSERT_THAT(-1, startTilePos.x);
+    ASSERT_THAT(-1, startTilePos.y);
+}
+
+TEST(GameBoard, serialiseGameToString) {
+    GameBoard gameBoard{};
+    std::string game = "|┘ -|├-┳┘- | |-|";
+    gameBoard.loadGame(game);
+    std::string serialisedGame = gameBoard.serialiseGameToString();
+    ASSERT_EQ(game, serialisedGame);
+}
+
+TEST(GameBoard, printGame) {
+    //Based on http://stackoverflow.com/questions/3803465/how-to-capture-stdout-stderr-with-googletest
+    GameBoard gameBoard{};
+    std::string game = "|┘ -|├-┳┘- | |-|";
+    gameBoard.loadGame(game);
+
+    // This can be an ofstream as well or any other ostream
+    std::stringstream buffer;
+    // Save cout's buffer here
+    std::streambuf *sbuf = std::cout.rdbuf();
+    // Redirect cout to our stringstream buffer or any other ostream
+    std::cout.rdbuf(buffer.rdbuf());
+    // Use cout as usual
+    gameBoard.printGame();
+    // When done redirect cout to its old self
+    std::cout.rdbuf(sbuf);
+
+    std::string output = buffer.str();
+    ASSERT_EQ(game + '\n', output);
+}
+
+TEST(GameBoard, setWinnerTiles) {
+    GameBoard gameBoard{};
+    std::string game = "|┘ -|├-┳┘- | |-|";
+    gameBoard.loadGame(game);
+    std::vector<sf::Vector2i> fakeSolutionPath{};
+    fakeSolutionPath.push_back(sf::Vector2i{0, 1});
+    fakeSolutionPath.push_back(sf::Vector2i{0, 2});
+    fakeSolutionPath.push_back(sf::Vector2i{1, 2});
+    fakeSolutionPath.push_back(sf::Vector2i{1, 3});
+    gameBoard.setWinnerTiles(fakeSolutionPath);
+    int on, off = 0;
+    for (int x = 0; x < GameBoard::boardSize; ++x)
+        for (int y = 0; y < GameBoard::boardSize; ++y)
+            if (gameBoard.tiles[x][y].isWinner()) {
+                ++on;
+            } else {
+                ++off;
+            }
+    ASSERT_THAT(4, on);
+    ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize - 4, off);
+}
+
+TEST(GameBoard, clearWinnerTiles) {
+    GameBoard gameBoard{};
+    std::string game = "|┘ -|├-┳┘- | |-|";
+    gameBoard.loadGame(game);
+    std::vector<sf::Vector2i> fakeSolutionPath{};
+    fakeSolutionPath.push_back(sf::Vector2i{0, 1});
+    fakeSolutionPath.push_back(sf::Vector2i{0, 2});
+    fakeSolutionPath.push_back(sf::Vector2i{1, 2});
+    fakeSolutionPath.push_back(sf::Vector2i{1, 3});
+    gameBoard.setWinnerTiles(fakeSolutionPath);
+    int on, off = 0;
+    for (int x = 0; x < GameBoard::boardSize; ++x)
+        for (int y = 0; y < GameBoard::boardSize; ++y)
+            if (gameBoard.tiles[x][y].isWinner()) {
+                ++on;
+            } else {
+                ++off;
+            }
+    ASSERT_THAT(4, on);
+    ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize - 4, off);
+
+    on = 0;
+    off = 0;
+    gameBoard.clearWinnerTiles();
+    for (int x = 0; x < GameBoard::boardSize; ++x)
+        for (int y = 0; y < GameBoard::boardSize; ++y)
+            if (gameBoard.tiles[x][y].isWinner()) {
+                ++on;
+            } else {
+                ++off;
+            }
+    ASSERT_THAT(0, on);
+    ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize, off);
+}
+
