@@ -3,53 +3,54 @@
 #include <SFML/Graphics.hpp>
 #include "texturesSingleton.h"
 #include "renderingSingleton.h"
+#include "tileObserver.h"
+#include "renderable.h"
 
 namespace SlidingTiles {
 
     /**
      * @brief The view class for the tile that knows how to render itself
      */
-    class TileView {
+    class TileView : public TileObserver, public Renderable {
     public:
-
-        /**
-         * @brief Empty constructor
-         */
-        TileView() {}
-
         /**
          * @brief Constructs a new TileView with the appropriate screen coordinates
          */
-        TileView(sf::Vector2i tileCoordinates)
-        : tileCoordinates(tileCoordinates) {
+        TileView(sf::Vector2i tileCoordinates) : tileCoordinates(tileCoordinates) {
+            RenderingSingleton::getInstance().add(*this);
         };
+
+        /**
+         * @brief Destructor
+         */
+        ~TileView() {
+            RenderingSingleton::getInstance().remove(*this);
+        }
 
         /**
          * @brief knows how to render the tile
          */
-        void render();
+        void render() override;
 
         /**
          * @brief need to be called periodically with a delta time to
          * update the position etc.
          * @param dt The passing time since last call in seconds
          */
-        void update(const float dt);
+        void update(const float dt) override;
 
         /**
          * @brief starts a transition to the supplied new pixel coordinates
          * @return true if transition kicked off, false if not
          */
-        bool transition(const sf::Vector2i & newTileCoordinates);
+        void transition(const sf::Vector2i & newTileCoordinates) override;
 
         /**
          * @brief settor for the tile type
          * @param newType the new type of the tile. Will figure out the correct texture from the TexturesSingleton
          */
-        void setTileType(const TileType & newType) {
-            //setTexture(TexturesSingleton::getInstance().getTexturesMap()[newType]);
+        void setTileType(const TileType & newType) override {
             tileType = newType;
-            //setTexture(TexturesSingleton::getInstance().getTexture(newType));
         };
 
         /**
@@ -60,14 +61,22 @@ namespace SlidingTiles {
         /**
          * @brief settor for the tile coordinates in screen coordinates
          */
-        void setCoordinates(const sf::Vector2i & newCoordinates) {
+        void setCoordinates(const sf::Vector2i & newCoordinates) override {
             tileCoordinates = newCoordinates;
+        };
+
+        /**
+         * @brief gettor for the tile coordinates in screen coordinates
+         * @return the coordinates
+         */
+        const sf::Vector2i & getCoordinates() {
+            return tileCoordinates;
         };
 
         /**
          * @brief settor for the winner flag
          */
-        void setWinner(const bool & status) {
+        void setWinner(const bool & status) override {
             winner = status;
         };
 
@@ -103,8 +112,8 @@ namespace SlidingTiles {
         bool winner{false};
 
         /**
-        * @brief the type of the tile
-        */
-        TileType tileType {TileType::Empty};
+         * @brief the type of the tile
+         */
+        TileType tileType{TileType::Empty};
     };
 } // namespace SlidingTiles

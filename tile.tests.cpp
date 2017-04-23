@@ -5,11 +5,11 @@
 using namespace SlidingTiles;
 
 TEST(Tile, ObjectCreation) {
-    SlidingTiles::Tile tile;
+    Tile tile;
 }
 
 TEST(Tile, outputDirectionStartRight) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::StartRight);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::GoRight, newDirection);
@@ -28,7 +28,7 @@ TEST(Tile, outputDirectionStartRight) {
 }
 
 TEST(Tile, outputDirectionStartLeft) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::StartLeft);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::GoLeft, newDirection);
@@ -47,7 +47,7 @@ TEST(Tile, outputDirectionStartLeft) {
 }
 
 TEST(Tile, outputDirectionStartTop) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::StartTop);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::GoUp, newDirection);
@@ -66,7 +66,7 @@ TEST(Tile, outputDirectionStartTop) {
 }
 
 TEST(Tile, outputDirectionStartBottom) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::StartBottom);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::GoDown, newDirection);
@@ -85,7 +85,7 @@ TEST(Tile, outputDirectionStartBottom) {
 }
 
 TEST(Tile, outputDirectionEndRight) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::EndRight);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -104,7 +104,7 @@ TEST(Tile, outputDirectionEndRight) {
 }
 
 TEST(Tile, outputDirectionEndLeft) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::EndLeft);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -123,7 +123,7 @@ TEST(Tile, outputDirectionEndLeft) {
 }
 
 TEST(Tile, outputDirectionEndTop) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::EndTop);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -142,7 +142,7 @@ TEST(Tile, outputDirectionEndTop) {
 }
 
 TEST(Tile, outputDirectionEndBottom) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::EndBottom);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -161,7 +161,7 @@ TEST(Tile, outputDirectionEndBottom) {
 }
 
 TEST(Tile, outputDirectionVertical) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::Vertical);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -180,7 +180,7 @@ TEST(Tile, outputDirectionVertical) {
 }
 
 TEST(Tile, outputDirectionHorizontal) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::Horizontal);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -199,7 +199,7 @@ TEST(Tile, outputDirectionHorizontal) {
 }
 
 TEST(Tile, outputDirectionBottomRight) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::BottomRight);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -218,7 +218,7 @@ TEST(Tile, outputDirectionBottomRight) {
 }
 
 TEST(Tile, outputDirectionLeftTop) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::LeftTop);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -237,7 +237,7 @@ TEST(Tile, outputDirectionLeftTop) {
 }
 
 TEST(Tile, outputDirectionLeftBottom) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::LeftBottom);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -256,7 +256,7 @@ TEST(Tile, outputDirectionLeftBottom) {
 }
 
 TEST(Tile, TopRight) {
-    SlidingTiles::Tile tile;
+    Tile tile;
     tile.setTileType(TileType::TopRight);
     Direction newDirection = tile.outputDirection(Direction::Unknown);
     ASSERT_THAT(Direction::Unknown, newDirection);
@@ -275,7 +275,7 @@ TEST(Tile, TopRight) {
 }
 
 TEST(Tile, setTileTypeChar) {
-    SlidingTiles::Tile tile;
+    Tile tile;
 
     tile.setTileType("-");
     ASSERT_EQ(TileType::Horizontal, tile.getTileType());
@@ -334,10 +334,13 @@ TEST(Tile, transition) {
         "└", "-", "-", "┘"};
     GameBoard gameBoard;
     gameBoard.loadGame(game);
-    SlidingTiles::Tile t = gameBoard.tiles[0][0];
-    sf::Vector2i topLeftPostion{0, 0};
-    bool result = t.transition(topLeftPostion);
-    ASSERT_TRUE(result) << "Transitioning should be possible first time\n";
-    result = t.transition(topLeftPostion);
-    ASSERT_FALSE(result) << "Transitioning should not be possible when transitioning in progress\n";
+    Tile t = gameBoard.tiles[0][0];
+    sf::Vector2i newPosition{1, 0};
+    t.transition(newPosition);
+    //bool result = t.transition(topLeftPostion);
+    //ASSERT_TRUE(result) << "Transitioning should be possible first time\n";
+    //result = t.transition(topLeftPostion);
+    //ASSERT_FALSE(result) << "Transitioning should not be possible when transitioning in progress\n";
+    ASSERT_EQ(t.getTilePosition().x, 1 );
+    ASSERT_EQ(t.getTilePosition().y, 0 );
 }

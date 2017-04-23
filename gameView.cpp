@@ -1,20 +1,19 @@
 #include "gameView.h"
 #include "renderingSingleton.h"
-#include "tile.h"
-//#include "game.h"
 
 namespace SlidingTiles {
 
     GameView::GameView() {
-
+        RenderingSingleton::getInstance().add(*this);
+        renderPriority = Renderable::RenderPriority::Background;
     }
 
     void GameView::render() {
         RenderingSingleton::getInstance().getRenderWindow()->clear(sf::Color::White);
-        
+
 
         // render the board after the clear
-        sf::Sprite emptyTileSprite;
+ /*       sf::Sprite emptyTileSprite;
         sf::Texture emptyTexture{};
         emptyTexture = TexturesSingleton::getInstance().getTexturesMap()[TileType::Empty];
         emptyTileSprite.setTexture(emptyTexture);
@@ -30,20 +29,20 @@ namespace SlidingTiles {
         // first render the tiles that are static
         for (int x = 0; x < GameBoard::boardSize; ++x)
             for (int y = 0; y < GameBoard::boardSize; ++y) {
-                //Tile t = GameBoardSingleton::getInstance().tiles[x][y];
                 Tile t = gameBoard->tiles[x][y];
-                if ((!t.tileView.transitioning) && (t.getTileType() != TileType::Empty))
-                    t.tileView.render();
+                //if ((!t.tileView.transitioning) && (t.getTileType() != TileType::Empty))
+                if (t.getTileType() != TileType::Empty)
+                    t.render();
             }
 
         // then render the tiles that are transitioning so that they are on top
-        for (int x = 0; x < GameBoard::boardSize; ++x)
+        /*for (int x = 0; x < GameBoard::boardSize; ++x)
             for (int y = 0; y < GameBoard::boardSize; ++y) {
                 //Tile t = GameBoardSingleton::getInstance().tiles[x][y];
                 Tile t = gameBoard->tiles[x][y];
                 if (t.tileView.transitioning)
                     t.tileView.render();
-            }
+            }*/
 
         //RenderingSingleton::getInstance().getRenderWindow()->display();
     }

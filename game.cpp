@@ -28,6 +28,14 @@ namespace SlidingTiles {
         json j;
         in >> j;
         levelsArray = j["levels"];
+
+        for (int y = 0; y < gameBoard.boardSize; ++y) {
+            for (int x = 0; x < gameBoard.boardSize; ++x) {
+                TileView* tileView = new TileView(sf::Vector2i{x,y});
+                gameBoard.tiles[x][y].add(*tileView);
+            }
+        }
+
         loadLevel();
 
         gameView.setGameBoard(&gameBoard);
@@ -50,7 +58,8 @@ namespace SlidingTiles {
         // send update event to all the tiles
         for (int x = 0; x < GameBoard::boardSize; ++x)
             for (int y = 0; y < GameBoard::boardSize; ++y) {
-                gameBoard.tiles[x][y].tileView.update(dt);
+                //gameBoard.tiles[x][y].tileView.update(dt);
+                gameBoard.tiles[x][y].update(dt);
             }
 
         if (gameState == GameState::Playing) {
@@ -82,7 +91,6 @@ namespace SlidingTiles {
 
     void Game::run() {
         sf::RenderWindow* window = RenderingSingleton::getInstance().getRenderWindow();
-
         while (window->isOpen()) {
             sf::Event event;
             while (window->pollEvent(event)) {
@@ -106,7 +114,6 @@ namespace SlidingTiles {
 
             sf::Time dt = deltaClock.restart();
             update(dt.asSeconds());
-            gameView.render();
             if (gameState == GameState::VictoryRolling) {
                 victoryRollingTime -= dt.asSeconds();
                 if (victoryRollingTime < 0.0f) {
@@ -115,22 +122,17 @@ namespace SlidingTiles {
                 }
                 winnerBlingBling.render();
             }
-            levelLabel.render();
-            movesLabel.render();
-            parLabel.render();
-            randomSfmlButton.render();
-            nextSfmlButton.render();
-            restartSfmlButton.render();
-            window->display();
+            RenderingSingleton::getInstance().renderAll();
         }
     }
 
     void Game::doRandomGame() {
+        GameBoard findGameBoard {};
         int count{0};
         do {
-            gameBoard.randomGame(1);
+            findGameBoard.randomGame(1);
             PuzzleSolver puzzleSolver;
-            MoveNode rootNode = puzzleSolver.getTree(gameBoard.serialiseGame(), 3);
+            MoveNode rootNode = puzzleSolver.getTree(findGameBoard.serialiseGame(), 3);
 
             std::cout << "trying a game: " << ++count << "\n";
             int solutionDepth = puzzleSolver.hasASolution(rootNode);
@@ -139,6 +141,7 @@ namespace SlidingTiles {
                 count = -1;
             }
         } while (count > -1);
+        gameBoard.loadGame(findGameBoard.serialiseGame());
     }
 
     void Game::doMousePressed(const sf::Vector2i & mousePosition) {
@@ -148,11 +151,15 @@ namespace SlidingTiles {
     void Game::doMouseReleased(const sf::Vector2i & mousePosition) {
         if (nextSfmlButton.mouseReleased(mousePosition)) {
             onNextButtonClick();
+            return;
         } else if (randomSfmlButton.mouseReleased(mousePosition)) {
             onRandomButtonClick();
+            return;
         } else if (restartSfmlButton.mouseReleased(mousePosition)) {
             onRestartButtonClick();
+            return;
         }
+        
         sf::Vector2i movingTilePosition = RenderingSingleton::getInstance().findTile(mousePositionPressed);
         if (movingTilePosition.x == -1 || movingTilePosition.y == -1)
             return; // out of grid
@@ -160,7 +167,7 @@ namespace SlidingTiles {
         int deltaY = mousePosition.y - mousePositionPressed.y;
         if (abs(deltaX) > 2 || abs(deltaY) > 2) {
             incrementMoves();
-            SlidingTiles::Tile movingTile = gameBoard.tiles[movingTilePosition.x][movingTilePosition.y];
+            Tile movingTile = gameBoard.tiles[movingTilePosition.x][movingTilePosition.y];
             if (abs(deltaX) > abs(deltaY)) {
                 // horizontal movement
                 sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x + copysign(1, deltaX), movingTilePosition.y);
@@ -172,7 +179,6 @@ namespace SlidingTiles {
             } else {
                 // vertical movement
                 sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x, movingTilePosition.y + copysign(1, deltaY));
-                //gameBoard.slideTile(movingTilePosition, newPosition);
                 if (deltaY > 0) {
                     gameBoard.slideTile(Move{movingTilePosition, Direction::GoDown});
                 } else {

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "renderable.h"
+#include <map>
 
 namespace SlidingTiles {
 
@@ -68,6 +70,44 @@ namespace SlidingTiles {
          */
         sf::Vector2i findTile(sf::Vector2i mousePosition);
 
+        /**
+         * Add a renderable to the list of object to render
+         * @param renderable The Renderable to add
+         */
+        void add(Renderable& renderable) {
+            renderables.insert(std::pair<Renderable * const, Renderable * const>(&renderable, &renderable));
+        }
+
+        /**
+         * Removes a renderable from the list of objects to render
+         * @param renderable The Renderable to remove
+         */
+        void remove(Renderable& renderable) {
+            renderables.erase(&renderable);
+        }
+
+        /**
+         * Tell all renderables to render
+         */
+        void renderAll() {
+            for (auto& pair : renderables) {
+                if (pair.second->renderPriority == Renderable::RenderPriority::Background) {
+                    pair.second->render();
+                }
+            }
+            for (auto& pair : renderables) {
+                if (pair.second->renderPriority == Renderable::RenderPriority::Normal) {
+                    pair.second->render();
+                }
+            }
+            for (auto& pair : renderables) {
+                if (pair.second->renderPriority == Renderable::RenderPriority::OnTop) {
+                    pair.second->render();
+                }
+            }
+            getRenderWindow()->display();
+        }
+
     private:
         /**
          * @brief Private constructor for singleton
@@ -78,6 +118,11 @@ namespace SlidingTiles {
          * @brief the rendering window
          */
         sf::RenderWindow window;
+
+        /**
+         * @brief The map of Renderables
+         */
+        std::map<Renderable * const, Renderable * const> renderables;
 
     };
 

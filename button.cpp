@@ -1,16 +1,16 @@
 #include "button.h"
-#include "renderingSingleton.h"
 #include <iostream>
 
 
 using namespace SlidingTiles;
 
 Button::Button(const std::string & filename) {
-    if ( texture.loadFromFile(filename) ) {
+    if (texture.loadFromFile(filename)) {
         sprite.setTexture(texture);
     } else {
         std::cerr << "Failed to load texture: " << filename << std::endl;
     }
+    RenderingSingleton::getInstance().add(*this);
 }
 
 void Button::setPosition(float x, float y) {

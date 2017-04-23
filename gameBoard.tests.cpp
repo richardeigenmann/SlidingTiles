@@ -16,7 +16,7 @@ TEST(GameBoard, loadGame) {
         "└", "-", "-", "┘"};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
-    SlidingTiles::Tile t = gameBoard.tiles[0][0];
+    Tile t = gameBoard.tiles[0][0];
     ASSERT_EQ(TileType::StartRight, t.getTileType()) << "Tile 0,0 is of type " << tileTypeToString(t.getTileType());
 
     t = gameBoard.tiles[1][0];
@@ -59,7 +59,7 @@ TEST(GameBoard, saveAndLoadGame) {
         " ", " ", " ", " "};
     gameBoard.loadGame(emptyGame);
 
-    SlidingTiles::Tile t = gameBoard.tiles[0][0];
+    Tile t = gameBoard.tiles[0][0];
     ASSERT_EQ(TileType::Empty, t.getTileType()) << "Tile 0,0 is of type " << tileTypeToString(t.getTileType());
 
     t = gameBoard.tiles[1][0];
@@ -282,7 +282,7 @@ TEST(GameBoard, getOutputPositionInvalid2) {
     std::string game [GameBoard::boardSize][GameBoard::boardSize]{"|", "┘", " ", "-",
         "|", "├", "-", "┳",
         "┘", "-", " ", "|",
-        " ", "|" "-", "|"};
+        " ", "|", "-", "|"};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     sf::Vector2i tilePosition{3, 1};
@@ -297,10 +297,7 @@ TEST(GameBoard, getOutputPositionInvalid2) {
 }
 
 TEST(GameBoard, getOutputPositionOffTheBoard1) {
-    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"|", "┘", "┴", "└",
-        "-", "├", "┳", "-",
-        "┘", "-", " ", "└",
-        "┬", "|", "┐", "┌"};
+    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"|┘┴└-├┳-┘- └┬|┐┌"};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     {
@@ -390,10 +387,7 @@ TEST(GameBoard, getOutputPositionOffTheBoard1) {
 }
 
 TEST(GameBoard, getOutputPositionOffTheBoard2) {
-    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"┤", " ", " ", "├",
-        " ", " ", "┳", " ",
-        " ", " ", " ", " ",
-        "┐", " ", " ", " "};
+    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"┤  ├  ┳     ┐   "};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     {
@@ -417,10 +411,7 @@ TEST(GameBoard, getOutputPositionOffTheBoard2) {
 }
 
 TEST(GameBoard, findAdjacentTilePosition) {
-    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"├", "-", "-", "┐",
-        "┣", "┐", " ", "|",
-        "┌", "┘", " ", "|",
-        "└", "-", "-", "┘"};
+    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"├--┐┣┐ |┌┘ |└--┘"};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     sf::Vector2i tilePosition{0, 0};
@@ -574,10 +565,7 @@ TEST(GameBoard, isNotSolved) {
 }
 
 TEST(GameBoard, isNotSolved2) {
-    std::string game [GameBoard::boardSize][GameBoard::boardSize]{" ", " ", " ", " ",
-        " ", " ", " ", " ",
-        " ", " ", "-", " ",
-        "┫", "-" "-", "┤"};
+    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"          - ┫--┤"};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     std::vector<sf::Vector2i> result = gameBoard.isSolved();
@@ -585,10 +573,7 @@ TEST(GameBoard, isNotSolved2) {
 }
 
 TEST(GameBoard, isNotSolved3) {
-    std::string game [GameBoard::boardSize][GameBoard::boardSize]{" ", " ", " ", " ",
-        " ", " ", " ", " ",
-        " ", " ", "-", " ",
-        "┤", "-" "-", "┫"};
+    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"          - ┤--┫"};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     std::vector<sf::Vector2i> result = gameBoard.isSolved();
@@ -596,10 +581,7 @@ TEST(GameBoard, isNotSolved3) {
 }
 
 TEST(GameBoard, isNotSolved4) {
-    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"|", "┘", " ", "-",
-        "|", "├", "-", "┳",
-        "┘", "-", " ", "|",
-        " ", "|" "-", "|"};
+    std::string game [GameBoard::boardSize][GameBoard::boardSize]{"|┘ -|├-┳┘- | |-|"};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     std::vector<sf::Vector2i> result = gameBoard.isSolved();
@@ -663,7 +645,7 @@ TEST(GameBoard, setWinnerTiles) {
     fakeSolutionPath.push_back(sf::Vector2i{1, 2});
     fakeSolutionPath.push_back(sf::Vector2i{1, 3});
     gameBoard.setWinnerTiles(fakeSolutionPath);
-    int on, off = 0;
+    int on = 0, off = 0;
     for (int x = 0; x < GameBoard::boardSize; ++x)
         for (int y = 0; y < GameBoard::boardSize; ++y)
             if (gameBoard.tiles[x][y].isWinner()) {
@@ -671,7 +653,7 @@ TEST(GameBoard, setWinnerTiles) {
             } else {
                 ++off;
             }
-    ASSERT_THAT(4, on);
+    ASSERT_THAT(on, 4);
     ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize - 4, off);
 }
 
@@ -685,7 +667,7 @@ TEST(GameBoard, clearWinnerTiles) {
     fakeSolutionPath.push_back(sf::Vector2i{1, 2});
     fakeSolutionPath.push_back(sf::Vector2i{1, 3});
     gameBoard.setWinnerTiles(fakeSolutionPath);
-    int on, off = 0;
+    int on = 0, off = 0;
     for (int x = 0; x < GameBoard::boardSize; ++x)
         for (int y = 0; y < GameBoard::boardSize; ++y)
             if (gameBoard.tiles[x][y].isWinner()) {
@@ -693,7 +675,7 @@ TEST(GameBoard, clearWinnerTiles) {
             } else {
                 ++off;
             }
-    ASSERT_THAT(4, on);
+    ASSERT_THAT(on, 4);
     ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize - 4, off);
 
     on = 0;
@@ -706,7 +688,7 @@ TEST(GameBoard, clearWinnerTiles) {
             } else {
                 ++off;
             }
-    ASSERT_THAT(0, on);
+    ASSERT_THAT(on, 0);
     ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize, off);
 }
 

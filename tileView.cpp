@@ -30,16 +30,16 @@ namespace SlidingTiles {
             if (timeSpentTransitioning > TRANSITION_TIME) {
                 transitioning = false;
                 tileCoordinates = transitionTileCoordiantes;
+                renderPriority = RenderPriority::Normal;
             }
         }
     }
 
-    bool TileView::transition(const sf::Vector2i & newTileCoordinates) {
-        if (transitioning) return false;
+    void TileView::transition(const sf::Vector2i & newTileCoordinates) {
         transitionTileCoordiantes = newTileCoordinates;
-        transitioning = true;
         timeSpentTransitioning = 0;
-        return true;
+        renderPriority = RenderPriority::OnTop;
+        transitioning = true;
     }
 
 }

@@ -10,14 +10,12 @@
 
 using namespace SlidingTiles;
 
-// wierdest thing ever: The static member variable needs to be
-// declared in the cpp file or the inker gets upset.
 const int GameBoard::boardSize;
 
 void GameBoard::loadGame(const std::string game[boardSize][boardSize]) {
     for (int x = 0; x < boardSize; ++x) {
         for (int y = 0; y < boardSize; ++y) {
-            SlidingTiles::Tile* tile = &tiles[x][y];
+            Tile* tile = &tiles[x][y];
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(game[y][x]); // note the inversion here!
             //std::cout << "[" << x << "][" << y << "] char: " << game[x][y] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
@@ -28,7 +26,7 @@ void GameBoard::loadGame(const std::string game[boardSize][boardSize]) {
 void GameBoard::loadGame(const std::vector<std::string> & game) {
     for (int y = 0; y < boardSize; ++y) {
         for (int x = 0; x < boardSize; ++x) {
-            SlidingTiles::Tile* tile = &tiles[x][y];
+            Tile* tile = &tiles[x][y];
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(game[y * 4 + x]);
             //std::cout << "[" << x << "][" << y << "] game[y*4+x]: " << game[y*4+x] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
@@ -144,6 +142,7 @@ void GameBoard::printGame() {
 }
 
 sf::Vector2i GameBoard::getAdjacentTilePosition(const Move & move) {
+    // TODO should this not be a function of the move?
     assert(move.startPosition.x >= 0 && move.startPosition.x <= boardSize);
     assert(move.startPosition.y >= 0 && move.startPosition.y <= boardSize);
     sf::Vector2i adjacentPosition{move.startPosition.x, move.startPosition.y};
@@ -167,7 +166,7 @@ sf::Vector2i GameBoard::getAdjacentTilePosition(const Move & move) {
 bool GameBoard::canSlideTile(const Move & move) {
     assert(move.startPosition.x >= 0 && move.startPosition.x <= boardSize);
     assert(move.startPosition.y >= 0 && move.startPosition.y <= boardSize);
-    SlidingTiles::Tile movingTile = tiles[move.startPosition.x][move.startPosition.y];
+    Tile movingTile = tiles[move.startPosition.x][move.startPosition.y];
     /*std::cout << "canSlideTile: [" << move.startPosition.x << "][" << move.startPosition.y
              << "] Direction: " << directionToString(move.direction) << "\n";*/
     if (!movingTile.isMoveable)
@@ -192,14 +191,23 @@ void GameBoard::slideTile(const Move & move) {
     assert(move.startPosition.x >= 0 && move.startPosition.x <= boardSize);
     assert(move.startPosition.y >= 0 && move.startPosition.y <= boardSize);
     if (canSlideTile(move)) {
+        // transition to the new position
         sf::Vector2i newPosition = getAdjacentTilePosition(move);
-        SlidingTiles::Tile slidingTile = tiles[move.startPosition.x][move.startPosition.y];
+        Tile slidingTile = tiles[move.startPosition.x][move.startPosition.y];
+        Tile obscuredTile = tiles[newPosition.x][newPosition.y];
+
         slidingTile.transition(newPosition);
+        //slidingTile.setTilePosition(newPosition);
+        obscuredTile.setTilePosition(move.startPosition);
+        
+        
         tiles[newPosition.x][newPosition.y] = slidingTile;
-        SlidingTiles::Tile newTile{};
+        tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;
+        
+       /* Tile newTile{};
         newTile.setTilePosition(move.startPosition);
         newTile.setTileType(TileType::Empty);
-        tiles[move.startPosition.x][move.startPosition.y] = newTile;
+        tiles[move.startPosition.x][move.startPosition.y] = newTile;*/
     }
 }
 

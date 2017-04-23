@@ -7,7 +7,7 @@ namespace SlidingTiles {
     /**
      * @brief The view class for the tile that knows how to render itself
      */
-    class GameView {
+    class GameView : public Renderable {
     public:
         /**
          * @brief constructor for the view of the game
@@ -17,7 +17,7 @@ namespace SlidingTiles {
         /**
          * @brief knows how to render the game
          */
-        void render();
+        void render() override;
         
         /**
          * @brief pointer to the gameBoard

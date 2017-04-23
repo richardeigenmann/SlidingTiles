@@ -20,7 +20,7 @@ namespace SlidingTiles {
         /**
          * @brief The 2d array of tiles that makes up the game board
          */
-        SlidingTiles::Tile tiles [boardSize][boardSize];
+        Tile tiles [boardSize][boardSize];
 
         /**
          * @brief load the game into the board
@@ -79,9 +79,11 @@ namespace SlidingTiles {
         bool canSlideTile(const Move & move);
         
         /**
-         * @brief slides the tile from the movingTilePosition to the newPosition if
-         * this is legal.
-         * @param move the movement
+         * @brief slides the tile from the movingTilePosition to the newPosition 
+         * with a transition command if this is legal. Since the target position 
+         * must have been an empty tile it is pushed over to the position that 
+         * is vacated. 
+         * @param move The movement
          */
         void slideTile(const Move & move);
 

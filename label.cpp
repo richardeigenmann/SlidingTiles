@@ -1,6 +1,4 @@
 #include "label.h"
-#include "renderingSingleton.h"
-
 
 using namespace SlidingTiles;
 
@@ -10,8 +8,8 @@ Label::Label() {
 
     text.setFont(font);
     text.setCharacterSize(16);
-    //text.setStyle(sf::Text::Bold);
     text.setColor(sf::Color::Black);
+    RenderingSingleton::getInstance().add(*this);
 }
 
 void Label::setPosition(float x, float y) {

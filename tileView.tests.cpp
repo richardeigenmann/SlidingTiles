@@ -1,12 +1,15 @@
 #include "tileView.h"
 #include <gmock/gmock.h>
 
+using namespace ::testing;
+using namespace SlidingTiles;
+
 TEST(TileView, ObjectCreation) {
-    SlidingTiles::TileView tileView;
+    TileView tileView {sf::Vector2i {1,2}};
 }
 
 TEST(TileView, transition) {
-    SlidingTiles::TileView tileView;
-    bool result = tileView.transition(sf::Vector2i{0, 0});
-    ASSERT_TRUE(result) << "First transition should succeed\n";
+    TileView tileView {sf::Vector2i {1,2}};
+    tileView.transition(sf::Vector2i{0, 0});
+    ASSERT_EQ(tileView.transitioning, true);
 }

@@ -8,8 +8,9 @@ namespace SlidingTiles {
      */
     void Tile::setTileType(const TileType & newType) {
         tileType = newType;
-        //tileView.setTexture(newType);
-        tileView.setTileType( newType );
+        for (auto& pair : tileObservers) {
+            pair.second->setTileType(newType);
+        }
         setMoveable(newType);
     };
 
@@ -92,8 +93,7 @@ namespace SlidingTiles {
             setTileType(TileType::Empty);
         }
     }
-    
-    
+
     void Tile::setMoveable(const TileType & newType) {
         if (newType == TileType::Empty
                 || newType == TileType::StartBottom
@@ -109,10 +109,12 @@ namespace SlidingTiles {
             isMoveable = true;
     };
 
-    bool Tile::transition(const sf::Vector2i & newGameBoardPosition) {
+    void Tile::transition(const sf::Vector2i & newGameBoardPosition) {
+        myPosition = newGameBoardPosition;
         sf::Vector2i newCoordiantes = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
-        if (!tileView.transition(newCoordiantes)) return false;
-        return true;
+        for (auto& pair : tileObservers) {
+            pair.second->transition(newCoordiantes);
+        }
     }
 
     /**
@@ -155,7 +157,10 @@ namespace SlidingTiles {
 
     void Tile::setWinner(const bool & status) {
         winner = status;
-        tileView.setWinner(status);
+        for (auto& pair : tileObservers) {
+            pair.second->setWinner(status);
+        }
+
     }
 
 }
