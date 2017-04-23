@@ -127,21 +127,8 @@ namespace SlidingTiles {
     }
 
     void Game::doRandomGame() {
-        GameBoard findGameBoard {};
-        int count{0};
-        do {
-            findGameBoard.randomGame(1);
-            PuzzleSolver puzzleSolver;
-            MoveNode rootNode = puzzleSolver.getTree(findGameBoard.serialiseGame(), 3);
-
-            std::cout << "trying a game: " << ++count << "\n";
-            int solutionDepth = puzzleSolver.hasASolution(rootNode);
-            if (solutionDepth > -1) {
-                std::cout << "Solution Depth: " << solutionDepth << "\n";
-                count = -1;
-            }
-        } while (count > -1);
-        gameBoard.loadGame(findGameBoard.serialiseGame());
+        PuzzleSolver puzzleSolver;
+        gameBoard.loadGame(puzzleSolver.generateRandomGame(3,4).serialiseGame());
     }
 
     void Game::doMousePressed(const sf::Vector2i & mousePosition) {

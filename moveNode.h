@@ -39,6 +39,12 @@ namespace SlidingTiles {
             depth = newDepth;
         }
 
+        const MoveNode * parent {nullptr};
+        
+        void setParent( const MoveNode & parentNode ) {
+            parent = &parentNode;
+        }
+        
         /**
          * @brief ending board (serialised)
          */

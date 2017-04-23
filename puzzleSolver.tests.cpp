@@ -10,9 +10,11 @@ TEST(PuzzleSolver, possibleMovesNone) {
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(gameBoard.serialiseGame());
-    std::vector<SlidingTiles::MoveNode> possibleMoves = puzzleSolver.possibleMoves(rootNode);
-    ASSERT_THAT(possibleMoves.size(), 0);
+    //MoveNode rootNode = puzzleSolver.getTree(gameBoard.serialiseGame());
+    puzzleSolver.buildTree(gameBoard, 2);
+    //std::vector<SlidingTiles::MoveNode> possibleMoves = puzzleSolver.possibleMoves(rootNode);
+    //ASSERT_THAT(possibleMoves.size(), 0);
+    ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 0);
 }
 
 TEST(PuzzleSolver, possibleMovesOne) {
@@ -51,13 +53,17 @@ TEST(PuzzleSolver, possibleMovesOne) {
 TEST(PuzzleSolver, possibleMovesTwo) {
     std::wstring game{L"├┫          -   "};
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(game, 3);
-    ASSERT_THAT(rootNode.possibleMoves.size(), 2);
+    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
+    GameBoard gameBoard{};
+    gameBoard.loadGame(game);
+    puzzleSolver.buildTree(gameBoard, 3);
+    //ASSERT_THAT(rootNode.possibleMoves.size(), 2);
+    ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 2);
     int up{0};
     int down{0};
     int left{0};
     int right{0};
-    for (auto moveNode : rootNode.possibleMoves) {
+    for (auto moveNode : gameBoard.rootNode.possibleMoves) {
         if (moveNode.direction == Direction::GoDown) {
             ++down;
         } else if (moveNode.direction == Direction::GoUp) {
@@ -76,14 +82,17 @@ TEST(PuzzleSolver, possibleMovesTwo) {
 
 TEST(PuzzleSolver, possibleMovesFour) {
     std::wstring game{L"├ ┫  -          "};
+    GameBoard gameBoard{};
+    gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(game, 3);
-    ASSERT_THAT(rootNode.possibleMoves.size(), 4);
+    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
+    puzzleSolver.buildTree(gameBoard, 3);
+    ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 4);
     int up{0};
     int down{0};
     int left{0};
     int right{0};
-    for (auto moveNode : rootNode.possibleMoves) {
+    for (auto moveNode : gameBoard.rootNode.possibleMoves) {
         if (moveNode.direction == Direction::GoDown) {
             ++down;
         } else if (moveNode.direction == Direction::GoUp) {
@@ -133,11 +142,14 @@ TEST(PuzzleSolver, possibleMovesDontGoBack) {
 TEST(PuzzleSolver, addPossibleMoves) {
     // builds on possibleMovesOne
     std::wstring game{L"├-┫             "};
+    GameBoard gameBoard{};
+    gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(game, 3);
-    ASSERT_THAT(rootNode.possibleMoves.size(), 1);
+    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
+    puzzleSolver.buildTree(gameBoard, 3);
+    ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 1);
 
-    MoveNode onlyChild = rootNode.possibleMoves[0];
+    MoveNode onlyChild = gameBoard.rootNode.possibleMoves[0];
     ASSERT_THAT(onlyChild.possibleMoves.size(), 3);
     int up{0};
     int down{0};
@@ -164,10 +176,13 @@ TEST(PuzzleSolver, addPossibleMoves3Deep) {
     // builds on addPossibleMoves which builds on possibleMovesOne
     std::wstring game{L"├-┫             "};
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(game, 3);
-    ASSERT_THAT(rootNode.possibleMoves.size(), 1);
+    GameBoard gameBoard{};
+    gameBoard.loadGame(game);
+    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
+    puzzleSolver.buildTree(gameBoard, 3);
+    ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 1);
 
-    MoveNode onlyChild = rootNode.possibleMoves[0];
+    MoveNode onlyChild = gameBoard.rootNode.possibleMoves[0];
     ASSERT_THAT(onlyChild.possibleMoves.size(), 3);
     int up{0};
     int down{0};
@@ -228,37 +243,48 @@ TEST(PuzzleSolver, addPossibleMoves3Deep) {
 TEST(PuzzleSolver, isSolvedIn1Move) {
     std::wstring game{L"├ ┫  -          "};
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(game, 3);
-    ASSERT_THAT(puzzleSolver.hasASolution(rootNode),1) << "There should be at least one solution for this puzzle";
+    GameBoard gameBoard{};
+    gameBoard.loadGame(game);
+    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
+    puzzleSolver.buildTree(gameBoard, 3);
+    ASSERT_THAT(puzzleSolver.hasASolution(gameBoard.rootNode), 1) << "There should be at least one solution for this puzzle";
 }
 
 TEST(PuzzleSolver, isSolvedIn2Moves) {
     std::wstring game{L"├ ┫      -      "};
+    GameBoard gameBoard{};
+    gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(game, 3);
-    ASSERT_THAT(puzzleSolver.hasASolution(rootNode), 2) << "There should be at least one solution for this puzzle";
+    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
+    puzzleSolver.buildTree(gameBoard, 3);
+    ASSERT_THAT(puzzleSolver.hasASolution(gameBoard.rootNode), 2) << "There should be at least one solution for this puzzle";
 }
 
 TEST(PuzzleSolver, noSolution) {
     std::wstring game{L"├ ┫  |          "};
+    GameBoard gameBoard{};
+    gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(game, 3);
-    ASSERT_THAT(puzzleSolver.hasASolution(rootNode), -1) << "There should be at no solution for this puzzle";
+    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
+    puzzleSolver.buildTree(gameBoard, 3);
+    ASSERT_THAT(puzzleSolver.hasASolution(gameBoard.rootNode), -1) << "There should be at no solution for this puzzle";
 }
-
 
 TEST(PuzzleSolver, depth) {
     std::wstring game{L"├┫          -   "};
     PuzzleSolver puzzleSolver;
-    MoveNode rootNode = puzzleSolver.getTree(game, 3);
-    ASSERT_THAT(rootNode.depth, 0);
-    
-    MoveNode firstChild = rootNode.possibleMoves.at(0);
+    GameBoard gameBoard{};
+    gameBoard.loadGame(game);
+    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
+    puzzleSolver.buildTree(gameBoard, 3);
+    ASSERT_THAT(gameBoard.rootNode.depth, 0);
+
+    MoveNode firstChild = gameBoard.rootNode.possibleMoves.at(0);
     ASSERT_THAT(firstChild.depth, 1);
 
-    MoveNode secondChild = rootNode.possibleMoves.at(1);
+    MoveNode secondChild = gameBoard.rootNode.possibleMoves.at(1);
     ASSERT_THAT(secondChild.depth, 1);
-    
+
     MoveNode firstChildChild = firstChild.possibleMoves.at(0);
     ASSERT_THAT(firstChildChild.depth, 2);
 

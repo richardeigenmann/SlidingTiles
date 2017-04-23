@@ -19,7 +19,7 @@ namespace SlidingTiles {
         /**
          * @brief My game board
          */
-        GameBoard gameBoard;
+        //GameBoard gameBoard;
 
         /**
          * @brief returns all moves that are possible on the current gameboard
@@ -38,15 +38,23 @@ namespace SlidingTiles {
          * @param game The serialised game
          * @param depth The depth to which the tree should be built
          */
-        MoveNode getTree(const std::vector<std::string> & game, int depth = DEFAULT_DEPTH);
+        //MoveNode getTree(const std::vector<std::string> & game, int depth = DEFAULT_DEPTH);
 
         /**
          * @brief returns the root node with the whole tree attached to it.
          * @param game The serialised game
          * @param depth The depth to which the tree should be built
          */
-        MoveNode getTree(const std::wstring & game, int depth = DEFAULT_DEPTH);
+        //MoveNode getTree(const std::wstring & game, int depth = DEFAULT_DEPTH);
 
+        
+        /**
+         * @brief Builds the tree in the supplied gameBoard
+         * @param gameBoard The GameBoard on which to build the tree
+         * @param depth The depth to which the tree should be built
+         */
+        void buildTree(GameBoard & gameBoard, int depth);
+        
         /**
          * @brief figures out if the moves tree holds a solution
          * @details Used a breadth-first search to visit all MoveNode nodes. 
@@ -58,7 +66,26 @@ namespace SlidingTiles {
         int hasASolution(const MoveNode & node);
 
         /**
-         * @brief generates a single fame Game
+         * @brief figures out if the moves tree holds a solution and stores it 
+         * in the supplied gameBoard
+         * @details Used a breadth-first search to visit all MoveNode nodes. 
+         * Since each MoveNode has the endGameState we can load that state
+         * into a GameBoard and ask the GameBoard if it is solved.
+         * @param node the root node from which to start the search
+         * @return the depth at which the node was found or -1 is no solution
+         */
+        void saveSolution(GameBoard & gameBoard);
+        
+        /**
+         * Generates a random playable game with a solution depth of Y 0
+         * @param emptyTiles The number of empty tiles
+         * @param maxDepth The maximum depth to search for 
+         * @return the GameBoard of the playable game
+         */
+        GameBoard generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth);
+        
+        /**
+         * @brief generates a single playable Game and prints it
          * @param emptyTiles The number of empty tiles
          * @param maxDepth The maximum depth for a solution
          */

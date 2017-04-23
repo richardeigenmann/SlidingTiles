@@ -49,7 +49,7 @@ TEST(Game, DoRandomGame) {
  * send a window->close event. The run() is expected to shut down withing
  * 10 ms.
  */
-TEST(Game, Run) {
+TEST(Game, DISABLED_Run) {
     Game game{};
     sf::RenderWindow* window = RenderingSingleton::getInstance().getRenderWindow();
     window->setActive(false);
