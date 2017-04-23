@@ -36,12 +36,14 @@ namespace SlidingTiles {
         /**
          * @brief returns the root node with the whole tree attached to it.
          * @param game The serialised game
+         * @param depth The depth to which the tree should be built
          */
         MoveNode getTree(const std::vector<std::string> & game, int depth = DEFAULT_DEPTH);
 
         /**
          * @brief returns the root node with the whole tree attached to it.
          * @param game The serialised game
+         * @param depth The depth to which the tree should be built
          */
         MoveNode getTree(const std::wstring & game, int depth = DEFAULT_DEPTH);
 
@@ -57,7 +59,7 @@ namespace SlidingTiles {
 
         /**
          * @brief generates a single fame Game
-         * @param emptyTilesthe number of empty tiles
+         * @param emptyTiles The number of empty tiles
          * @param maxDepth The maximum depth for a solution
          */
         void generateGame(std::size_t emptyTiles, std::size_t maxDepth);

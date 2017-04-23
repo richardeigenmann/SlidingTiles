@@ -12,7 +12,7 @@ namespace SlidingTiles {
     public:
         /**
          * @brief Constructor for the button
-         * @param takes the filename of the button bitmap as parameter
+         * @param filename takes the filename of the button bitmap as parameter
          */
         Button(const std::string & filename);
 

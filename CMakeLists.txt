@@ -93,6 +93,7 @@ set( UNIT_TESTS
     gameBoard.tests.cpp
     puzzleSolver.tests.cpp
     button.tests.cpp
+    move.tests.cpp
 )
 
 ADD_EXECUTABLE(sliding-tiles main.cpp ${SOURCE_FILES})

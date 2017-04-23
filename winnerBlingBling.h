@@ -32,6 +32,8 @@ namespace SlidingTiles {
         /**
          * @brief call this to start the bling bling
          * @param time The amount of time it will last
+         * @param moves the number of moves it took to solve
+         * @param par the par number of moves to solve
          */
         void startBlingBling(const float & time, std::size_t moves, std::size_t par);
 
