@@ -13,6 +13,7 @@ namespace SlidingTiles {
      */
     class TileView : public TileObserver, public Renderable {
     public:
+
         /**
          * @brief Constructs a new TileView with the appropriate screen coordinates
          */
@@ -40,10 +41,10 @@ namespace SlidingTiles {
         void update(const float dt) override;
 
         /**
-         * @brief starts a transition to the supplied new pixel coordinates
+         * @brief starts a transition to the supplied new game coordinates
          * @return true if transition kicked off, false if not
          */
-        void transition(const sf::Vector2i & newTileCoordinates) override;
+        void transition(const sf::Vector2i & newGameBoardPosition) override;
 
         /**
          * @brief settor for the tile type
@@ -59,10 +60,10 @@ namespace SlidingTiles {
         bool transitioning{false};
 
         /**
-         * @brief settor for the tile coordinates in screen coordinates
+         * @brief settor for the tile coordinates in game coordinates
          */
-        void setCoordinates(const sf::Vector2i & newCoordinates) override {
-            tileCoordinates = newCoordinates;
+        void setCoordinates(const sf::Vector2i & newGameBoardPosition) override {
+            tileCoordinates = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
         };
 
         /**

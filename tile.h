@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "tileView.h"
 #include "direction.h"
+#include "tileType.h"
 
 namespace SlidingTiles {
 
@@ -17,7 +18,8 @@ namespace SlidingTiles {
         void setTilePosition(const sf::Vector2i & newGameBoardPosition) {
             myPosition = newGameBoardPosition;
             for (auto& pair : tileObservers) {
-                pair.second->setCoordinates(RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition));
+                //pair.second->setCoordinates(RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition));
+                pair.second->setCoordinates(newGameBoardPosition);
             }
         }
 

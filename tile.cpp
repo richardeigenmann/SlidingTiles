@@ -111,9 +111,8 @@ namespace SlidingTiles {
 
     void Tile::transition(const sf::Vector2i & newGameBoardPosition) {
         myPosition = newGameBoardPosition;
-        sf::Vector2i newCoordiantes = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
         for (auto& pair : tileObservers) {
-            pair.second->transition(newCoordiantes);
+            pair.second->transition(newGameBoardPosition);
         }
     }
 

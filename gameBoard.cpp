@@ -38,7 +38,7 @@ void GameBoard::loadGame(const std::wstring & game) {
     assert(game.size() == boardSize * boardSize);
     for (int y = 0; y < boardSize; ++y) {
         for (int x = 0; x < boardSize; ++x) {
-            SlidingTiles::Tile* tile = &tiles[x][y];
+            Tile* tile = &tiles[x][y];
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(std::wstring{game[y * 4 + x]});
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
@@ -53,7 +53,7 @@ void GameBoard::loadGame(const std::string & game) {
 
     for (int y = 0; y < boardSize; ++y) {
         for (int x = 0; x < boardSize; ++x) {
-            SlidingTiles::Tile* tile = &tiles[x][y];
+            Tile* tile = &tiles[x][y];
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(std::wstring{utf16[y * 4 + x]});
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
@@ -191,23 +191,15 @@ void GameBoard::slideTile(const Move & move) {
     assert(move.startPosition.x >= 0 && move.startPosition.x <= boardSize);
     assert(move.startPosition.y >= 0 && move.startPosition.y <= boardSize);
     if (canSlideTile(move)) {
-        // transition to the new position
         sf::Vector2i newPosition = getAdjacentTilePosition(move);
         Tile slidingTile = tiles[move.startPosition.x][move.startPosition.y];
         Tile obscuredTile = tiles[newPosition.x][newPosition.y];
 
         slidingTile.transition(newPosition);
-        //slidingTile.setTilePosition(newPosition);
         obscuredTile.setTilePosition(move.startPosition);
-        
-        
+
         tiles[newPosition.x][newPosition.y] = slidingTile;
         tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;
-        
-       /* Tile newTile{};
-        newTile.setTilePosition(move.startPosition);
-        newTile.setTileType(TileType::Empty);
-        tiles[move.startPosition.x][move.startPosition.y] = newTile;*/
     }
 }
 

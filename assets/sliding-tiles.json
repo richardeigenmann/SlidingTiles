@@ -59,7 +59,13 @@
             "SerializedGame": "| └ ┘┘┫ ┌┴ └└ --",
             "Difficulty": 2,
             "Par": 7
+        },
+        {
+            "SerializedGame": "┘┌└└┌┳┘└-|└┐ -└┴",
+            "Difficulty": 2,
+            "Par": 7
         }
+
     ],
 
     "winnerSoundBites": [

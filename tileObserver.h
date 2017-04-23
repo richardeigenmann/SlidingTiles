@@ -31,14 +31,14 @@ namespace SlidingTiles {
         virtual void setTileType(const TileType & newType) = 0;
 
         /**
-         * @brief settor for the tile coordinates in screen coordinates
+         * @brief settor for the tile coordinates in game coordinates
          */
-        virtual void setCoordinates(const sf::Vector2i & newCoordinates) = 0;
+        virtual void setCoordinates(const sf::Vector2i & newGameBoardPosition) = 0;
         
         /**
-         * @brief starts a transition to the supplied new pixel coordinates
+         * @brief starts a transition to the supplied new game coordinates
          */
-        virtual void transition(const sf::Vector2i & newTileCoordinates) = 0;
+        virtual void transition(const sf::Vector2i & newGameBoardPosition) = 0;
 
         /**
          * @brief settor for the winner flag

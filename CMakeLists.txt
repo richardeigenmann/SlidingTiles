@@ -177,14 +177,20 @@ if (CHECK_COVERAGE)
 ENDIF (CHECK_COVERAGE)
 
 
-ADD_EXECUTABLE(levelGenerator levelGenerator.cpp ${SOURCE_FILES})
+SET(LEVEL_GENERATOR_SOURCE_FILES
+    gameBoard.cpp
+    moveNode.cpp
+    direction.cpp
+    tile.cpp
+    tileType.cpp
+    puzzleSolver.cpp
+)
+
+
+ADD_EXECUTABLE(levelGenerator levelGenerator.cpp ${LEVEL_GENERATOR_SOURCE_FILES})
 TARGET_INCLUDE_DIRECTORIES(levelGenerator PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}
-    ${SFML_INCLUDE_DIR}
-    ${SFGUI_INCLUDE_DIR}
 )
 TARGET_LINK_LIBRARIES(levelGenerator LINK_PUBLIC
-    ${SFML_LIBRARIES}
-    ${SFGUI_LIBRARY}
 )

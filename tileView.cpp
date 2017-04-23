@@ -35,8 +35,8 @@ namespace SlidingTiles {
         }
     }
 
-    void TileView::transition(const sf::Vector2i & newTileCoordinates) {
-        transitionTileCoordiantes = newTileCoordinates;
+    void TileView::transition(const sf::Vector2i & newGameBoardPosition) {
+        transitionTileCoordiantes = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
         timeSpentTransitioning = 0;
         renderPriority = RenderPriority::OnTop;
         transitioning = true;
