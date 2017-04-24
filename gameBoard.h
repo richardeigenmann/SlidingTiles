@@ -114,12 +114,6 @@ namespace SlidingTiles {
         std::vector<sf::Vector2i> isSolved();
         
         /**
-         * @brief If populated shows the depth of the solution. Gets set back to 0 when 
-         * the GameBoard changes.
-         */
-        int solutionDepth{0};
-        
-        /**
          * @brief The puzzleSolver can use this to store the tree
          */
         MoveNode rootNode{};

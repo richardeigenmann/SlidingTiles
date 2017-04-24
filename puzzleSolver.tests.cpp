@@ -24,16 +24,16 @@ TEST(PuzzleSolver, possibleMovesOne) {
     MoveNode rootNode{sf::Vector2i{-1, -1}, Direction::Unknown};
     rootNode.endingBoard = gameBoard.serialiseGame();
     PuzzleSolver puzzleSolver;
-    std::vector<MoveNode> possibleMoves = puzzleSolver.possibleMoves(rootNode);
-    ASSERT_THAT(possibleMoves.size(), 1);
-    MoveNode move = possibleMoves[0];
+    puzzleSolver.possibleMoves(rootNode);
+    ASSERT_THAT(rootNode.possibleMoves.size(), 1);
+    MoveNode move = rootNode.possibleMoves[0];
     sf::Vector2i expectedTile{1, 0};
     ASSERT_EQ(move.startPosition, expectedTile) << "Expect tile [1][0] to be a possible move but returned tile is [" << move.startPosition.x << "][" << move.startPosition.y << "] \n";
     int up{0};
     int down{0};
     int left{0};
     int right{0};
-    for (auto moveNode : possibleMoves) {
+    for (auto moveNode : rootNode.possibleMoves) {
         if (moveNode.direction == Direction::GoDown) {
             ++down;
         } else if (moveNode.direction == Direction::GoUp) {
@@ -116,13 +116,13 @@ TEST(PuzzleSolver, possibleMovesDontGoBack) {
     MoveNode rootNode{sf::Vector2i{1, 1}, Direction::GoDown};
     rootNode.endingBoard = gameBoard.serialiseGame();
     PuzzleSolver puzzleSolver;
-    std::vector<MoveNode> possibleMoves = puzzleSolver.possibleMoves(rootNode);
-    ASSERT_THAT(possibleMoves.size(), 3);
+    puzzleSolver.possibleMoves(rootNode);
+    ASSERT_THAT(rootNode.possibleMoves.size(), 3);
     int up{0};
     int down{0};
     int left{0};
     int right{0};
-    for (auto moveNode : possibleMoves) {
+    for (auto moveNode : rootNode.possibleMoves) {
         if (moveNode.direction == Direction::GoDown) {
             ++down;
         } else if (moveNode.direction == Direction::GoUp) {
@@ -247,7 +247,8 @@ TEST(PuzzleSolver, isSolvedIn1Move) {
     gameBoard.loadGame(game);
     //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
-    ASSERT_THAT(puzzleSolver.hasASolution(gameBoard.rootNode), 1) << "There should be at least one solution for this puzzle";
+    puzzleSolver.saveSolution(gameBoard);
+    ASSERT_THAT(gameBoard.solution.size(), 1) << "There should be at least one solution for this puzzle";
 }
 
 TEST(PuzzleSolver, isSolvedIn2Moves) {
@@ -257,7 +258,8 @@ TEST(PuzzleSolver, isSolvedIn2Moves) {
     PuzzleSolver puzzleSolver;
     //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
-    ASSERT_THAT(puzzleSolver.hasASolution(gameBoard.rootNode), 2) << "There should be at least one solution for this puzzle";
+    puzzleSolver.saveSolution(gameBoard);
+    ASSERT_THAT(gameBoard.solution.size(), 2) << "There should be at least one solution for this puzzle";
 }
 
 TEST(PuzzleSolver, noSolution) {
@@ -267,7 +269,8 @@ TEST(PuzzleSolver, noSolution) {
     PuzzleSolver puzzleSolver;
     //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
-    ASSERT_THAT(puzzleSolver.hasASolution(gameBoard.rootNode), -1) << "There should be at no solution for this puzzle";
+    puzzleSolver.saveSolution(gameBoard);
+    ASSERT_THAT(gameBoard.solution.size(), -1) << "There should be no solution for this puzzle";
 }
 
 TEST(PuzzleSolver, depth) {

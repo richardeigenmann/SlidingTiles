@@ -43,6 +43,12 @@ namespace SlidingTiles {
         SlidingTiles::GameView gameView;
 
         /**
+         * @brief a vector to hold the unique_ptr to the TileView objects
+         */
+        std::vector<std::unique_ptr<TileView>> tileViews {};
+
+
+        /**
          * @brief handler method for when the user wants to play a new random game
          */
         void doRandomGame();
@@ -57,18 +63,18 @@ namespace SlidingTiles {
          */
         void doMouseReleased(const sf::Vector2i & mousePosition);
 
-        
-       /**
-        * @brief increment the move count and update the label
-        */
+
+        /**
+         * @brief increment the move count and update the label
+         */
         void incrementMoves();
-    
+
         /**
          * Sets the move counter and updates the moves label
          * @param newMoves the new number of moves
          */
         void setMoves(std::size_t newMoves);
-        
+
         /**
          * @brief advance to the next level
          */
@@ -87,7 +93,7 @@ namespace SlidingTiles {
          * @brief the state of the current game
          */
         GameState gameState{GameState::Initializing};
-        
+
         /**
          * @brief the winner bling bling
          */

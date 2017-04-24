@@ -24,7 +24,7 @@ namespace SlidingTiles {
         /**
          * @brief returns all moves that are possible on the current gameboard
          */
-        std::vector<MoveNode> possibleMoves(const MoveNode & parentNode);
+        void possibleMoves(MoveNode & parentNode);
 
         /**
          * @brief Adds the possibleMoves as MoveNodes to the supplied MoveNode
@@ -32,20 +32,6 @@ namespace SlidingTiles {
          * @param levels how many levels deep to search 1 .. n
          */
         void addPossibleMoves(MoveNode & moveNode, const int levels);
-
-        /**
-         * @brief returns the root node with the whole tree attached to it.
-         * @param game The serialised game
-         * @param depth The depth to which the tree should be built
-         */
-        //MoveNode getTree(const std::vector<std::string> & game, int depth = DEFAULT_DEPTH);
-
-        /**
-         * @brief returns the root node with the whole tree attached to it.
-         * @param game The serialised game
-         * @param depth The depth to which the tree should be built
-         */
-        //MoveNode getTree(const std::wstring & game, int depth = DEFAULT_DEPTH);
 
         
         /**
@@ -55,16 +41,6 @@ namespace SlidingTiles {
          */
         void buildTree(GameBoard & gameBoard, int depth);
         
-        /**
-         * @brief figures out if the moves tree holds a solution
-         * @details Used a breadth-first search to visit all MoveNode nodes. 
-         * Since each MoveNode has the endGameState we can load that state
-         * into a GameBoard and ask the GameBoard if it is solved.
-         * @param node the root node from which to start the search
-         * @return the depth at which the node was found or -1 is no solution
-         */
-        int hasASolution(const MoveNode & node);
-
         /**
          * @brief figures out if the moves tree holds a solution and stores it 
          * in the supplied gameBoard

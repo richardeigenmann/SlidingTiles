@@ -21,7 +21,7 @@ void GameBoard::loadGame(const std::string game[boardSize][boardSize]) {
             //std::cout << "[" << x << "][" << y << "] char: " << game[x][y] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
         }
     }
-    solutionDepth = 0;
+    solution.clear();
 }
 
 void GameBoard::loadGame(const std::vector<std::string> & game) {
@@ -33,7 +33,7 @@ void GameBoard::loadGame(const std::vector<std::string> & game) {
             //std::cout << "[" << x << "][" << y << "] game[y*4+x]: " << game[y*4+x] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
         }
     }
-    solutionDepth = 0;
+    solution.clear();
 }
 
 void GameBoard::loadGame(const std::wstring & game) {
@@ -46,7 +46,7 @@ void GameBoard::loadGame(const std::wstring & game) {
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
         }
     }
-    solutionDepth = 0;
+    solution.clear();
 }
 
 void GameBoard::loadGame(const std::string & game) {
@@ -62,12 +62,15 @@ void GameBoard::loadGame(const std::string & game) {
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
         }
     }
-    solutionDepth = 0;
+    solution.clear();
 }
 
 void GameBoard::randomGame(const int emptyTiles) {
     assert(emptyTiles > 0 && emptyTiles < boardSize * boardSize - 2);
-    std::cout << "GameBoard::randomGame\n";
+    
+    //loadGame("   ┬ |     ┻    ");
+    //return;
+    
     std::vector<sf::Vector2i> positions{};
     for (int x = 0; x < boardSize; ++x) {
         for (int y = 0; y < boardSize; ++y) {
@@ -120,10 +123,7 @@ void GameBoard::randomGame(const int emptyTiles) {
         tile.setTileType(tileType);
         tiles[tilePos.x][tilePos.y] = tile;
     }
-    solutionDepth = 0;
-    std::cout << "Exit GameBoard::randomGame\n";
-    std::wstring game{L"├ ┫      -      "};
-    loadGame(game);
+    solution.clear();
 }
 
 std::vector<std::string> GameBoard::serialiseGame() {
@@ -210,7 +210,7 @@ void GameBoard::slideTile(const Move & move) {
         tiles[newPosition.x][newPosition.y] = slidingTile;
         tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;
     }
-    solutionDepth = 0;
+    solution.clear();
 }
 
 const Tile GameBoard::findStartTile() {

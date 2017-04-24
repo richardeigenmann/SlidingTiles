@@ -42,6 +42,7 @@ namespace SlidingTiles {
         const MoveNode * parent {nullptr};
         
         void setParent( const MoveNode & parentNode ) {
+            //std::cout << "Setting parent on node #" << id << " to #" << parentNode.id << "\n";
             parent = &parentNode;
         }
         
@@ -71,8 +72,14 @@ namespace SlidingTiles {
                     << " startPosition: [" << startPosition.x
                     << "][" << startPosition.y << "]" << " depth: " << depth
                     << " direction: " << directionToString(direction)
-                    << " possibleMoves: " << possibleMoves.size() << "\n";
-            ss << std::string(indent, ' ');
+                    << " possibleMoves: " << possibleMoves.size() ; //<< "\n";
+            //ss << std::string(indent, ' ');
+            ss << " parent: ";
+            if ( parent == nullptr ) {
+                ss << "nullptr";
+            } else {
+                ss << " #" << parent->id;
+            }
             ss << " endingBoard: ";
             for (std::string s : endingBoard) {
                 ss << s;
