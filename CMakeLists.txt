@@ -1,6 +1,9 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 PROJECT(sliding-tiles)
 
+# To run with Clang:
+# cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang .. 
+
 SET(CMAKE_CXX_STANDARD 14)
 IF (WIN32)
   SET(SFML_ROOT "C:/Users/Richard/Documents/SFML-2.4.2")

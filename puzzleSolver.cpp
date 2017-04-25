@@ -6,7 +6,6 @@ using namespace SlidingTiles;
 
 const int PuzzleSolver::DEFAULT_DEPTH;
 
-
 void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
     assert(parentNode.startPosition.x >= -1 && parentNode.startPosition.x <= GameBoard::boardSize);
     assert(parentNode.startPosition.y >= -1 && parentNode.startPosition.y <= GameBoard::boardSize);
@@ -53,7 +52,6 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
         }
 }
 
-
 void PuzzleSolver::addPossibleMoves(MoveNode &parentNode, const int levels) {
     assert(parentNode.startPosition.x >= -1 && parentNode.startPosition.x <= GameBoard::boardSize);
     assert(parentNode.startPosition.y >= -1 && parentNode.startPosition.y <= GameBoard::boardSize);
@@ -92,34 +90,27 @@ void PuzzleSolver::saveSolution(GameBoard & gameBoard) {
             while (t.parent != nullptr) {
                 auto iteratorFront = gameBoard.solution.begin();
                 gameBoard.solution.insert(iteratorFront, t);
-                std::cout << "Inserting #" << t.id << "\n";
                 t = *t.parent;
             }
             return;
         };
-        for (int i = 0; i < t.possibleMoves.size(); ++i) {
+        for (std::size_t i = 0; i < t.possibleMoves.size(); ++i) {
             Q.push(t.possibleMoves[i]);
         }
     }
     gameBoard.solution.clear();
-    std::cout << "No solution\n";
     return;
 }
 
 GameBoard PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) {
-    std::cout << "PuzzleSolver::generateRandomGame\n";
     PuzzleSolver puzzleSolver;
     while (true) {
-        std::cout << "Generating a random game...";
         GameBoard gameBoard{};
         gameBoard.randomGame(emptyTiles);
         buildTree(gameBoard, maxDepth);
         saveSolution(gameBoard);
 
         if (gameBoard.solution.size() > 0) {
-            for (auto node : gameBoard.solution) {
-                std::cout << "node: " << node.toString() << "\n";
-            }
             return gameBoard;
         }
     }

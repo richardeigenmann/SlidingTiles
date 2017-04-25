@@ -67,10 +67,8 @@ void GameBoard::loadGame(const std::string & game) {
 
 void GameBoard::randomGame(const int emptyTiles) {
     assert(emptyTiles > 0 && emptyTiles < boardSize * boardSize - 2);
-    
-    //loadGame("   ┬ |     ┻    ");
-    //return;
-    
+    std::cout << "Searching for a game..\n";
+
     std::vector<sf::Vector2i> positions{};
     for (int x = 0; x < boardSize; ++x) {
         for (int y = 0; y < boardSize; ++y) {
@@ -152,8 +150,8 @@ void GameBoard::printGame() {
 
 sf::Vector2i GameBoard::getAdjacentTilePosition(const Move & move) {
     // TODO should this not be a function of the move?
-    assert(move.startPosition.x >= 0 && move.startPosition.x <= boardSize);
-    assert(move.startPosition.y >= 0 && move.startPosition.y <= boardSize);
+    assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize);
+    assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize);
     sf::Vector2i adjacentPosition{move.startPosition.x, move.startPosition.y};
 
     if (move.direction == Direction::GoDown) {
@@ -173,8 +171,8 @@ sf::Vector2i GameBoard::getAdjacentTilePosition(const Move & move) {
 }
 
 bool GameBoard::canSlideTile(const Move & move) {
-    assert(move.startPosition.x >= 0 && move.startPosition.x <= boardSize);
-    assert(move.startPosition.y >= 0 && move.startPosition.y <= boardSize);
+    assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize);
+    assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize);
     Tile movingTile = tiles[move.startPosition.x][move.startPosition.y];
     /*std::cout << "canSlideTile: [" << move.startPosition.x << "][" << move.startPosition.y
              << "] Direction: " << directionToString(move.direction) << "\n";*/
@@ -197,8 +195,8 @@ bool GameBoard::canSlideTile(const Move & move) {
 }
 
 void GameBoard::slideTile(const Move & move) {
-    assert(move.startPosition.x >= 0 && move.startPosition.x <= boardSize);
-    assert(move.startPosition.y >= 0 && move.startPosition.y <= boardSize);
+    assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize);
+    assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize);
     if (canSlideTile(move)) {
         sf::Vector2i newPosition = getAdjacentTilePosition(move);
         Tile slidingTile = tiles[move.startPosition.x][move.startPosition.y];
@@ -228,12 +226,12 @@ const Tile GameBoard::findStartTile() {
 }
 
 sf::Vector2i GameBoard::getOutputPosition(const Move & move) {
-    assert(move.startPosition.x >= 0 && move.startPosition.x <= boardSize);
-    assert(move.startPosition.y >= 0 && move.startPosition.y <= boardSize);
+    assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize);
+    assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize);
     TileType type = tiles[move.startPosition.x][move.startPosition.y].getTileType();
     sf::Vector2i nextTile{move.startPosition.x, move.startPosition.y};
 
-    if (type == TileType::StartRight)
+    if (type == TileType::StartRight && move.startPosition.x < boardSize - 1)
         ++nextTile.x;
     else if (type == TileType::StartLeft && move.startPosition.x < boardSize - 1 && move.startPosition.x > 0)
         --nextTile.x;
@@ -277,6 +275,8 @@ sf::Vector2i GameBoard::getOutputPosition(const Move & move) {
         nextTile.y = -1;
     }
 
+    assert(nextTile.x >= -2 && nextTile.x < boardSize);
+    assert(nextTile.y >= -2 && nextTile.y < boardSize);
     return nextTile;
 }
 
@@ -291,10 +291,12 @@ std::vector<sf::Vector2i> GameBoard::isSolved() {
     sf::Vector2i nextTilePos = getOutputPosition(move);
     Direction nextDirection = startTile.outputDirection(Direction::Unknown);
     int count{0};
-    while (nextTilePos.x > -1 && ++count < 10) {
+    while (nextTilePos.x > -1 && ++count < 10) { // Magic Number
         solutionPath.push_back(nextTilePos);
         Move nextMove{nextTilePos, nextDirection};
         sf::Vector2i tempTile = getOutputPosition(nextMove);
+        assert(nextTilePos.x >= 0 && nextTilePos.x < boardSize);
+        assert(nextTilePos.y >= 0 && nextTilePos.y < boardSize);
         Tile nextTile = tiles[nextTilePos.x][nextTilePos.y];
         Direction tempDirection = nextTile.outputDirection(nextDirection);
         nextTilePos = tempTile;
@@ -305,4 +307,3 @@ std::vector<sf::Vector2i> GameBoard::isSolved() {
         solutionPath = {};
     return solutionPath;
 }
-

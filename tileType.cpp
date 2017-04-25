@@ -124,8 +124,9 @@ bool isStartTileType(const TileType & t) {
             return true;
         case TileType::StartRight:
             return true;
+        default:
+            return false;
     }
-    return false;
 }
 
 /**
@@ -159,8 +160,9 @@ bool isEndTileType(const TileType & t) {
             return true;
         case TileType::EndRight:
             return true;
+        default:
+            return false;
     }
-    return false;
 }
 
 /**
@@ -195,8 +197,10 @@ bool isGameTileType(const TileType & t) {
             return true;
         case TileType::BottomRight:
             return true;
+        default:
+            return false;
+
     }
-    return false;
 }
 
 TileType randomGameTileType() {
