@@ -16,13 +16,17 @@ When the start and end tile match up in a path you win.
 ```bash
 mkdir -p build
 cd build
-export CXX=/usr/bin/g++-6 # only if you have an old compiler and need to override the default to a modern one
-cmake ..
+cmake .. 
+# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang .. 
+# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++-6 -DCMAKE_CC_COMPILER=/usr/bin/gcc .. 
 make
 ./sliding-tiles
 ```
 
 ## Build and run on Visual Studio 2017
+
+Currently broken because of broken UTF-8 support
+
 This is a CMake project. That means that we let CMake create the solution files in the build directory from the CMakeLists.txt file
 
 You need to install
@@ -194,6 +198,106 @@ places the root node on the queue and then reads nodes off the front of the queu
 If the endboard of the move isn't a solved puzzle the method looks for the
 child moves and adds them at the end of the queue. This way first all the level 1
 nodes are visited before the level 2 nodes are checked and so on.
+
+
+## Rendering
+
+The SFML documentation suggests that you use this code to draw a window. Note
+how the loop in the main method clears the canvas then draws the various objects
+and then displays the window. This means that the main loop needs to know about
+everything that is going on in the game and needs to keep track of it's state
+so it can decide what to draw. For instance you don't want to draw the victory roll
+banner while the game is still playing.
+
+```c++
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+int main()
+{
+    // Create the main window
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+    // Load a sprite to display
+    sf::Texture texture;
+    if (!texture.loadFromFile("cute_image.jpg"))
+        return EXIT_FAILURE;
+    sf::Sprite sprite(texture);
+    // Create a graphical text to display
+    sf::Font font;
+    if (!font.loadFromFile("arial.ttf"))
+        return EXIT_FAILURE;
+    sf::Text text("Hello SFML", font, 50);
+    // Load a music to play
+    sf::Music music;
+    if (!music.openFromFile("nice_music.ogg"))
+        return EXIT_FAILURE;
+    // Play the music
+    music.play();
+    // Start the game loop
+    while (window.isOpen())
+    {
+        // Process events
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // Close window: exit
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        // Clear screen
+        window.clear();
+        // Draw the sprite
+        window.draw(sprite);
+        // Draw the string
+        window.draw(text);
+        // Update the window
+        window.display();
+    }
+    return EXIT_SUCCESS;
+}
+```
+
+I didn't like my code after a few hundred lines. Can't we do better?
+
+I chose to create an object that knows which objects can be rendered and then
+calls them in the correct Z-order. Thus when the renderable objects are created
+they register themselves with the renderer during object construction and 
+de-register themselves when they get destructed.
+
+So we need a class with a pure virtual function that the renderable objects can 
+inherit and add their draw function to:
+
+```c++
+    class Renderable {
+    public:
+
+        /**
+         * @brief Implementing classes must define the render method
+         */
+        virtual void render() = 0;
+
+        /**
+         * @brief an enum to hold the priority of the renderable. It can be
+         * Background, Normal and OnTop. This is the order in which the
+         * renderables will be drawn.
+         */
+        enum RenderPriority {
+            Background,
+            Normal,
+            OnTop
+        };
+
+
+        /**
+         * Inheriting classes can override this function to change the priority.
+         * @return The RenderPriority enum value
+         */
+        virtual RenderPriority getRenderPriority() {
+            return RenderPriority::Normal;
+        }
+    };
+```
+
+To be continued....
 
 
 ## Copyright information

@@ -91,17 +91,18 @@ namespace SlidingTiles {
          */
         void renderAll() {
             for (auto& pair : renderables) {
-                if (pair.second->renderPriority == Renderable::RenderPriority::Background) {
+                //if (pair.second->renderPriority == Renderable::RenderPriority::Background) {
+                if (pair.second->getRenderPriority() == Renderable::RenderPriority::Background) {
                     pair.second->render();
                 }
             }
             for (auto& pair : renderables) {
-                if (pair.second->renderPriority == Renderable::RenderPriority::Normal) {
+                if (pair.second->getRenderPriority() == Renderable::RenderPriority::Normal) {
                     pair.second->render();
                 }
             }
             for (auto& pair : renderables) {
-                if (pair.second->renderPriority == Renderable::RenderPriority::OnTop) {
+                if (pair.second->getRenderPriority() == Renderable::RenderPriority::OnTop) {
                     pair.second->render();
                 }
             }

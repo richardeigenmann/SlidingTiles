@@ -5,10 +5,14 @@ namespace SlidingTiles {
 
     GameView::GameView() {
         RenderingSingleton::getInstance().add(*this);
-        renderPriority = Renderable::RenderPriority::Background;
+        //renderPriority = Renderable::RenderPriority::Background;
     }
 
     void GameView::render() {
         RenderingSingleton::getInstance().getRenderWindow()->clear(sf::Color::White);
+    }
+
+    Renderable::RenderPriority GameView::getRenderPriority() {
+        return Renderable::RenderPriority::Background;
     }
 }

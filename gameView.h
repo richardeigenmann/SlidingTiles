@@ -22,6 +22,12 @@ namespace SlidingTiles {
         void render() override;
         
         /**
+         * Overrides the renderable priority to clear the background
+         * @return the RenderPriorits Background
+         */
+        Renderable::RenderPriority getRenderPriority() override;
+        
+        /**
          * @brief pointer to the gameBoard
          */
         SlidingTiles::GameBoard* gameBoard;

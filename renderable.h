@@ -9,7 +9,7 @@ namespace SlidingTiles {
     public:
 
         /**
-         * @brief Implementing classes but define the render method
+         * @brief Implementing classes must define the render method
          */
         virtual void render() = 0;
 
@@ -26,18 +26,22 @@ namespace SlidingTiles {
 
 
         /**
-         * @brief The order in which the renderables should be drawn
+         * Inheriting classes can override this function to change the priority.
+         * @return The RenderPriority enum value
          */
-        RenderPriority renderPriority{RenderPriority::Normal};
-
+        virtual RenderPriority getRenderPriority() {
+            return RenderPriority::Normal;
+        }
+        
+        
         /**
          * Returns the renderable priority in a string
          * @return 
          */
         std::string toString() {
-            if (renderPriority == RenderPriority::Background) {
+            if (getRenderPriority() == RenderPriority::Background) {
                 return "RenderPriority::Background";
-            } else if (renderPriority == RenderPriority::Normal) {
+            } else if (getRenderPriority() == RenderPriority::Normal) {
                 return "RenderPriority::Normal";
             } else {
                 return "RenderPriority::OnTop";

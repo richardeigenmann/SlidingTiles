@@ -34,6 +34,14 @@ namespace SlidingTiles {
         void render() override;
 
         /**
+         * Tiles that are transitioning return OnTop priority whilst others
+         * return Normal priorits
+         * @return RenderPriority::OnTop for transitioning slides, 
+         * RenderPriority::Normal for the other ones
+         */
+        Renderable::RenderPriority getRenderPriority() override;
+        
+        /**
          * @brief need to be called periodically with a delta time to
          * update the position etc.
          * @param dt The passing time since last call in seconds

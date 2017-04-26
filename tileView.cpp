@@ -1,4 +1,5 @@
 #include "tileView.h"
+#include "renderable.h"
 
 namespace SlidingTiles {
 
@@ -30,7 +31,7 @@ namespace SlidingTiles {
             if (timeSpentTransitioning > TRANSITION_TIME) {
                 transitioning = false;
                 tileCoordinates = transitionTileCoordiantes;
-                renderPriority = RenderPriority::Normal;
+                //renderPriority = RenderPriority::Normal;
             }
         }
     }
@@ -38,8 +39,16 @@ namespace SlidingTiles {
     void TileView::transition(const sf::Vector2i & newGameBoardPosition) {
         transitionTileCoordiantes = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
         timeSpentTransitioning = 0;
-        renderPriority = RenderPriority::OnTop;
+        //renderPriority = RenderPriority::OnTop;
         transitioning = true;
+    }
+
+    Renderable::RenderPriority TileView::getRenderPriority() {
+        if (transitioning) {
+            return Renderable::RenderPriority::OnTop;
+        } else {
+            return Renderable::RenderPriority::Normal;
+        }
     }
 
 }
