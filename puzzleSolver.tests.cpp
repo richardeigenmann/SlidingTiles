@@ -270,7 +270,7 @@ TEST(PuzzleSolver, noSolution) {
     //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
     puzzleSolver.saveSolution(gameBoard);
-    ASSERT_THAT(gameBoard.solution.size(), -1) << "There should be no solution for this puzzle";
+    ASSERT_THAT(gameBoard.solution.size(), 0) << "There should be no solution for this puzzle";
 }
 
 TEST(PuzzleSolver, depth) {
