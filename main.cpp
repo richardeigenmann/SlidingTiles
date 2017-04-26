@@ -1,6 +1,4 @@
 #include "game.h"
-
-#include <random> // random_shuffle, std::default_random_engine
 #include <chrono> // std::chrono::system_clock
 
 using namespace SlidingTiles;

@@ -4,6 +4,7 @@
 #include <string>
 #include "renderingSingleton.h"
 #include "renderable.h"
+#include "gameState.h"
 
 namespace SlidingTiles {
 

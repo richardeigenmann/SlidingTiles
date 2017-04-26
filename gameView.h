@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "gameBoard.h"
+#include "renderingSingleton.h"
+#include "renderable.h"
 
 namespace SlidingTiles {
 

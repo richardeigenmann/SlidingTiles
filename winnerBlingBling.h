@@ -4,13 +4,15 @@
 #include <string>
 #include "json.hpp"
 #include "randomSoundPlayer.h"
+#include "renderable.h"
+#include "gameState.h"
 
 namespace SlidingTiles {
 
     /**
      * @brief A base button class
      */
-    class WinnerBlingBling {
+    class WinnerBlingBling : public Renderable {
     public:
         /**
          * @brief Constructor for winner bling bling
@@ -38,6 +40,12 @@ namespace SlidingTiles {
         void startBlingBling(const float & time, std::size_t moves, std::size_t par);
 
         /**
+         * @brief call this to end the bling bling
+         */
+        void endBlingBling();
+        
+        
+        /**
          * @brief update callback
          */
         void update(const float & dt);
@@ -46,7 +54,7 @@ namespace SlidingTiles {
         /**
          * Call this method to have the button rendered
          */
-        void render();
+        void render() override;
 
         /**
          * @brief returns the sprite (for testing). I can't figure out how to do the FRIENDS_TEST
@@ -70,6 +78,11 @@ namespace SlidingTiles {
          * an object with winner sounds to be played randomly when a game is won 
          */
         RandomSoundPlayer winnerSounds;
+        
+        /**
+         * local variable to remember the state of the game
+         */
+        GameState gameState {GameState::Initializing};
 
     };
 }

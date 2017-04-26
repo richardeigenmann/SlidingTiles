@@ -32,9 +32,9 @@ namespace SlidingTiles {
         for (int y = 0; y < gameBoard.boardSize; ++y) {
             for (int x = 0; x < gameBoard.boardSize; ++x) {
                 //TileView* tileView = new TileView(sf::Vector2i{x,y});
-                std::unique_ptr<TileView> tileView( new TileView(sf::Vector2i{x,y}) );
+                std::unique_ptr<TileView> tileView(new TileView(sf::Vector2i{x, y}));
                 gameBoard.tiles[x][y].add(*tileView);
-                tileViews.push_back( std::move(tileView) );
+                tileViews.push_back(std::move(tileView));
             }
         }
 
@@ -60,7 +60,6 @@ namespace SlidingTiles {
         // send update event to all the tiles
         for (int x = 0; x < GameBoard::boardSize; ++x)
             for (int y = 0; y < GameBoard::boardSize; ++y) {
-                //gameBoard.tiles[x][y].tileView.update(dt);
                 gameBoard.tiles[x][y].update(dt);
             }
 
@@ -76,6 +75,17 @@ namespace SlidingTiles {
                 gameBoard.clearWinnerTiles();
             }
         }
+
+
+        if (gameState == GameState::VictoryRolling) {
+            victoryRollingTime -= dt;
+            if (victoryRollingTime < 0.0f) {
+                doLevelUp();
+                gameState = GameState::Playing;
+                winnerBlingBling.endBlingBling();
+            }
+        }
+
     }
 
     void Game::onRandomButtonClick() {
@@ -116,21 +126,13 @@ namespace SlidingTiles {
 
             sf::Time dt = deltaClock.restart();
             update(dt.asSeconds());
-            if (gameState == GameState::VictoryRolling) {
-                victoryRollingTime -= dt.asSeconds();
-                if (victoryRollingTime < 0.0f) {
-                    doLevelUp();
-                    gameState = GameState::Playing;
-                }
-                winnerBlingBling.render();
-            }
             RenderingSingleton::getInstance().renderAll();
         }
     }
 
     void Game::doRandomGame() {
         PuzzleSolver puzzleSolver;
-        gameBoard.loadGame(puzzleSolver.generateRandomGame(3,4).serialiseGame());
+        gameBoard.loadGame(puzzleSolver.generateRandomGame(3, 4).serialiseGame());
     }
 
     void Game::doMousePressed(const sf::Vector2i & mousePosition) {
@@ -148,7 +150,7 @@ namespace SlidingTiles {
             onRestartButtonClick();
             return;
         }
-        
+
         sf::Vector2i movingTilePosition = RenderingSingleton::getInstance().findTile(mousePositionPressed);
         if (movingTilePosition.x == -1 || movingTilePosition.y == -1)
             return; // out of grid
@@ -161,20 +163,27 @@ namespace SlidingTiles {
                 // horizontal movement
                 sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x + copysign(1, deltaX), movingTilePosition.y);
                 if (deltaX > 0) {
-                    gameBoard.slideTile(Move{movingTilePosition, Direction::GoRight});
+                    //gameBoard.slideTile(Move{movingTilePosition, Direction::GoRight});
+                    doMove(Move{movingTilePosition, Direction::GoRight});
                 } else {
-                    gameBoard.slideTile(Move{movingTilePosition, Direction::GoLeft});
+                    doMove(Move{movingTilePosition, Direction::GoLeft});
                 }
             } else {
                 // vertical movement
                 sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x, movingTilePosition.y + copysign(1, deltaY));
                 if (deltaY > 0) {
-                    gameBoard.slideTile(Move{movingTilePosition, Direction::GoDown});
+                    doMove(Move{movingTilePosition, Direction::GoDown});
                 } else {
-                    gameBoard.slideTile(Move{movingTilePosition, Direction::GoUp});
+                    doMove(Move{movingTilePosition, Direction::GoUp});
                 }
 
             }
+        }
+    }
+
+    void Game::doMove(const Move & move) {
+        if (gameState == GameState::Playing) {
+            gameBoard.slideTile(move);
         }
     }
 

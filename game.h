@@ -8,6 +8,7 @@
 #include "json.hpp"
 #include "randomSoundPlayer.h"
 #include "winnerBlingBling.h"
+#include "gameState.h"
 
 namespace SlidingTiles {
 
@@ -63,6 +64,11 @@ namespace SlidingTiles {
          */
         void doMouseReleased(const sf::Vector2i & mousePosition);
 
+        /**
+         * Moves a tile (if the GameState is GameState::Playing)
+         * @param move the move to make
+         */
+        void doMove(const Move & move);
 
         /**
          * @brief increment the move count and update the label
@@ -79,15 +85,6 @@ namespace SlidingTiles {
          * @brief advance to the next level
          */
         void doLevelUp();
-
-        /**
-         * @brief the game states
-         */
-        enum GameState {
-            Initializing,
-            Playing,
-            VictoryRolling
-        };
 
         /**
          * @brief the state of the current game
