@@ -411,8 +411,13 @@ Check out the whole implementation of the RenderingSingleton in the
 ## Copyright information
 This project is copyrighted by Richard Eigenmann, Zürich, 2016,2017. I have not yet
 decided on a license. Please contact me with any questions.
+
 The source includes a copy of JSON for Modern C++ from Niels Lohmann [GitHub](https://github.com/nlohmann/json) This is MIT licenced.
+
 Trophy Clipart from http://www.clipartbest.com/clipart-aieonzEzT
+
 The buttons were created by https://dabuttonfactory.com/
+
 The Raleway font is a Google Font with Open Font License: https://fonts.google.com/specimen/Raleway
+
 The tiles were drawn by Richard Eigenmann using Blender.
