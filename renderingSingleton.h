@@ -71,7 +71,7 @@ namespace SlidingTiles {
         sf::Vector2i findTile(sf::Vector2i mousePosition);
 
         /**
-         * Add a renderable to the list of object to render
+         * Add a Renderable to the list of object to render
          * @param renderable The Renderable to add
          */
         void add(Renderable& renderable) {
@@ -91,7 +91,6 @@ namespace SlidingTiles {
          */
         void renderAll() {
             for (auto& pair : renderables) {
-                //if (pair.second->renderPriority == Renderable::RenderPriority::Background) {
                 if (pair.second->getRenderPriority() == Renderable::RenderPriority::Background) {
                     pair.second->render();
                 }

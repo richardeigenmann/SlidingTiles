@@ -200,14 +200,14 @@ child moves and adds them at the end of the queue. This way first all the level 
 nodes are visited before the level 2 nodes are checked and so on.
 
 
-## Rendering
+## Rendering with a Rendering Singleton where Renderables register themselves
 
 The SFML documentation suggests that you use this code to draw a window. Note
 how the loop in the main method clears the canvas then draws the various objects
 and then displays the window. This means that the main loop needs to know about
 everything that is going on in the game and needs to keep track of it's state
-so it can decide what to draw. For instance you don't want to draw the victory roll
-banner while the game is still playing.
+so it can decide what to draw. For instance you would not want to draw the victory 
+roll banner while the game is still playing.
 
 ```c++
 #include <SFML/Audio.hpp>
@@ -267,44 +267,152 @@ So we need a class with a pure virtual function that the renderable objects can
 inherit and add their draw function to:
 
 ```c++
-    class Renderable {
-    public:
+class Renderable {
+public:
+    /**
+     * @brief Implementing classes must define the render method
+     */
+    virtual void render() = 0;
 
-        /**
-         * @brief Implementing classes must define the render method
-         */
-        virtual void render() = 0;
-
-        /**
-         * @brief an enum to hold the priority of the renderable. It can be
-         * Background, Normal and OnTop. This is the order in which the
-         * renderables will be drawn.
-         */
-        enum RenderPriority {
-            Background,
-            Normal,
-            OnTop
-        };
-
-
-        /**
-         * Inheriting classes can override this function to change the priority.
-         * @return The RenderPriority enum value
-         */
-        virtual RenderPriority getRenderPriority() {
-            return RenderPriority::Normal;
-        }
+    /**
+     * @brief an enum to hold the priority of the renderable. It can be
+     * Background, Normal and OnTop. This is the order in which the
+     * renderables will be drawn.
+     */
+    enum RenderPriority {
+        Background,
+        Normal,
+        OnTop
     };
+
+
+    /**
+      * Inheriting classes can override this function to change the priority.
+      * @return The RenderPriority enum value
+      */
+    virtual RenderPriority getRenderPriority() {
+        return RenderPriority::Normal;
+    }
+};
 ```
 
-To be continued....
+Next we need the Rendering Singleton. We use the Observer pattern and kill off 
+the default constructors so that you can only call the static getInstance() 
+method which will create the exactly one instance and return it.
+
+```c++
+class RenderingSingleton {
+public:
+    /**
+     * @brief Deleted to enforce singleton pattern
+     */
+    RenderingSingleton(RenderingSingleton const&) = delete;
+
+    /**
+     * @brief Deleted to enforce singleton pattern
+     */
+    void operator=(RenderingSingleton const&) = delete;
+
+    /**
+     * @brief returns the single instance of the RenderingSingleton
+     */
+    static RenderingSingleton& getInstance() {
+        static RenderingSingleton instance; // Guaranteed to be destroyed.
+        // Instantiated on first use.
+        return instance;
+    }
+private:
+    /**
+     * @brief Private constructor for singleton
+     */
+    RenderingSingleton();
+};
+```
+
+Next our RenderingSingleton needs to allow Renderables to register and deregister 
+themselves. Following an example of the Observer pattern we use a std::map
+to hold the references to the Renderables.
+
+```c++
+/**
+ * @brief The map of Renderables
+ */
+std::map<Renderable * const, Renderable * const> renderables;
+
+/**
+ * Add a Renderable to the list of object to render
+ * @param renderable The Renderable to add
+ */
+void add(Renderable& renderable) {
+    renderables.insert(std::pair<Renderable * const, Renderable * const>(&renderable, &renderable));
+}
+
+/**
+ * Removes a renderable from the list of objects to render
+ * @param renderable The Renderable to remove
+ */
+void remove(Renderable& renderable) {
+    renderables.erase(&renderable);
+}
+```
+
+And finally our RenderingSingleton needs to call each registered Renderables to
+ask it to render itself.
+
+```c++
+/**
+ * Tell all renderables to render
+ */
+void renderAll() {
+    for (auto& pair : renderables) {
+        if (pair.second->getRenderPriority() == Renderable::RenderPriority::Background) {
+            pair.second->render();
+        }
+    }
+    for (auto& pair : renderables) {
+        if (pair.second->getRenderPriority() == Renderable::RenderPriority::Normal) {
+            pair.second->render();
+        }
+    }
+    for (auto& pair : renderables) {
+        if (pair.second->getRenderPriority() == Renderable::RenderPriority::OnTop) {
+            pair.second->render();
+        }
+    }
+    getRenderWindow()->display();
+}
+```
+
+Now classes like Button can inherit from Renderable and can register themselves 
+with the Rendering Singleton upon creation. The render() method is called by
+the RenderingSingleton at the right time when the button needs to be drawn,
+
+```c++
+class Button : public Renderable ...
+
+Button::Button() {
+    RenderingSingleton::getInstance().add(*this);
+}
+
+~Button() {
+    RenderingSingleton::getInstance().remove(*this);
+}
+
+void render() {
+    RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
+}
+```
+
+Check out the whole implementation of the RenderingSingleton in the 
+[renderingSingleton.h](renderingSingleton.h) and 
+[renderingSingleton.cpp](renderingSingleton.cpp) files.
 
 
 ## Copyright information
-Designer was Eduardo Tunni http://www.1001freefonts.com/search.php?d=1&q=Eduardo+Tunni
+This project is copyrighted by Richard Eigenmann, Zürich, 2016,2017. I have not yet
+decided on a license. Please contact me with any questions.
 The source includes a copy of JSON for Modern C++ from Niels Lohmann [GitHub](https://github.com/nlohmann/json) This is MIT licenced.
 Trophy Clipart from http://www.clipartbest.com/clipart-aieonzEzT
 The buttons were created by https://dabuttonfactory.com/
 The Raleway font is a Google Font with Open Font License: https://fonts.google.com/specimen/Raleway
-
-The tiles were drawn by Richard Eigenmann. My artistic skills are gradually improving...
+The tiles were drawn by Richard Eigenmann using Blender.
