@@ -40,8 +40,8 @@ namespace SlidingTiles {
         /**
          * @brief load the game into the board
          */
-        void loadGame(const std::string & game);        
-        
+        void loadGame(const std::string & game);
+
         /**
          * @brief sets up a random game
          * @param emptyTiles the number of empty tiles to place defaults to 3
@@ -53,7 +53,7 @@ namespace SlidingTiles {
          * @brief saves the game into an vector of string characters
          */
         std::vector<std::string> serialiseGame();
-        
+
         /**
          * @brief saves the game into a string;
          */
@@ -63,7 +63,7 @@ namespace SlidingTiles {
          * @brief prints the game to the console
          */
         void printGame();
-            
+
         /**
          * @brief Returns the adjacent tile in the supplied direction and check for off-the board condition.
          * If no adjacent tile is possible it returns -1,-1
@@ -77,7 +77,7 @@ namespace SlidingTiles {
          * @return true if a slide is allowed, false if not
          */
         bool canSlideTile(const Move & move);
-        
+
         /**
          * @brief slides the tile from the movingTilePosition to the newPosition 
          * with a transition command if this is legal. Since the target position 
@@ -105,19 +105,27 @@ namespace SlidingTiles {
          * @param move The move to for the ball
          */
         sf::Vector2i getOutputPosition(const Move & move);
-        
+
+        /**
+         * @brief Returns the next move after the supplied move
+         * If we hit a matching end tile it returns -2,-2. If we can't end properly 
+         * because of an off the board or empty tile we return -1,-1
+         * @param move The move to for the ball
+         */
+        Move getOutputMove(const Move & move);
+
         /**
          * @brief returns if the puzzle is in a solved state by checking the path
          * from the start tile to the end tile.
          * @return a vector with the tile positions of the solution if solved otherwise returns an empty vector
          */
         std::vector<sf::Vector2i> isSolved();
-        
+
         /**
          * @brief The puzzleSolver can use this to store the tree
          */
         MoveNode rootNode{};
-        
+
         /**
          * @brief The puzzleSolver can put the cheapest solution here
          */

@@ -280,6 +280,16 @@ sf::Vector2i GameBoard::getOutputPosition(const Move & move) {
     return nextTile;
 }
 
+Move GameBoard::getOutputMove(const Move & move) {
+    assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize);
+    assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize);
+    Tile startTile = tiles[move.startPosition.x][move.startPosition.y];
+    Move outputMove{getOutputPosition(move), startTile.outputDirection(move.direction)};
+    assert(outputMove.startPosition.x >= -2 && outputMove.startPosition.x < boardSize);
+    assert(outputMove.startPosition.y >= -2 && outputMove.startPosition.y < boardSize);
+    return outputMove;
+}
+
 std::vector<sf::Vector2i> GameBoard::isSolved() {
     std::vector<sf::Vector2i> solutionPath{};
 
@@ -287,23 +297,17 @@ std::vector<sf::Vector2i> GameBoard::isSolved() {
     if (startTile.getTilePosition().x == -1) return solutionPath; // no start tile
     solutionPath.push_back(startTile.getTilePosition());
 
-    Move move{startTile.getTilePosition(), Direction::Unknown};
-    sf::Vector2i nextTilePos = getOutputPosition(move);
-    Direction nextDirection = startTile.outputDirection(Direction::Unknown);
+    Move move{startTile.getTilePosition(), startTile.outputDirection(Direction::Unknown)};
     int count{0};
-    while (nextTilePos.x > -1 && ++count < 10) { // Magic Number
-        solutionPath.push_back(nextTilePos);
-        Move nextMove{nextTilePos, nextDirection};
-        sf::Vector2i tempTile = getOutputPosition(nextMove);
-        assert(nextTilePos.x >= 0 && nextTilePos.x < boardSize);
-        assert(nextTilePos.y >= 0 && nextTilePos.y < boardSize);
-        Tile nextTile = tiles[nextTilePos.x][nextTilePos.y];
-        Direction tempDirection = nextTile.outputDirection(nextDirection);
-        nextTilePos = tempTile;
-        nextDirection = tempDirection;
+    while (move.startPosition.x >= 0 && ++count < boardSize * boardSize) {
+        move = getOutputMove(move);
+        if (move.startPosition.x >= 0) {
+            solutionPath.push_back(move.startPosition);
+        }
     }
 
-    if (nextTilePos.x != -2)
+    if (move.startPosition.x != -2)
         solutionPath = {};
     return solutionPath;
 }
+
