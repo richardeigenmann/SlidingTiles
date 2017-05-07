@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 #include "zmq.hpp"
 
@@ -30,16 +29,18 @@ namespace SlidingTiles {
             return instance;
         }
 
-        void publish(std::string message);
+        void publish(const std::string & message);
 
         static const std::string PUBLISHER_SOCKET;
         static const std::string RECEIVER_SOCKET;
-        
+
         static const std::string INITIALISING;
 
         static const std::string GAME_WON;
 
         static const std::string GAME_STARTED;
+
+        static const std::string SLIDE_TILE;
 
     private:
         /**

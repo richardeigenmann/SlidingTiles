@@ -5,6 +5,9 @@
 #include "renderingSingleton.h"
 #include "tileObserver.h"
 #include "renderable.h"
+#include "zmq.hpp"
+#include "publishingSingleton.h"
+#include <iostream>
 
 namespace SlidingTiles {
 
@@ -17,8 +20,10 @@ namespace SlidingTiles {
         /**
          * @brief Constructs a new TileView with the appropriate screen coordinates
          */
-        TileView(sf::Vector2i tileCoordinates) : tileCoordinates(tileCoordinates) {
+        TileView(sf::Vector2i tileCoordinates) : tileGameCoordinates(tileCoordinates) {
             RenderingSingleton::getInstance().add(*this);
+            socket.connect(PublishingSingleton::RECEIVER_SOCKET);
+            socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
         };
 
         /**
@@ -40,7 +45,7 @@ namespace SlidingTiles {
          * RenderPriority::Normal for the other ones
          */
         Renderable::RenderPriority getRenderPriority() override;
-        
+
         /**
          * @brief need to be called periodically with a delta time to
          * update the position etc.
@@ -71,7 +76,8 @@ namespace SlidingTiles {
          * @brief settor for the tile coordinates in game coordinates
          */
         void setCoordinates(const sf::Vector2i & newGameBoardPosition) override {
-            tileCoordinates = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
+            tileGameCoordinates = newGameBoardPosition;
+            tileScreenCoordinates = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
         };
 
         /**
@@ -79,7 +85,7 @@ namespace SlidingTiles {
          * @return the coordinates
          */
         const sf::Vector2i & getCoordinates() {
-            return tileCoordinates;
+            return tileScreenCoordinates;
         };
 
         /**
@@ -101,9 +107,14 @@ namespace SlidingTiles {
         double timeSpentTransitioning{0};
 
         /**
-         * The coordinates of the tile
+         * The coordinates of the tile in game coordinates
          */
-        sf::Vector2i tileCoordinates{0, 0};
+        sf::Vector2i tileGameCoordinates{0, 0};
+
+        /**
+         * The coordinates of the tile in screen coordinates
+         */
+        sf::Vector2i tileScreenCoordinates{0, 0};
 
         /**
          * The coordinates where to move the tile to if transitioning is true
@@ -124,5 +135,15 @@ namespace SlidingTiles {
          * @brief the type of the tile
          */
         TileType tileType{TileType::Empty};
+
+        /**
+         * @brief ZeroMQ needs a context
+         */
+        zmq::context_t context{1};
+
+        /**
+         * @brief the ZeroMQ socket of type subscriber
+         */
+        zmq::socket_t socket{context, ZMQ_SUB};
     };
 } // namespace SlidingTiles

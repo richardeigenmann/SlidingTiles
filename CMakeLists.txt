@@ -196,6 +196,7 @@ SET(LEVEL_GENERATOR_SOURCE_FILES
     tile.cpp
     tileType.cpp
     puzzleSolver.cpp
+    publishingSingleton.cpp
 )
 
 
@@ -203,6 +204,8 @@ ADD_EXECUTABLE(levelGenerator levelGenerator.cpp ${LEVEL_GENERATOR_SOURCE_FILES}
 TARGET_INCLUDE_DIRECTORIES(levelGenerator PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}
+    ${ZeroMQ_INCLUDE_DIR}
 )
 TARGET_LINK_LIBRARIES(levelGenerator LINK_PUBLIC
+    ${ZeroMQ_LIBRARIES}
 )

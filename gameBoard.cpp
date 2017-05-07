@@ -7,8 +7,10 @@
 #include <sstream> // stringstream
 #include <locale>
 #include <codecvt>
+#include "json.hpp"
 
 using namespace SlidingTiles;
+using json = nlohmann::json;
 
 const int GameBoard::boardSize;
 
@@ -204,6 +206,15 @@ void GameBoard::slideTile(const Move & move) {
 
         slidingTile.transition(newPosition);
         obscuredTile.setTilePosition(move.startPosition);
+
+
+        json jsonMessage{};
+        jsonMessage["state"] = PublishingSingleton::SLIDE_TILE;
+        jsonMessage["startPosition"]["x"] = move.startPosition.x;
+        jsonMessage["startPosition"]["y"] = move.startPosition.y;
+        jsonMessage["newPosition"]["x"] = newPosition.x;
+        jsonMessage["newPosition"]["y"] = newPosition.y;
+        PublishingSingleton::getInstance().publish(jsonMessage.dump());
 
         tiles[newPosition.x][newPosition.y] = slidingTile;
         tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;

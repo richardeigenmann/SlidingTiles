@@ -419,11 +419,44 @@ you have to go back to the Game class and fix it there for instance.
 A more modern design uses loose coupling where the various objects don't know or
 care about the bigger picture. They just listen out for things they are concerned
 with and react accordingly. I.e. the WinnerBlingBling class only needs to know
-that the game was won and can start the merryment.
+that the game was won and can start the merriment.
 
 ZeroMQ is a fast versatile messaging library that lets us implement the pub-sub
-publisher - subscriber pattern within our process (but also across a network if 
-need be).
+publisher - subscriber pattern. This allows a publisher to broadcast messages
+that the subscribers receive and can act upon.
+
+I have chosen to use JSON as a format for my messages as the game already links
+to Niels Lohmann's library and JSON is a nice versatile format. Obviously the 
+serialisation and deserialisation comes at a cost so this approach might not work
+in all cases.
+
+The game probably has multiple places that need to send messages so I created
+a PublishingSingleton ( [publishingSingleton.h](publishingSingleton.h) and 
+[publishingSingleton.cpp](publishingSingleton.cpp) ) where any class can call the 
+publish(const std::string & message) function.
+
+In the receiving classes we need to connect to the socket and check if a message
+was received:
+
+```c++
+// need the context and socket defined on the class
+zmq::context_t context{1};
+zmq::socket_t socket{context, ZMQ_SUB};
+
+// This happens in the constructor:
+socket.connect("tcp://localhost:64123");
+socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+
+// Here we receive the message:
+ zmq::message_t reply;
+ if (socket.recv(&reply, ZMQ_NOBLOCK)) {
+    std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
+    auto j = json::parse(message);
+    std::string state = j["state"].get<std::string>();
+    if (state == PublishingSingleton::GAME_WON) 
+        ...
+}
+```
 
 
 

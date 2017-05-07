@@ -90,8 +90,14 @@ namespace SlidingTiles {
          */
         GameState gameState{GameState::Initializing};
 
-
+        /**
+         * @brief ZeroMQ needs a context
+         */
         zmq::context_t context{1};
+        
+        /**
+         * @brief the ZeroMQ socket of type subscriber
+         */
         zmq::socket_t socket{context, ZMQ_SUB};
 
     };

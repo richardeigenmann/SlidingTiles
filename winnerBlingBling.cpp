@@ -17,11 +17,9 @@ WinnerBlingBling::WinnerBlingBling() {
     sprite.setScale(0.2f, 0.2f);
     RenderingSingleton::getInstance().add(*this);
 
-    std::cout << "Client Connecting to socket: " << PublishingSingleton::RECEIVER_SOCKET  << std::endl;
+    std::cout << "WinnerBlingBling connecting to ZeroMQ socket: " << PublishingSingleton::RECEIVER_SOCKET  << std::endl;
     socket.connect(PublishingSingleton::RECEIVER_SOCKET );
     socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
-
-
 }
 
 WinnerBlingBling::~WinnerBlingBling() {
