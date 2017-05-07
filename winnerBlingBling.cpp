@@ -1,6 +1,8 @@
 #include "winnerBlingBling.h"
 #include "renderingSingleton.h"
 #include <iostream>
+#include "publishingSingleton.h"
+#include "json.hpp"
 
 using namespace SlidingTiles;
 
@@ -14,6 +16,16 @@ WinnerBlingBling::WinnerBlingBling() {
     setPosition(400, 5);
     sprite.setScale(0.2f, 0.2f);
     RenderingSingleton::getInstance().add(*this);
+
+    std::cout << "Client Connecting to socket: " << PublishingSingleton::RECEIVER_SOCKET  << std::endl;
+    socket.connect(PublishingSingleton::RECEIVER_SOCKET );
+    socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+
+
+}
+
+WinnerBlingBling::~WinnerBlingBling() {
+    socket.close();
 }
 
 void WinnerBlingBling::loadSounds(const json & jsonArray) {
@@ -38,6 +50,18 @@ void WinnerBlingBling::endBlingBling() {
 }
 
 void WinnerBlingBling::update(const float & dt) {
+    zmq::message_t reply;
+    if (socket.recv(&reply, ZMQ_NOBLOCK)) {
+        std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
+        std::cout << "WinnerBlingBling received: " << message << std::endl;
+        auto j = json::parse(message);
+        std::string state = j["state"].get<std::string>();
+        if (state == PublishingSingleton::GAME_WON) {
+            startBlingBling(j["victoryRollTime"], j["moves"], j["par"]);
+        } else if (state == PublishingSingleton::GAME_STARTED) {
+            endBlingBling();
+        }
+    }
 }
 
 void WinnerBlingBling::render() {

@@ -2,12 +2,12 @@
 #include "gameBoard.h"
 #include <cmath>
 #include "puzzleSolver.h"
+#include "publishingSingleton.h"
 #include <fstream>
 #include <random> // random_shuffle, std::default_random_engine
 #include <chrono> // std::chrono::system_clock
 #include <sstream>
-
-
+#include "json.hpp"
 
 
 using namespace SlidingTiles;
@@ -68,9 +68,16 @@ namespace SlidingTiles {
             if (solutionPath.size() > 0) {
                 gameBoard.setWinnerTiles(solutionPath);
                 gameState = GameState::VictoryRolling;
+
+                json jsonMessage{};
+                jsonMessage["state"] = PublishingSingleton::GAME_WON;
+                jsonMessage["victoryRollTime"] = VICTORY_ROLL_TIME;
+                jsonMessage["moves"] = moves;
+                jsonMessage["par"] = par;
+
+                PublishingSingleton::getInstance().publish(jsonMessage.dump());
+
                 victoryRollingTime = VICTORY_ROLL_TIME;
-                winnerBlingBling.startBlingBling(VICTORY_ROLL_TIME, moves, par);
-                winnerBlingBling.update(dt);
             } else {
                 gameBoard.clearWinnerTiles();
             }
@@ -82,10 +89,9 @@ namespace SlidingTiles {
             if (victoryRollingTime < 0.0f) {
                 doLevelUp();
                 gameState = GameState::Playing;
-                winnerBlingBling.endBlingBling();
             }
         }
-
+        winnerBlingBling.update(dt);
     }
 
     void Game::onRandomButtonClick() {
@@ -215,6 +221,10 @@ namespace SlidingTiles {
         std::ostringstream parText;
         parText << "Par: " << par;
         parLabel.setText(parText.str());
+
+        json jsonMessage{};
+        jsonMessage["state"] = PublishingSingleton::GAME_STARTED;
+        PublishingSingleton::getInstance().publish(jsonMessage.dump());
 
     }
 

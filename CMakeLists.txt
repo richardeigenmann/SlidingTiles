@@ -20,6 +20,10 @@ FIND_PACKAGE(SFML REQUIRED COMPONENTS graphics window system audio)
 MESSAGE(STATUS "SFML_INCLUDE_DIR: ${SFML_INCLUDE_DIR}")
 MESSAGE(STATUS "SFML_LIBRARIES: ${SFML_LIBRARIES}")
 
+find_package(ZeroMQ)
+MESSAGE(STATUS "ZeroMQ_INCLUDE_DIR: ${ZeroMQ_INCLUDE_DIR}")
+MESSAGE(STATUS "ZeroMQ_LIBRARIES: ${ZeroMQ_LIBRARIES}")
+
 SET(sliding-tiles_assets_dir "${PROJECT_SOURCE_DIR}/assets")
 SET(sliding-tiles-assets
     ${sliding-tiles_assets_dir}/Raleway-Regular.ttf
@@ -82,6 +86,7 @@ SET(SOURCE_FILES
     label.cpp
     randomSoundPlayer.cpp
     winnerBlingBling.cpp
+    publishingSingleton.cpp
 )
 
 set( UNIT_TESTS
@@ -113,12 +118,12 @@ TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}
     ${SFML_INCLUDE_DIR}
-    ${SFGUI_INCLUDE_DIR}
+    ${ZeroMQ_INCLUDE_DIR}
 )
 
 TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
     ${SFML_LIBRARIES}
-    ${SFGUI_LIBRARY}
+    ${ZeroMQ_LIBRARIES}
 )
 
 IF (WIN32)
@@ -160,9 +165,13 @@ TARGET_INCLUDE_DIRECTORIES( unit-tests PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}
     ${SFML_INCLUDE_DIR}
+    ${ZeroMQ_INCLUDE_DIR}
 )
 target_link_libraries( unit-tests LINK_PUBLIC
-    gtest gmock ${SFML_LIBRARIES}
+    gtest 
+    gmock 
+    ${SFML_LIBRARIES}
+    ${ZeroMQ_LIBRARIES}
 )
 
 

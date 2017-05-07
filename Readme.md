@@ -408,6 +408,25 @@ Check out the whole implementation of the RenderingSingleton in the
 [renderingSingleton.cpp](renderingSingleton.cpp) files.
 
 
+## Messaging
+
+The early versions of the game were built on the premise that the Game class
+directed the flow of events. The Game class would order a puzzle to be loaded
+and would tell the WinnerBlingBling class to celebrate the win. This approach is
+fine for simple applications but there are drawbacks. If something changes 
+you have to go back to the Game class and fix it there for instance.
+
+A more modern design uses loose coupling where the various objects don't know or
+care about the bigger picture. They just listen out for things they are concerned
+with and react accordingly. I.e. the WinnerBlingBling class only needs to know
+that the game was won and can start the merryment.
+
+ZeroMQ is a fast versatile messaging library that lets us implement the pub-sub
+publisher - subscriber pattern within our process (but also across a network if 
+need be).
+
+
+
 ## Copyright information
 This project is copyrighted by Richard Eigenmann, Zürich, 2016,2017. I have not yet
 decided on a license. Please contact me with any questions.

@@ -140,7 +140,7 @@ namespace SlidingTiles {
         /**
          * @brief The number of tiles in each direction
          */
-        static constexpr float VICTORY_ROLL_TIME{1.5f};
+        static constexpr float VICTORY_ROLL_TIME{1.8f};
 
         /**
          *@brief The amount of time left for the victory roll in seconds.  

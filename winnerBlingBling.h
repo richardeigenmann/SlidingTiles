@@ -6,6 +6,7 @@
 #include "randomSoundPlayer.h"
 #include "renderable.h"
 #include "gameState.h"
+#include "zmq.hpp"
 
 namespace SlidingTiles {
 
@@ -20,6 +21,11 @@ namespace SlidingTiles {
         WinnerBlingBling();
 
         /**
+         * @brief Destructor for winner bling bling
+         */
+        ~WinnerBlingBling();
+
+        /**
          * @brief Load method that takes the filenames in the JSON array and loads
          * the corresponding files into the sounds vector.
          * @param jsonArray The JSON array with File entries representing the filenames
@@ -31,20 +37,7 @@ namespace SlidingTiles {
          */
         void setPosition(float x, float y);
 
-        /**
-         * @brief call this to start the bling bling
-         * @param time The amount of time it will last
-         * @param moves the number of moves it took to solve
-         * @param par the par number of moves to solve
-         */
-        void startBlingBling(const float & time, std::size_t moves, std::size_t par);
 
-        /**
-         * @brief call this to end the bling bling
-         */
-        void endBlingBling();
-        
-        
         /**
          * @brief update callback
          */
@@ -65,6 +58,19 @@ namespace SlidingTiles {
 
     private:
         /**
+         * @brief call this to start the bling bling
+         * @param time The amount of time it will last
+         * @param moves the number of moves it took to solve
+         * @param par the par number of moves to solve
+         */
+        void startBlingBling(const float & time, std::size_t moves, std::size_t par);
+
+        /**
+         * @brief call this to end the bling bling
+         */
+        void endBlingBling();
+
+        /**
          * @brief The texture of the button
          */
         sf::Texture texture;
@@ -78,11 +84,15 @@ namespace SlidingTiles {
          * an object with winner sounds to be played randomly when a game is won 
          */
         RandomSoundPlayer winnerSounds;
-        
+
         /**
          * local variable to remember the state of the game
          */
-        GameState gameState {GameState::Initializing};
+        GameState gameState{GameState::Initializing};
+
+
+        zmq::context_t context{1};
+        zmq::socket_t socket{context, ZMQ_SUB};
 
     };
 }

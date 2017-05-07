@@ -2,6 +2,8 @@
 
 #include <SFML/Audio.hpp>
 #include "json.hpp"
+#include <random>
+
 
 using json = nlohmann::json;
 
@@ -13,6 +15,7 @@ namespace SlidingTiles {
      */
     class RandomSoundPlayer {
     public:
+        RandomSoundPlayer();
         /**
          * @brief Load method that takes the filenames in the JSON array and loads
          * the corresponding files into the sounds vector.
@@ -41,6 +44,11 @@ namespace SlidingTiles {
          * @brief the currently playing sound
          */
         sf::Sound sound{};
+
+        /**
+         * @brief add a decent random number Generator to the class
+         */
+        std::mt19937 randomNumberGenerator;
     };
 
 
