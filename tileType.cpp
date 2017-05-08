@@ -37,6 +37,25 @@ std::string tileTypeToString(const TileType & t) {
     }
 }
 
+TileType stringToTileType(const std::string & s) {
+    if (s == "Empty") return TileType::Empty;
+    else if (s == "Horizontal") return TileType::Horizontal;
+    else if (s == "Vertical") return TileType::Vertical;
+    else if (s == "StartTop") return TileType::StartTop;
+    else if (s == "StartBottom") return TileType::StartBottom;
+    else if (s == "StartLeft") return TileType::StartLeft;
+    else if (s == "StartRight") return TileType::StartRight;
+    else if (s == "EndTop") return TileType::EndTop;
+    else if (s == "EndBottom") return TileType::EndBottom;
+    else if (s == "EndRight") return TileType::EndRight;
+    else if (s == "EndLeft") return TileType::EndLeft;
+    else if (s == "LeftTop") return TileType::LeftTop;
+    else if (s == "LeftBottom") return TileType::LeftBottom;
+    else if (s == "TopRight") return TileType::TopRight;
+    else if (s == "BottomRight") return TileType::BottomRight;
+    return TileType::Empty;
+}
+
 std::string tileTypeToChar(const TileType & t) {
     switch (t) {
         case TileType::Empty:

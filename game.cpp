@@ -6,8 +6,10 @@
 #include <fstream>
 #include <random> // random_shuffle, std::default_random_engine
 #include <chrono> // std::chrono::system_clock
+#include <thread>
 #include <sstream>
 #include "json.hpp"
+#include "updatingSingleton.h"
 
 
 using namespace SlidingTiles;
@@ -39,8 +41,6 @@ namespace SlidingTiles {
             }
         }
 
-        loadLevel();
-
         gameView.setGameBoard(&gameBoard);
 
         json winnerSoundBitesArray = j["winnerSoundBites"];
@@ -55,60 +55,16 @@ namespace SlidingTiles {
         randomSfmlButton.setPosition(400, 230);
         nextSfmlButton.setPosition(400, 270);
         restartSfmlButton.setPosition(400, 310);
+
+        UpdatingSingleton::getInstance().add(*this);
     }
 
-    void Game::update(const float & dt) {
-        // send update event to all the tiles
-        for (int x = 0; x < GameBoard::boardSize; ++x)
-            for (int y = 0; y < GameBoard::boardSize; ++y) {
-                gameBoard.tiles[x][y].update(dt);
-            }
-
-        if (gameState == GameState::Playing) {
-            std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
-            if (solutionPath.size() > 0) {
-                gameBoard.setWinnerTiles(solutionPath);
-                gameState = GameState::VictoryRolling;
-
-                json jsonMessage{};
-                jsonMessage["state"] = PublishingSingleton::GAME_WON;
-                jsonMessage["victoryRollTime"] = VICTORY_ROLL_TIME;
-                jsonMessage["moves"] = moves;
-                jsonMessage["par"] = par;
-
-                PublishingSingleton::getInstance().publish(jsonMessage.dump());
-
-                victoryRollingTime = VICTORY_ROLL_TIME;
-            } else {
-                gameBoard.clearWinnerTiles();
-            }
-        }
-
-
-        if (gameState == GameState::VictoryRolling) {
-            victoryRollingTime -= dt;
-            if (victoryRollingTime < 0.0f) {
-                doLevelUp();
-                gameState = GameState::Playing;
-            }
-        }
-        winnerBlingBling.update(dt);
-    }
-
-    void Game::onRandomButtonClick() {
-        doRandomGame();
-    }
-
-    void Game::onNextButtonClick() {
-        doLevelUp();
-    }
-
-    void Game::onRestartButtonClick() {
-        loadLevel();
-        attitudeSounds.playRandomSound();
+    Game::~Game() {
+        UpdatingSingleton::getInstance().remove(*this);
     }
 
     void Game::run() {
+        loadLevel();
         sf::RenderWindow* window = RenderingSingleton::getInstance().getRenderWindow();
         while (window->isOpen()) {
             sf::Event event;
@@ -132,9 +88,51 @@ namespace SlidingTiles {
             }
 
             sf::Time dt = deltaClock.restart();
-            update(dt.asSeconds());
+            UpdatingSingleton::getInstance().updateAll(dt.asSeconds());
             RenderingSingleton::getInstance().renderAll();
         }
+    }
+
+    void Game::update(const float dt) {
+        if (gameState == GameState::Playing) {
+            std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
+            if (solutionPath.size() > 0) {
+                gameBoard.setWinnerTiles(solutionPath);
+                gameState = GameState::VictoryRolling;
+
+                json jsonMessage{};
+                jsonMessage["state"] = PublishingSingleton::GAME_WON;
+                jsonMessage["victoryRollTime"] = VICTORY_ROLL_TIME;
+                jsonMessage["moves"] = moves;
+                jsonMessage["par"] = par;
+                PublishingSingleton::getInstance().publish(jsonMessage.dump());
+
+                victoryRollingTime = VICTORY_ROLL_TIME;
+            } else {
+                gameBoard.clearWinnerTiles();
+            }
+        }
+
+        if (gameState == GameState::VictoryRolling) {
+            victoryRollingTime -= dt;
+            if (victoryRollingTime < 0.0f) {
+                doLevelUp();
+                gameState = GameState::Playing;
+            }
+        }
+    }
+
+    void Game::onRandomButtonClick() {
+        doRandomGame();
+    }
+
+    void Game::onNextButtonClick() {
+        doLevelUp();
+    }
+
+    void Game::onRestartButtonClick() {
+        loadLevel();
+        attitudeSounds.playRandomSound();
     }
 
     void Game::doRandomGame() {
@@ -207,6 +205,7 @@ namespace SlidingTiles {
     }
 
     void Game::loadLevel() {
+        std::cout << "loading level " << level << std::endl;
         std::ostringstream levelText;
         levelText << "Level: " << level;
         levelLabel.setText(levelText.str());

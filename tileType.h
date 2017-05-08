@@ -20,9 +20,18 @@ enum TileType {
 };
 
 /**
- * @brief Returns a string of the tile type. Helpful for debugging
+ * @brief Returns a string of the tile type.
+ * @param t the tile type to convert
  */
 std::string tileTypeToString(const TileType & t);
+
+/**
+ * @brief Returns the tile type from the supplied string. If it doesn't match
+ * it returns TileType::Empty
+ * @param s the string to parse
+ * @return the tileType or TileType::Empty if no match
+ */
+TileType stringToTileType(const std::string & s);
 
 /**
  * @brief Returns a char for the tile type. Used for Serialisation

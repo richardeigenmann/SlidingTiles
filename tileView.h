@@ -8,13 +8,14 @@
 #include "zmq.hpp"
 #include "publishingSingleton.h"
 #include <iostream>
+#include "updatingSingleton.h"
 
 namespace SlidingTiles {
 
     /**
      * @brief The view class for the tile that knows how to render itself
      */
-    class TileView : public TileObserver, public Renderable {
+    class TileView : public TileObserver, public Renderable, public Updateable {
     public:
 
         /**
@@ -22,15 +23,19 @@ namespace SlidingTiles {
          */
         TileView(sf::Vector2i tileCoordinates) : tileGameCoordinates(tileCoordinates) {
             RenderingSingleton::getInstance().add(*this);
+            UpdatingSingleton::getInstance().add(*this);
             socket.connect(PublishingSingleton::RECEIVER_SOCKET);
             socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+            std::cout << "TileView[" << tileGameCoordinates.x << "][" << tileGameCoordinates.y<<"] registered subscriber\n";
         };
 
         /**
          * @brief Destructor
          */
         ~TileView() {
+            socket.close();
             RenderingSingleton::getInstance().remove(*this);
+            UpdatingSingleton::getInstance().remove(*this);
         }
 
         /**

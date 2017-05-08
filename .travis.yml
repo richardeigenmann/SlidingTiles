@@ -12,6 +12,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - libsfml-dev
+    - libzmq-dev
     - lcov
     - g++-5
 

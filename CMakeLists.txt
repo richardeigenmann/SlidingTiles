@@ -87,6 +87,7 @@ SET(SOURCE_FILES
     randomSoundPlayer.cpp
     winnerBlingBling.cpp
     publishingSingleton.cpp
+    updatingSingleton.cpp
 )
 
 set( UNIT_TESTS

@@ -40,6 +40,7 @@ namespace SlidingTiles {
 
         static const std::string GAME_STARTED;
 
+        static const std::string SET_TILE;
         static const std::string SLIDE_TILE;
 
     private:

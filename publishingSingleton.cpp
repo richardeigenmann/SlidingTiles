@@ -26,4 +26,5 @@ const std::string PublishingSingleton::RECEIVER_SOCKET = "tcp://localhost:64123"
 const std::string PublishingSingleton::INITIALISING = "Initialising";
 const std::string PublishingSingleton::GAME_STARTED = "Game Started";
 const std::string PublishingSingleton::GAME_WON = "Game Won";
+const std::string PublishingSingleton::SET_TILE = "Set Tile";
 const std::string PublishingSingleton::SLIDE_TILE = "Slide Tile";

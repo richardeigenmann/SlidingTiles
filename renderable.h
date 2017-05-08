@@ -3,7 +3,7 @@
 namespace SlidingTiles {
 
     /**
-     * @brief Interface that defines what a TileObserver must implement
+     * @brief Interface that defines what a Renderable must implement
      */
     class Renderable {
     public:

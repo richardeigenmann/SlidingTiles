@@ -408,6 +408,14 @@ Check out the whole implementation of the RenderingSingleton in the
 [renderingSingleton.cpp](renderingSingleton.cpp) files.
 
 
+The same concept is used for the update cycle. Check out the whole implementation 
+of the UpdatingSingleton in the 
+[updatingSingleton.h](updatingSingleton.h) and 
+[updatingSingleton.cpp](updatingSingleton.cpp) and [updatable.h](updatable.h) 
+files.
+
+
+
 ## Messaging
 
 The early versions of the game were built on the premise that the Game class

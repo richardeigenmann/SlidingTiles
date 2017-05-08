@@ -9,6 +9,7 @@
 #include "randomSoundPlayer.h"
 #include "winnerBlingBling.h"
 #include "gameState.h"
+#include "updatingSingleton.h"
 
 namespace SlidingTiles {
 
@@ -16,7 +17,7 @@ namespace SlidingTiles {
      * @brief The main game object. This class acts like the Controller and the 
      * Model in MVC and it owns the view (GameView)
      */
-    class Game {
+    class Game : public Updateable {
     public:
         /**
          * @brief Constructor for the game
@@ -24,9 +25,14 @@ namespace SlidingTiles {
         Game();
 
         /**
+         * @brief Destructor for the game
+         */
+        ~Game();
+
+        /**
          * @brief update call to modify the model with a delta time in seconds
          */
-        void update(const float & dt);
+        void update(const float dt) override;
 
         /**
          * @brief entry point for the game
@@ -46,7 +52,9 @@ namespace SlidingTiles {
         /**
          * @brief a vector to hold the unique_ptr to the TileView objects
          */
-        std::vector<std::unique_ptr<TileView>> tileViews {};
+        std::vector<std::unique_ptr<TileView>> tileViews
+        {
+        };
 
 
         /**

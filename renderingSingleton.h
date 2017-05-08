@@ -31,13 +31,6 @@ namespace SlidingTiles {
         }
 
         /**
-         * @brief sets the render window
-         *
-        void setRenderWindow(sf::RenderWindow* newWindow) {
-            window = newWindow;
-        }*/
-
-        /**
          * @brief returns a pointer to the render window
          */
         sf::RenderWindow* getRenderWindow() {

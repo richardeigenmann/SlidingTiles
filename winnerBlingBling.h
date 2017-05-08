@@ -7,13 +7,14 @@
 #include "renderable.h"
 #include "gameState.h"
 #include "zmq.hpp"
+#include "updatingSingleton.h"
 
 namespace SlidingTiles {
 
     /**
      * @brief A base button class
      */
-    class WinnerBlingBling : public Renderable {
+    class WinnerBlingBling : public Renderable, public Updateable {
     public:
         /**
          * @brief Constructor for winner bling bling
@@ -41,7 +42,7 @@ namespace SlidingTiles {
         /**
          * @brief update callback
          */
-        void update(const float & dt);
+        void update(const float dt) override;
 
 
         /**

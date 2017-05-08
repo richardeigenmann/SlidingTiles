@@ -3,6 +3,7 @@
 #include <iostream>
 #include "publishingSingleton.h"
 #include "json.hpp"
+#include "updatingSingleton.h"
 
 using namespace SlidingTiles;
 
@@ -16,14 +17,17 @@ WinnerBlingBling::WinnerBlingBling() {
     setPosition(400, 5);
     sprite.setScale(0.2f, 0.2f);
     RenderingSingleton::getInstance().add(*this);
+    UpdatingSingleton::getInstance().add(*this);
 
-    std::cout << "WinnerBlingBling connecting to ZeroMQ socket: " << PublishingSingleton::RECEIVER_SOCKET  << std::endl;
-    socket.connect(PublishingSingleton::RECEIVER_SOCKET );
+    std::cout << "WinnerBlingBling connecting to ZeroMQ socket: " << PublishingSingleton::RECEIVER_SOCKET << std::endl;
+    socket.connect(PublishingSingleton::RECEIVER_SOCKET);
     socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
 }
 
 WinnerBlingBling::~WinnerBlingBling() {
     socket.close();
+    RenderingSingleton::getInstance().remove(*this);
+    UpdatingSingleton::getInstance().remove(*this);
 }
 
 void WinnerBlingBling::loadSounds(const json & jsonArray) {
@@ -47,7 +51,7 @@ void WinnerBlingBling::endBlingBling() {
     gameState = GameState::Playing;
 }
 
-void WinnerBlingBling::update(const float & dt) {
+void WinnerBlingBling::update(const float dt) {
     zmq::message_t reply;
     if (socket.recv(&reply, ZMQ_NOBLOCK)) {
         std::string message = std::string(static_cast<char*> (reply.data()), reply.size());

@@ -29,6 +29,7 @@ namespace SlidingTiles {
     }
 
     void TileView::update(const float dt) {
+        //std::cout << "tv update\n";
         if (transitioning) {
             timeSpentTransitioning += dt;
             if (timeSpentTransitioning > TRANSITION_TIME) {
@@ -41,7 +42,7 @@ namespace SlidingTiles {
         zmq::message_t reply;
         if (socket.recv(&reply, ZMQ_NOBLOCK)) {
             std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-            std::cout << "tileView received: " << message << std::endl;
+            //std::cout << "tileView received: " << message << std::endl;
             auto j = json::parse(message);
             std::string state = j["state"].get<std::string>();
             if (state == PublishingSingleton::SLIDE_TILE) {
@@ -50,10 +51,18 @@ namespace SlidingTiles {
                 int newPositionX = j["newPosition"]["x"];
                 int newPositionY = j["newPosition"]["y"];
                 if (tileGameCoordinates.x == startPositionX && tileGameCoordinates.y == startPositionY) {
-                    std::cout << "-->This is interesting. I am x: " << tileGameCoordinates.x << " y: " << tileGameCoordinates.y << " and the message is for x: " << startPositionX << " y: " << startPositionY << "\n";
+                    std::cout << "I am a TileView that needs to transition: I am x: " << tileGameCoordinates.x << " y: " << tileGameCoordinates.y << " and the message is for x: " << startPositionX << " y: " << startPositionY << "\n";
                     //transition(sf::Vector2i{newPositionX, newPositionY});
                 } else if (tileGameCoordinates.x == newPositionX && tileGameCoordinates.y == newPositionX) {
-                    std::cout << "-->This is interesting. I am x: " << tileGameCoordinates.x << " y: " << tileGameCoordinates.y << " and the message is for x: " << startPositionX << " y: " << startPositionY << "\n";
+                    std::cout << "I am a TileView that needs to setPosition: I am x: " << tileGameCoordinates.x << " y: " << tileGameCoordinates.y << " and the message is for x: " << startPositionX << " y: " << startPositionY << "\n";
+                }
+            } else if (state == PublishingSingleton::SET_TILE) {
+                int x = j["position"]["x"];
+                int y = j["position"]["y"];
+                std::string tileTypeString = j["tileType"].get<std::string>();
+                TileType tileType = stringToTileType(tileTypeString);
+                if (tileGameCoordinates.x == x && tileGameCoordinates.y == y) {
+                    std::cout << "I am a TileView that needs to setPosition and setTileType. I am x: " << tileGameCoordinates.x << " y: " << tileGameCoordinates.y << " and the message is for x: " << x << " y: " << y << " and tile type: " << tileTypeToString(tileType) << "\n";
                 }
             }
         }
