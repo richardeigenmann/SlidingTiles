@@ -1,5 +1,6 @@
 # Sliding Tiles
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7b1389d37d244865a6c12f7d028364fc)](https://www.codacy.com/app/richardeigenmann/SlidingTiles?utm_source=github.com&utm_medium=referral&utm_content=richardeigenmann/SlidingTiles&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/richardeigenmann/SlidingTiles.svg?branch=master)](https://travis-ci.org/richardeigenmann/SlidingTiles)
 [![codecov](https://codecov.io/gh/richardeigenmann/SlidingTiles/branch/master/graph/badge.svg)](https://codecov.io/gh/richardeigenmann/SlidingTiles)
 
