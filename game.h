@@ -10,6 +10,7 @@
 #include "winnerBlingBling.h"
 #include "gameState.h"
 #include "updatingSingleton.h"
+#include "debugMessageListener.h"
 
 namespace SlidingTiles {
 
@@ -49,12 +50,7 @@ namespace SlidingTiles {
          */
         SlidingTiles::GameView gameView;
 
-        /**
-         * @brief a vector to hold the unique_ptr to the TileView objects
-         */
-        std::vector<std::unique_ptr<TileView>> tileViews
-        {
-        };
+
 
 
         /**
@@ -198,6 +194,11 @@ namespace SlidingTiles {
          * an object with attitude sounds to be played randomly when the users is taking too long or restarts a level
          */
         RandomSoundPlayer attitudeSounds;
+        
+        /**
+         * Creates a DebugMessageListener which listens to the messages published on the ZMQ bus
+         */
+        DebugMessageListener debugMessageListener;
 
     };
 }

@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include "texturesSingleton.h"
 #include "renderingSingleton.h"
-#include "tileObserver.h"
 #include "renderable.h"
 #include "zmq.hpp"
 #include "publishingSingleton.h"
@@ -15,7 +14,7 @@ namespace SlidingTiles {
     /**
      * @brief The view class for the tile that knows how to render itself
      */
-    class TileView : public TileObserver, public Renderable, public Updateable {
+    class TileView : public Renderable, public Updateable {
     public:
 
         /**
@@ -26,7 +25,7 @@ namespace SlidingTiles {
             UpdatingSingleton::getInstance().add(*this);
             socket.connect(PublishingSingleton::RECEIVER_SOCKET);
             socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
-            std::cout << "TileView[" << tileGameCoordinates.x << "][" << tileGameCoordinates.y<<"] registered subscriber\n";
+            std::cout << "TileView[" << tileGameCoordinates.x << "][" << tileGameCoordinates.y << "] registered subscriber\n";
         };
 
         /**
@@ -58,47 +57,13 @@ namespace SlidingTiles {
          */
         void update(const float dt) override;
 
-        /**
-         * @brief starts a transition to the supplied new game coordinates
-         * @return true if transition kicked off, false if not
-         */
-        void transition(const sf::Vector2i & newGameBoardPosition) override;
 
-        /**
-         * @brief settor for the tile type
-         * @param newType the new type of the tile. Will figure out the correct texture from the TexturesSingleton
-         */
-        void setTileType(const TileType & newType) override {
-            tileType = newType;
-        };
 
-        /**
-         * @brief a bool to tell us if the tile is currently undergoing a transition
-         */
-        bool transitioning{false};
 
-        /**
-         * @brief settor for the tile coordinates in game coordinates
-         */
-        void setCoordinates(const sf::Vector2i & newGameBoardPosition) override {
-            tileGameCoordinates = newGameBoardPosition;
-            tileScreenCoordinates = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
-        };
 
-        /**
-         * @brief gettor for the tile coordinates in screen coordinates
-         * @return the coordinates
-         */
-        const sf::Vector2i & getCoordinates() {
-            return tileScreenCoordinates;
-        };
 
-        /**
-         * @brief settor for the winner flag
-         */
-        void setWinner(const bool & status) override {
-            winner = status;
-        };
+
+
 
     private:
         /**
@@ -137,6 +102,11 @@ namespace SlidingTiles {
         bool winner{false};
 
         /**
+         * @brief a bool to tell us if the tile is currently undergoing a transition
+         */
+        bool transitioning{false};
+
+        /**
          * @brief the type of the tile
          */
         TileType tileType{TileType::Empty};
@@ -150,5 +120,44 @@ namespace SlidingTiles {
          * @brief the ZeroMQ socket of type subscriber
          */
         zmq::socket_t socket{context, ZMQ_SUB};
+
+        /**
+         * @brief settor for the winner flag
+         */
+        void setWinner(const bool & status) {
+            winner = status;
+        };
+
+        /**
+         * @brief settor for the tile coordinates in game coordinates
+         */
+        void setCoordinates(const sf::Vector2i & newGameBoardPosition) {
+            tileGameCoordinates = newGameBoardPosition;
+            tileScreenCoordinates = RenderingSingleton::getInstance().calculateCoordinates(newGameBoardPosition);
+        };
+
+        /**
+         * @brief gettor for the tile coordinates in screen coordinates
+         * @return the coordinates
+         */
+        const sf::Vector2i & getCoordinates() {
+            return tileScreenCoordinates;
+        };
+
+        /**
+         * @brief starts a transition to the supplied new game coordinates
+         * @return true if transition kicked off, false if not
+         */
+        void transition(const sf::Vector2i & newGameBoardPosition);
+
+        /**
+         * @brief settor for the tile type
+         * @param newType the new type of the tile. Will figure out the correct texture from the TexturesSingleton
+         */
+        void setTileType(const TileType & newType) {
+            tileType = newType;
+        };
+
+
     };
 } // namespace SlidingTiles

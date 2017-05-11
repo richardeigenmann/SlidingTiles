@@ -28,3 +28,4 @@ const std::string PublishingSingleton::GAME_STARTED = "Game Started";
 const std::string PublishingSingleton::GAME_WON = "Game Won";
 const std::string PublishingSingleton::SET_TILE = "Set Tile";
 const std::string PublishingSingleton::SLIDE_TILE = "Slide Tile";
+const std::string PublishingSingleton::MOUSE_CLICKED = "Mouse Clicked";

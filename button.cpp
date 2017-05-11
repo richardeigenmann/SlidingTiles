@@ -8,9 +8,16 @@ Button::Button(const std::string & filename) {
     if (texture.loadFromFile(filename)) {
         sprite.setTexture(texture);
     } else {
-        std::cerr << "Failed to load texture: " << filename << std::endl;
+        throw std::runtime_error("Failed to load texture: " + filename);
     }
     RenderingSingleton::getInstance().add(*this);
+}
+
+/**
+ * @brief Destructor
+ */
+Button::~Button() {
+    RenderingSingleton::getInstance().remove(*this);
 }
 
 void Button::setPosition(float x, float y) {

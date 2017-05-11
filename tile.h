@@ -17,20 +17,19 @@ namespace SlidingTiles {
          */
         void setTilePosition(const sf::Vector2i & newGameBoardPosition) {
             myPosition = newGameBoardPosition;
-            for (auto& pair : tileObservers) {
+            /*for (auto& pair : tileObservers) {
                 pair.second->setCoordinates(newGameBoardPosition);
-            }
+            }*/
         }
 
         /**
          * Update event
          * @param dt The delta time in seconds
-         */
+         *
         void update(const float dt) {
             for (auto& pair : tileObservers) {
                 pair.second->update(dt);
-            }
-        }
+            }*/
 
         /**
          * @brief returns the tile position
@@ -95,18 +94,18 @@ namespace SlidingTiles {
          * Adds a TileObserver to the tile that will then get notified when
          * interesting things happen on the tile.
          * @param tileObserver The object that wants to find out about tile events
-         */
+         *
         void add(TileObserver& tileObserver) {
             tileObservers.insert(std::pair<TileObserver * const, TileObserver * const>(&tileObserver, &tileObserver));
-        }
+        }*/
 
         /**
          * Removes a TileObserver object from the list of notified objects
          * @param tileObserver
-         */
+         *
         void remove(TileObserver& tileObserver) {
             tileObservers.erase(&tileObserver);
-        }
+        }*/
 
     private:
         /**
@@ -132,7 +131,7 @@ namespace SlidingTiles {
         /**
          * @brief The map of TileOberservers
          */
-        std::map<TileObserver * const, TileObserver * const> tileObservers;
+        //std::map<TileObserver * const, TileObserver * const> tileObservers;
     };
 
 } // namespace SlidingTiles

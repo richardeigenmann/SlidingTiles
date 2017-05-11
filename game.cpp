@@ -20,34 +20,19 @@ namespace SlidingTiles {
     constexpr float Game::VICTORY_ROLL_TIME;
 
     Game::Game() {
-        // read a JSON file
+        // read a JSON file and parse it
         const std::string CONFIG_FILENAME = "assets/sliding-tiles.json";
-        std::ifstream in(CONFIG_FILENAME);
-        if (!in) {
-            std::cerr << "Could not read configuration file: "
-                    << CONFIG_FILENAME << std::endl;
+        std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
+        std::ifstream configIfstream(CONFIG_FILENAME);
+        if (!configIfstream) {
+            throw std::runtime_error("Could not read configuration file: " + CONFIG_FILENAME);
         }
-        json j;
-        in >> j;
-        levelsArray = j["levels"];
-
-        for (int y = 0; y < gameBoard.boardSize; ++y) {
-            for (int x = 0; x < gameBoard.boardSize; ++x) {
-                //TileView* tileView = new TileView(sf::Vector2i{x,y});
-                std::cout << "Creating a TileView for x: " << x << " y: " << y << "\n";
-                std::unique_ptr<TileView> tileView(new TileView(sf::Vector2i{x, y}));
-                gameBoard.tiles[x][y].add(*tileView);
-                tileViews.push_back(std::move(tileView));
-            }
-        }
-
-        gameView.setGameBoard(&gameBoard);
-
-        json winnerSoundBitesArray = j["winnerSoundBites"];
-        winnerBlingBling.loadSounds(winnerSoundBitesArray);
-
-        json attitudeSoundBitesArray = j["attitudeSoundBites"];
-        attitudeSounds.loadSounds(attitudeSoundBitesArray);
+        json configJson;
+        configIfstream >> configJson;
+        configIfstream.close();
+        levelsArray = configJson["levels"];
+        winnerBlingBling.loadSounds(configJson["winnerSoundBites"]);
+        attitudeSounds.loadSounds(configJson["attitudeSoundBites"]);
 
         levelLabel.setPosition(400, 120);
         movesLabel.setPosition(400, 150);
@@ -55,6 +40,8 @@ namespace SlidingTiles {
         randomSfmlButton.setPosition(400, 230);
         nextSfmlButton.setPosition(400, 270);
         restartSfmlButton.setPosition(400, 310);
+
+        gameView.setGameBoard(&gameBoard);
 
         UpdatingSingleton::getInstance().add(*this);
     }
@@ -97,7 +84,7 @@ namespace SlidingTiles {
         if (gameState == GameState::Playing) {
             std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
             if (solutionPath.size() > 0) {
-                gameBoard.setWinnerTiles(solutionPath);
+                //gameBoard.setWinnerTiles(solutionPath);
                 gameState = GameState::VictoryRolling;
 
                 json jsonMessage{};
@@ -105,11 +92,14 @@ namespace SlidingTiles {
                 jsonMessage["victoryRollTime"] = VICTORY_ROLL_TIME;
                 jsonMessage["moves"] = moves;
                 jsonMessage["par"] = par;
+                for (const auto & solutionStep : solutionPath) {
+                    jsonMessage["solutionTiles"].push_back({solutionStep.x, solutionStep.y});
+                }
                 PublishingSingleton::getInstance().publish(jsonMessage.dump());
 
                 victoryRollingTime = VICTORY_ROLL_TIME;
             } else {
-                gameBoard.clearWinnerTiles();
+                //gameBoard.clearWinnerTiles();
             }
         }
 
@@ -157,32 +147,39 @@ namespace SlidingTiles {
         }
 
         sf::Vector2i movingTilePosition = RenderingSingleton::getInstance().findTile(mousePositionPressed);
-        if (movingTilePosition.x == -1 || movingTilePosition.y == -1)
-            return; // out of grid
-        int deltaX = mousePosition.x - mousePositionPressed.x;
-        int deltaY = mousePosition.y - mousePositionPressed.y;
-        if (abs(deltaX) > 2 || abs(deltaY) > 2) {
-            incrementMoves();
-            Tile movingTile = gameBoard.tiles[movingTilePosition.x][movingTilePosition.y];
-            if (abs(deltaX) > abs(deltaY)) {
-                // horizontal movement
-                sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x + copysign(1, deltaX), movingTilePosition.y);
-                if (deltaX > 0) {
-                    //gameBoard.slideTile(Move{movingTilePosition, Direction::GoRight});
-                    doMove(Move{movingTilePosition, Direction::GoRight});
+        if (movingTilePosition.x != -1 && movingTilePosition.y != -1) {
+            // out of grid
+            int deltaX = mousePosition.x - mousePositionPressed.x;
+            int deltaY = mousePosition.y - mousePositionPressed.y;
+            if (abs(deltaX) > 2 || abs(deltaY) > 2) {
+                incrementMoves();
+                Tile movingTile = gameBoard.tiles[movingTilePosition.x][movingTilePosition.y];
+                if (abs(deltaX) > abs(deltaY)) {
+                    // horizontal movement
+                    sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x + copysign(1, deltaX), movingTilePosition.y);
+                    if (deltaX > 0) {
+                        //gameBoard.slideTile(Move{movingTilePosition, Direction::GoRight});
+                        doMove(Move{movingTilePosition, Direction::GoRight});
+                    } else {
+                        doMove(Move{movingTilePosition, Direction::GoLeft});
+                    }
                 } else {
-                    doMove(Move{movingTilePosition, Direction::GoLeft});
-                }
-            } else {
-                // vertical movement
-                sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x, movingTilePosition.y + copysign(1, deltaY));
-                if (deltaY > 0) {
-                    doMove(Move{movingTilePosition, Direction::GoDown});
-                } else {
-                    doMove(Move{movingTilePosition, Direction::GoUp});
-                }
+                    // vertical movement
+                    sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x, movingTilePosition.y + copysign(1, deltaY));
+                    if (deltaY > 0) {
+                        doMove(Move{movingTilePosition, Direction::GoDown});
+                    } else {
+                        doMove(Move{movingTilePosition, Direction::GoUp});
+                    }
 
+                }
             }
+        } else {
+            json jsonMessage{};
+            jsonMessage["state"] = PublishingSingleton::MOUSE_CLICKED;
+            jsonMessage["x"] = mousePosition.x;
+            jsonMessage["y"] = mousePosition.y;
+            PublishingSingleton::getInstance().publish(jsonMessage.dump());
         }
     }
 

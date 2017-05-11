@@ -87,7 +87,7 @@ SET(SOURCE_FILES
     randomSoundPlayer.cpp
     winnerBlingBling.cpp
     publishingSingleton.cpp
-    updatingSingleton.cpp
+    debugMessageListener.cpp
 )
 
 set( UNIT_TESTS
@@ -103,6 +103,7 @@ set( UNIT_TESTS
     puzzleSolver.tests.cpp
     button.tests.cpp
     move.tests.cpp
+    debugMessageListener.cpp
 )
 
 ADD_EXECUTABLE(sliding-tiles main.cpp ${SOURCE_FILES})
@@ -198,6 +199,7 @@ SET(LEVEL_GENERATOR_SOURCE_FILES
     tileType.cpp
     puzzleSolver.cpp
     publishingSingleton.cpp
+    debugMessageListener.cpp
 )
 
 

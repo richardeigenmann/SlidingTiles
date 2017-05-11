@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/richardeigenmann/SlidingTiles.svg?branch=master)](https://travis-ci.org/richardeigenmann/SlidingTiles)
 [![codecov](https://codecov.io/gh/richardeigenmann/SlidingTiles/branch/master/graph/badge.svg)](https://codecov.io/gh/richardeigenmann/SlidingTiles)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7b1389d37d244865a6c12f7d028364fc)](https://www.codacy.com/app/richardeigenmann/SlidingTiles?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=richardeigenmann/SlidingTiles&amp;utm_campaign=Badge_Grade)
 
 ## Screenshot
 ![Screenshot](http://opentechschool-zurich.github.io/cpp-co-learning/topics/games/monkey-keg/Richard/sliding-tiles/doc/Screenshot.png)

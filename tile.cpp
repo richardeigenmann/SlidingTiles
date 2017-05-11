@@ -8,9 +8,9 @@ namespace SlidingTiles {
      */
     void Tile::setTileType(const TileType & newType) {
         tileType = newType;
-        for (auto& pair : tileObservers) {
+        /*for (auto& pair : tileObservers) {
             pair.second->setTileType(newType);
-        }
+        }*/
         setMoveable(newType);
     };
 
@@ -111,9 +111,9 @@ namespace SlidingTiles {
 
     void Tile::transition(const sf::Vector2i & newGameBoardPosition) {
         myPosition = newGameBoardPosition;
-        for (auto& pair : tileObservers) {
+      /*  for (auto& pair : tileObservers) {
             pair.second->transition(newGameBoardPosition);
-        }
+        }*/
     }
 
     /**
@@ -156,9 +156,9 @@ namespace SlidingTiles {
 
     void Tile::setWinner(const bool & status) {
         winner = status;
-        for (auto& pair : tileObservers) {
+      /*  for (auto& pair : tileObservers) {
             pair.second->setWinner(status);
-        }
+        }*/
 
     }
 

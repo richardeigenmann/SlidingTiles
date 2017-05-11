@@ -134,20 +134,20 @@ namespace SlidingTiles {
 
         /**
          * @brief sets the winner tiles to winner true
-         */
+         *
         void setWinnerTiles(std::vector<sf::Vector2i> & solutionPath) {
             for (auto tile : solutionPath)
                 tiles[tile.x][tile.y].setWinner(true);
-        }
+        }*/
 
         /**
          * @brief sets all tiles back to no winner status
-         */
+         *
         void clearWinnerTiles() {
             for (int x = 0; x < boardSize; ++x)
                 for (int y = 0; y < boardSize; ++y)
                     tiles[x][y].setWinner(false);
-        }
+        }*/
 
     };
 

@@ -42,6 +42,11 @@ namespace SlidingTiles {
 
         static const std::string SET_TILE;
         static const std::string SLIDE_TILE;
+        static const std::string MOUSE_CLICKED;
+        
+        zmq::context_t * getContext() {
+            return &context;
+        }
 
     private:
         /**

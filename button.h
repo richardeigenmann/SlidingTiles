@@ -22,9 +22,7 @@ namespace SlidingTiles {
         /**
          * @brief Destructor
          */
-        ~Button() {
-            RenderingSingleton::getInstance().remove(*this);
-        }
+        ~Button();
 
         /**
          * @brief set the position of the button

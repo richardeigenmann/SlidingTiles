@@ -59,10 +59,10 @@ namespace SlidingTiles {
         /**
          * @brief Private constructor for singleton
          */
-        UpdatingSingleton();
+        UpdatingSingleton() {};
 
         /**
-         * @brief The map of Updateablex
+         * @brief The map of Updateable
          */
         std::map<Updateable * const, Updateable * const> updateables;
 

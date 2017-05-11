@@ -8,6 +8,9 @@
 #include "gameState.h"
 #include "zmq.hpp"
 #include "updatingSingleton.h"
+#include "renderingSingleton.h"
+#include "publishingSingleton.h"
+
 
 namespace SlidingTiles {
 
