@@ -127,16 +127,6 @@ namespace SlidingTiles {
         void loadLevel();
 
         /**
-         * @brief opens a random level
-         */
-        void onRandomButtonClick();
-
-        /**
-         * @brief advances to the next level
-         */
-        void onNextButtonClick();
-
-        /**
          * @brief restarts the level
          */
         void onRestartButtonClick();
@@ -154,15 +144,15 @@ namespace SlidingTiles {
         /**
          * a Button for a random level
          */
-        Button randomSfmlButton{"assets/button_random.png"};
+        Button randomSfmlButton{"assets/button_random.png", ZmqSingleton::LOAD_RANDOM_LEVEL};
         /**
          * a Button to go to the next level
          */
-        Button nextSfmlButton{"assets/button_next.png"};
+        Button nextSfmlButton{"assets/button_next.png", ZmqSingleton::LOAD_NEXT_LEVEL};
         /**
          * a restart button
          */
-        Button restartSfmlButton{"assets/button_restart.png"};
+        Button restartSfmlButton{"assets/button_restart.png", ZmqSingleton::RESTART_LEVEL};
 
         /**
          * a label to show the current level
@@ -194,11 +184,23 @@ namespace SlidingTiles {
          * an object with attitude sounds to be played randomly when the users is taking too long or restarts a level
          */
         RandomSoundPlayer attitudeSounds;
-        
+
         /**
          * Creates a DebugMessageListener which listens to the messages published on the ZMQ bus
          */
         DebugMessageListener debugMessageListener;
+
+        /**
+         * @brief A shared_ptr to the context of the ZeroMQ. It gets set by
+         * the Constructor
+         */
+        std::shared_ptr<zmq::context_t> contextPtr;
+
+        /**
+         * @brief The ZeroMQ socket of type subscriber. It is set by the 
+         * constructor.
+         */
+        std::unique_ptr<zmq::socket_t> socket;
 
     };
 }

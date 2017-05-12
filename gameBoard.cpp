@@ -22,11 +22,11 @@ void GameBoard::loadGame(const std::string game[boardSize][boardSize]) {
             tile->setTileType(game[y][x]); // note the inversion here!
             //std::cout << "[" << x << "][" << y << "] char: " << game[x][y] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
             json jsonMessage{};
-            jsonMessage["state"] = PublishingSingleton::SET_TILE;
+            jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
             jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            PublishingSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage.dump());
         }
     }
     solution.clear();
@@ -40,11 +40,11 @@ void GameBoard::loadGame(const std::vector<std::string> & game) {
             tile->setTileType(game[y * 4 + x]);
             //std::cout << "[" << x << "][" << y << "] game[y*4+x]: " << game[y*4+x] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
             json jsonMessage{};
-            jsonMessage["state"] = PublishingSingleton::SET_TILE;
+            jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
             jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            PublishingSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage.dump());
         }
     }
     solution.clear();
@@ -59,11 +59,11 @@ void GameBoard::loadGame(const std::wstring & game) {
             tile->setTileType(std::wstring{game[y * 4 + x]});
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
             json jsonMessage{};
-            jsonMessage["state"] = PublishingSingleton::SET_TILE;
+            jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
             jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            PublishingSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage.dump());
         }
     }
     solution.clear();
@@ -81,11 +81,11 @@ void GameBoard::loadGame(const std::string & game) {
             tile->setTileType(std::wstring{utf16[y * 4 + x]});
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
             json jsonMessage{};
-            jsonMessage["state"] = PublishingSingleton::SET_TILE;
+            jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
             jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            PublishingSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage.dump());
         }
     }
     solution.clear();
@@ -233,12 +233,12 @@ void GameBoard::slideTile(const Move & move) {
 
 
         json jsonMessage{};
-        jsonMessage["state"] = PublishingSingleton::SLIDE_TILE;
+        jsonMessage["state"] = ZmqSingleton::SLIDE_TILE;
         jsonMessage["startPosition"]["x"] = move.startPosition.x;
         jsonMessage["startPosition"]["y"] = move.startPosition.y;
         jsonMessage["newPosition"]["x"] = newPosition.x;
         jsonMessage["newPosition"]["y"] = newPosition.y;
-        PublishingSingleton::getInstance().publish(jsonMessage.dump());
+        ZmqSingleton::getInstance().publish(jsonMessage.dump());
 
         tiles[newPosition.x][newPosition.y] = slidingTile;
         tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;

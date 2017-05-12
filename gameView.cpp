@@ -10,7 +10,6 @@ namespace SlidingTiles {
             for (int x = 0; x < GameBoard::boardSize; ++x) {
                 std::cout << "Creating a TileView for x: " << x << " y: " << y << "\n";
                 std::unique_ptr<TileView> tileView(new TileView(sf::Vector2i{x, y}));
-                //gameBoard.tiles[x][y].add(*tileView);
                 tileViews.push_back(std::move(tileView));
             }
         }

@@ -5,7 +5,7 @@
 #include "renderingSingleton.h"
 #include "renderable.h"
 #include "zmq.hpp"
-#include "publishingSingleton.h"
+#include "zmqSingleton.h"
 #include <iostream>
 #include "updatingSingleton.h"
 
@@ -23,7 +23,7 @@ namespace SlidingTiles {
         TileView(sf::Vector2i tileCoordinates) : tileGameCoordinates(tileCoordinates) {
             RenderingSingleton::getInstance().add(*this);
             UpdatingSingleton::getInstance().add(*this);
-            socket.connect(PublishingSingleton::RECEIVER_SOCKET);
+            socket.connect(ZmqSingleton::RECEIVER_SOCKET);
             socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
             std::cout << "TileView[" << tileGameCoordinates.x << "][" << tileGameCoordinates.y << "] registered subscriber\n";
         };

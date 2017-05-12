@@ -12,6 +12,32 @@ This program creates a window and places tiles in a grid.
 The tiles can be slid around by dragging the mouse.
 When the start and end tile match up in a path you win.
 
+### Patterns
+* Singleton
+* Observer
+* Pub-Sub Messaging
+* Actor
+* RAII
+* shared_ptr
+* Unit Testing
+
+### Algorithms
+* Breadth-First-Search
+
+### Frameworks
+* SFML
+* ZeroMQ
+* Google Test
+* Doxygen
+* TravisCI
+
+### Features
+* cross platform (sort of)
+* Graphics & Sound
+* Animation
+* C++ 11
+* Code Coverage
+
 
 ## Build and run
 ```bash
@@ -423,7 +449,8 @@ The early versions of the game were built on the premise that the Game class
 directed the flow of events. The Game class would order a puzzle to be loaded
 and would tell the WinnerBlingBling class to celebrate the win. This approach is
 fine for simple applications but there are drawbacks. If something changes 
-you have to go back to the Game class and fix it there for instance.
+you have to go back to the Game class and fix it there. A lot of code accumulates 
+there and you don't end up with a good "separation of concerns".
 
 A more modern design uses loose coupling where the various objects don't know or
 care about the bigger picture. They just listen out for things they are concerned
@@ -440,33 +467,84 @@ serialisation and deserialisation comes at a cost so this approach might not wor
 in all cases.
 
 The game probably has multiple places that need to send messages so I created
-a PublishingSingleton ( [publishingSingleton.h](publishingSingleton.h) and 
-[publishingSingleton.cpp](publishingSingleton.cpp) ) where any class can call the 
+a ZmqSingleton ( [zmqSingleton.h](zmqSingleton.h) and 
+[zmqSingleton.cpp](zmqSingleton.cpp) ) where any class can call the 
 publish(const std::string & message) function.
 
+ZeroMQ can transport the messages over various kinds of connection. Most common 
+certainly is the use of TCP sockets. But it also support In-Process connections.
+For this to work, though, the zmq::context_t object must be shared. I chose to 
+use the ZmqSingleton as the carrier for the context object which is distributed
+to any caller by means of a shared_ptr.
+
 In the receiving classes we need to connect to the socket and check if a message
-was received:
+was received. The best place to review this is the DebugMessageListener class:
+[debugMessageListener.h](debugMessageListener.h) and 
+[debugMessageListener.cpp](debugMessageListener.cpp)
 
 ```c++
-// need the context and socket defined on the class
-zmq::context_t context{1};
-zmq::socket_t socket{context, ZMQ_SUB};
+// The constructor for a listener needs to bind to the ZeroMQ context and open 
+// a ZMQ_SUB socket which it can connect to as a tcp port, in process etc.
+// It also extends the Updatable and registers there so that it gets update() callbacks.
+DebugMessageListener::DebugMessageListener() {
+    UpdatingSingleton::getInstance().add(*this);
 
-// This happens in the constructor:
-socket.connect("tcp://localhost:64123");
-socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+    std::cout << "DebugMessageListener connecting to ZeroMQ socket: "
+            << ZmqSingleton::RECEIVER_SOCKET << std::endl;
+    contextPtr = ZmqSingleton::getInstance().getContext();
+    socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);
+    socket->connect(ZmqSingleton::RECEIVER_SOCKET);
+    socket->setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+}
 
-// Here we receive the message:
- zmq::message_t reply;
- if (socket.recv(&reply, ZMQ_NOBLOCK)) {
-    std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-    auto j = json::parse(message);
-    std::string state = j["state"].get<std::string>();
-    if (state == PublishingSingleton::GAME_WON) 
-        ...
+
+void DebugMessageListener::update(const float dt) {
+    zmq::message_t reply;
+    if (socket->recv(&reply, ZMQ_NOBLOCK)) {
+        std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
+        std::cout << "DebugMessageListener received: " << message << std::endl;
+    }
 }
 ```
 
+The ZmqSingleton create the context and socket as a private member variable:
+
+```c++
+std::shared_ptr<zmq::context_t> contextPtr = std::make_shared<zmq::context_t>(1);
+zmq::socket_t socket{*contextPtr, ZMQ_PUB};
+```
+
+It makes the context available:
+
+```c++
+std::shared_ptr<zmq::context_t> & getContext() {
+    return contextPtr;
+}
+```
+
+And it facilitates publishing a message:
+
+```c++
+void ZmqSingleton::publish(const std::string & message) {
+    zmq::message_t zmqMessage(message.size());
+    memcpy(zmqMessage.data(), message.data(), message.size());
+    socket.send(zmqMessage);
+}
+```
+
+Which can be used when the game is won:
+
+```c++
+json jsonMessage{};
+jsonMessage["state"] = ZmqSingleton::GAME_WON;
+jsonMessage["victoryRollTime"] = VICTORY_ROLL_TIME;
+jsonMessage["moves"] = moves;
+jsonMessage["par"] = par;
+for (const auto & solutionStep : solutionPath) {
+    jsonMessage["solutionTiles"].push_back({solutionStep.x, solutionStep.y});
+}
+ZmqSingleton::getInstance().publish(jsonMessage.dump());
+```
 
 
 ## Copyright information

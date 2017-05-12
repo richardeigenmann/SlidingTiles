@@ -3,10 +3,9 @@
 #include <string>
 #include "zmq.hpp"
 #include "updatingSingleton.h"
-#include "publishingSingleton.h"
+#include "zmqSingleton.h"
 
 namespace SlidingTiles {
-
     /**
      * @brief A base button class
      */
@@ -22,7 +21,6 @@ namespace SlidingTiles {
          */
         ~DebugMessageListener();
 
-
         /**
          * @brief update callback
          */
@@ -31,17 +29,15 @@ namespace SlidingTiles {
 
     private:
         /**
-         * @brief ZeroMQ needs a context
+         * @brief A shared_ptr to the context of the ZeroMQ. It gets set by
+         * the Constructor
          */
-        //zmq::context_t context{1};
-        zmq::context_t * context;
+        std::shared_ptr<zmq::context_t> contextPtr;
         
         /**
-         * @brief the ZeroMQ socket of type subscriber
+         * @brief The ZeroMQ socket of type subscriber. It is set by the 
+         * constructor.
          */
-        //zmq::socket_t socket{context, ZMQ_SUB};
-        zmq::socket_t * socket;
-        
-
+        std::unique_ptr<zmq::socket_t> socket;
     };
 }

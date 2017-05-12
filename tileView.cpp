@@ -45,7 +45,7 @@ namespace SlidingTiles {
             //std::cout << "tileView received: " << message << std::endl;
             auto jsonMessage = json::parse(message);
             std::string state = jsonMessage["state"].get<std::string>();
-            if (state == PublishingSingleton::SLIDE_TILE) {
+            if (state == ZmqSingleton::SLIDE_TILE) {
                 int startPositionX = jsonMessage["startPosition"]["x"];
                 int startPositionY = jsonMessage["startPosition"]["y"];
                 int newPositionX = jsonMessage["newPosition"]["x"];
@@ -57,7 +57,7 @@ namespace SlidingTiles {
                     std::cout << "I am a TileView that needs to setPosition: I am x: " << tileGameCoordinates.x << " y: " << tileGameCoordinates.y << " and the message is for x: " << startPositionX << " y: " << startPositionY << "\n";
                     setCoordinates(sf::Vector2i{startPositionX, startPositionY});
                 }
-            } else if (state == PublishingSingleton::SET_TILE) {
+            } else if (state == ZmqSingleton::SET_TILE) {
                 int x = jsonMessage["position"]["x"];
                 int y = jsonMessage["position"]["y"];
                 std::string tileTypeString = jsonMessage["tileType"].get<std::string>();
@@ -68,7 +68,7 @@ namespace SlidingTiles {
                     setTileType(stringToTileType(tileTypeString));
                     setWinner(false);
                 }
-            } else if (state == PublishingSingleton::GAME_WON) {
+            } else if (state == ZmqSingleton::GAME_WON) {
                 auto solutionTiles = jsonMessage["solutionTiles"];
                 for (const auto & solutionTile : solutionTiles) {
                     size_t x = solutionTile[0];

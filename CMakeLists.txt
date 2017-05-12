@@ -86,7 +86,7 @@ SET(SOURCE_FILES
     label.cpp
     randomSoundPlayer.cpp
     winnerBlingBling.cpp
-    publishingSingleton.cpp
+    zmqSingleton.cpp
     debugMessageListener.cpp
 )
 
@@ -198,7 +198,7 @@ SET(LEVEL_GENERATOR_SOURCE_FILES
     tile.cpp
     tileType.cpp
     puzzleSolver.cpp
-    publishingSingleton.cpp
+    zmqSingleton.cpp
     debugMessageListener.cpp
 )
 

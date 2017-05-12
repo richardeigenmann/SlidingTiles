@@ -15,7 +15,7 @@ WinnerBlingBling::WinnerBlingBling() {
     UpdatingSingleton::getInstance().add(*this);
 
     //std::cout << "WinnerBlingBling connecting to ZeroMQ socket: " << PublishingSingleton::RECEIVER_SOCKET << std::endl;
-    socket.connect(PublishingSingleton::RECEIVER_SOCKET);
+    socket.connect(ZmqSingleton::RECEIVER_SOCKET);
     socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
 }
 
@@ -50,12 +50,11 @@ void WinnerBlingBling::update(const float dt) {
     zmq::message_t reply;
     if (socket.recv(&reply, ZMQ_NOBLOCK)) {
         std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-        //std::cout << "WinnerBlingBling received: " << message << std::endl;
-        auto j = json::parse(message);
-        std::string state = j["state"].get<std::string>();
-        if (state == PublishingSingleton::GAME_WON) {
-            startBlingBling(j["victoryRollTime"], j["moves"], j["par"]);
-        } else if (state == PublishingSingleton::GAME_STARTED) {
+        auto jsonMessage = json::parse(message);
+        std::string state = jsonMessage["state"].get<std::string>();
+        if (state == ZmqSingleton::GAME_WON) {
+            startBlingBling(jsonMessage["victoryRollTime"], jsonMessage["moves"], jsonMessage["par"]);
+        } else if (state == ZmqSingleton::GAME_STARTED) {
             endBlingBling();
         }
     }

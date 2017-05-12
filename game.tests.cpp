@@ -64,7 +64,7 @@ TEST(Game, Run) {
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     window->close();
 
-    EXPECT_TRUE(futureResult.wait_for(std::chrono::milliseconds(10)) != std::future_status::timeout);
+    EXPECT_TRUE(futureResult.wait_for(std::chrono::milliseconds(200)) != std::future_status::timeout);
 }
 
 

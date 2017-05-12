@@ -5,17 +5,21 @@ using namespace SlidingTiles;
 DebugMessageListener::DebugMessageListener() {
     UpdatingSingleton::getInstance().add(*this);
 
-    std::cout << "DebugMessageListener connecting to ZeroMQ socket: " << PublishingSingleton::RECEIVER_SOCKET << std::endl;
-    context = PublishingSingleton::getInstance().getContext();
-    socket = new zmq::socket_t{*context, ZMQ_SUB};
-    socket->connect(PublishingSingleton::RECEIVER_SOCKET);
-    socket->setsockopt(ZMQ_SUBSCRIBE, 0, 0);
-    UpdatingSingleton::getInstance().add(*this);
+    std::cout << "DebugMessageListener connecting to ZeroMQ socket: "
+            << ZmqSingleton::RECEIVER_SOCKET << std::endl;
+    contextPtr = ZmqSingleton::getInstance().getContext();
+    try {
+        socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);
+        socket->connect(ZmqSingleton::RECEIVER_SOCKET);
+        socket->setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+    } catch (const zmq::error_t & e) {
+        throw std::runtime_error("ZeroMQ Error when connecting Button to socket "
+                + ZmqSingleton::RECEIVER_SOCKET + ": " + e.what());
+    }
 }
 
 DebugMessageListener::~DebugMessageListener() {
     socket->close();
-    delete socket;
     UpdatingSingleton::getInstance().remove(*this);
 }
 

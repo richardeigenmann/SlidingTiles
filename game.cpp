@@ -2,7 +2,7 @@
 #include "gameBoard.h"
 #include <cmath>
 #include "puzzleSolver.h"
-#include "publishingSingleton.h"
+#include "zmqSingleton.h"
 #include <fstream>
 #include <random> // random_shuffle, std::default_random_engine
 #include <chrono> // std::chrono::system_clock
@@ -43,7 +43,21 @@ namespace SlidingTiles {
 
         gameView.setGameBoard(&gameBoard);
 
+        std::cout << "Game connecting to ZeroMQ socket: "
+                << ZmqSingleton::RECEIVER_SOCKET << std::endl;
+        contextPtr = ZmqSingleton::getInstance().getContext();
+        try {
+            socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);
+            socket->connect(ZmqSingleton::RECEIVER_SOCKET);
+            socket->setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+        } catch (const zmq::error_t & e) {
+            throw std::runtime_error("ZeroMQ Error when connecting Game to socket "
+                    + ZmqSingleton::RECEIVER_SOCKET + ": " + e.what());
+        }
+
         UpdatingSingleton::getInstance().add(*this);
+
+
     }
 
     Game::~Game() {
@@ -88,14 +102,14 @@ namespace SlidingTiles {
                 gameState = GameState::VictoryRolling;
 
                 json jsonMessage{};
-                jsonMessage["state"] = PublishingSingleton::GAME_WON;
+                jsonMessage["state"] = ZmqSingleton::GAME_WON;
                 jsonMessage["victoryRollTime"] = VICTORY_ROLL_TIME;
                 jsonMessage["moves"] = moves;
                 jsonMessage["par"] = par;
                 for (const auto & solutionStep : solutionPath) {
                     jsonMessage["solutionTiles"].push_back({solutionStep.x, solutionStep.y});
                 }
-                PublishingSingleton::getInstance().publish(jsonMessage.dump());
+                ZmqSingleton::getInstance().publish(jsonMessage.dump());
 
                 victoryRollingTime = VICTORY_ROLL_TIME;
             } else {
@@ -110,14 +124,22 @@ namespace SlidingTiles {
                 gameState = GameState::Playing;
             }
         }
-    }
 
-    void Game::onRandomButtonClick() {
-        doRandomGame();
-    }
+        zmq::message_t reply;
+        if (socket->recv(&reply, ZMQ_NOBLOCK)) {
+            std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
+            auto jsonMessage = json::parse(message);
+            std::string state = jsonMessage["state"].get<std::string>();
+            if (state == ZmqSingleton::LOAD_NEXT_LEVEL) {
+                doLevelUp();
+            } else if (state == ZmqSingleton::LOAD_RANDOM_LEVEL) {
+                doRandomGame();
+            }else if (state == ZmqSingleton::RESTART_LEVEL) {
+                onRestartButtonClick();
+            }
+        }
 
-    void Game::onNextButtonClick() {
-        doLevelUp();
+
     }
 
     void Game::onRestartButtonClick() {
@@ -135,17 +157,6 @@ namespace SlidingTiles {
     }
 
     void Game::doMouseReleased(const sf::Vector2i & mousePosition) {
-        if (nextSfmlButton.mouseReleased(mousePosition)) {
-            onNextButtonClick();
-            return;
-        } else if (randomSfmlButton.mouseReleased(mousePosition)) {
-            onRandomButtonClick();
-            return;
-        } else if (restartSfmlButton.mouseReleased(mousePosition)) {
-            onRestartButtonClick();
-            return;
-        }
-
         sf::Vector2i movingTilePosition = RenderingSingleton::getInstance().findTile(mousePositionPressed);
         if (movingTilePosition.x != -1 && movingTilePosition.y != -1) {
             // out of grid
@@ -176,10 +187,10 @@ namespace SlidingTiles {
             }
         } else {
             json jsonMessage{};
-            jsonMessage["state"] = PublishingSingleton::MOUSE_CLICKED;
+            jsonMessage["state"] = ZmqSingleton::MOUSE_CLICKED;
             jsonMessage["x"] = mousePosition.x;
             jsonMessage["y"] = mousePosition.y;
-            PublishingSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage.dump());
         }
     }
 
@@ -220,8 +231,8 @@ namespace SlidingTiles {
         parLabel.setText(parText.str());
 
         json jsonMessage{};
-        jsonMessage["state"] = PublishingSingleton::GAME_STARTED;
-        PublishingSingleton::getInstance().publish(jsonMessage.dump());
+        jsonMessage["state"] = ZmqSingleton::GAME_STARTED;
+        ZmqSingleton::getInstance().publish(jsonMessage.dump());
 
     }
 

@@ -4,7 +4,7 @@
 #include "tile.h"
 #include <vector>
 #include "moveNode.h"
-#include "publishingSingleton.h"
+#include "zmqSingleton.h"
 
 namespace SlidingTiles {
 

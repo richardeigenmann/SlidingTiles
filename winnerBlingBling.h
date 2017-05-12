@@ -9,7 +9,7 @@
 #include "zmq.hpp"
 #include "updatingSingleton.h"
 #include "renderingSingleton.h"
-#include "publishingSingleton.h"
+#include "zmqSingleton.h"
 
 
 namespace SlidingTiles {
