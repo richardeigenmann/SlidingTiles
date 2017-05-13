@@ -48,15 +48,7 @@ namespace SlidingTiles {
         configJson["state"] = ZmqSingleton::CONFIGURATION_LOADED;
         ZmqSingleton::getInstance().publish(configJson.dump());
 
-
-        levelLabel.setPosition(400, 120);
-        movesLabel.setPosition(400, 150);
-        parLabel.setPosition(400, 180);
-
-
         gameView.setGameBoard(&gameBoard);
-
-
         UpdatingSingleton::getInstance().add(*this);
     }
 
@@ -104,14 +96,14 @@ namespace SlidingTiles {
                 jsonMessage["state"] = ZmqSingleton::GAME_WON;
                 jsonMessage["victoryRollTime"] = VICTORY_ROLL_TIME;
                 jsonMessage["moves"] = moves;
-                jsonMessage["par"] = par;
+                jsonMessage["par"] = levelsArray[level]["Par"].get<int>();
                 for (const auto & solutionStep : solutionPath) {
                     jsonMessage["solutionTiles"].push_back({solutionStep.x, solutionStep.y});
                 }
                 ZmqSingleton::getInstance().publish(jsonMessage.dump());
 
                 victoryRollingTime = VICTORY_ROLL_TIME;
-            } 
+            }
         }
 
         if (gameState == GameState::VictoryRolling) {
@@ -162,7 +154,6 @@ namespace SlidingTiles {
             int deltaX = mousePosition.x - mousePositionPressed.x;
             int deltaY = mousePosition.y - mousePositionPressed.y;
             if (abs(deltaX) > 2 || abs(deltaY) > 2) {
-                incrementMoves();
                 Tile movingTile = gameBoard.tiles[movingTilePosition.x][movingTilePosition.y];
                 if (abs(deltaX) > abs(deltaY)) {
                     // horizontal movement
@@ -194,6 +185,7 @@ namespace SlidingTiles {
     }
 
     void Game::doMove(const Move & move) {
+        incrementMoves();
         if (gameState == GameState::Playing) {
             gameBoard.slideTile(move);
         }
@@ -205,18 +197,9 @@ namespace SlidingTiles {
 
     void Game::setMoves(std::size_t newMoves) {
         moves = newMoves;
-
-        std::ostringstream movesText;
-        movesText << "Moves: " << moves;
-        movesLabel.setText(movesText.str());
     }
 
     void Game::loadLevel() {
-        std::cout << "loading level " << level << std::endl;
-        std::ostringstream levelText;
-        levelText << "Level: " << level;
-        levelLabel.setText(levelText.str());
-
         setMoves(0);
 
         json jsonLevel = levelsArray[level];
@@ -224,15 +207,11 @@ namespace SlidingTiles {
         gameBoard.loadGame(serializedGame);
         gameState = GameState::Playing;
 
-        par = jsonLevel["Par"].get<int>();
-        std::ostringstream parText;
-        parText << "Par: " << par;
-        parLabel.setText(parText.str());
-
         json jsonMessage{};
         jsonMessage["state"] = ZmqSingleton::GAME_STARTED;
+        jsonMessage["level"] = level;
+        jsonMessage["par"] = jsonLevel["Par"].get<int>();
         ZmqSingleton::getInstance().publish(jsonMessage.dump());
-
     }
 
     void Game::doLevelUp() {

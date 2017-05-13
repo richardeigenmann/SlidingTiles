@@ -7,6 +7,9 @@
 #include "nextButton.h"
 #include "restartButton.h"
 #include "attitudeSoundPlayer.h"
+#include "levelLabel.h"
+#include "parLabel.h"
+#include "movesLabel.h"
 
 namespace SlidingTiles {
 
@@ -48,12 +51,12 @@ namespace SlidingTiles {
          * @brief a vector to hold the unique_ptr to the TileView objects
          */
         std::vector<std::unique_ptr<TileView>> tileViews;
-        
-                /**
+
+        /**
          * a Button for a random level
          */
         RandomButton randomSfmlButton{};
-        
+
         /**
          * a Button to go to the next level
          */
@@ -68,6 +71,21 @@ namespace SlidingTiles {
          */
         AttitudeSoundPlayer AttitudeSoundPlayer{};
 
+        /**
+         * Add the LevelLabel
+         */
+        LevelLabel levelLabel{};
+
+        /**
+         * Add the ParLabel
+         */
+        ParLabel parLabel{};
+        
+        /**
+         * Add the MovesLabel
+         */
+        MovesLabel movesLabel{};
+        
     };
 
 } // namespace SlidingTiles

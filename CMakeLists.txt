@@ -89,6 +89,9 @@ SET(SOURCE_FILES
     zmqSingleton.cpp
     debugMessageListener.cpp
     attitudeSoundPlayer.cpp
+    levelLabel.cpp
+    parLabel.cpp
+    movesLabel.cpp
 )
 
 set( UNIT_TESTS

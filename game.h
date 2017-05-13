@@ -141,30 +141,9 @@ namespace SlidingTiles {
         float victoryRollingTime{0.0f};
 
         /**
-         * a label to show the current level
-         */
-        Label levelLabel;
-
-        /**
          * @brief the number of moves in the game
          */
         std::size_t moves{0};
-
-        /**
-         * a label to show the number of moves
-         */
-        Label movesLabel;
-
-
-        /**
-         * @brief the par number of moves in the game
-         */
-        std::size_t par{0};
-
-        /**
-         * a label to show the par number of moves
-         */
-        Label parLabel;
 
         /**
          * Creates a DebugMessageListener which listens to the messages published on the ZMQ bus
