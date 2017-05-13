@@ -6,6 +6,7 @@
 #include "randomButton.h"
 #include "nextButton.h"
 #include "restartButton.h"
+#include "attitudeSoundPlayer.h"
 
 namespace SlidingTiles {
 
@@ -62,6 +63,10 @@ namespace SlidingTiles {
          */
         RestartButton restartSfmlButton{};
 
+        /**
+         * Add the AttitudeSoundPlayer
+         */
+        AttitudeSoundPlayer AttitudeSoundPlayer{};
 
     };
 

@@ -15,7 +15,7 @@
 namespace SlidingTiles {
 
     /**
-     * @brief A base button class
+     * @brief The class that will gratify the winner of the game
      */
     class WinnerBlingBling : public Renderable, public Updateable {
     public:
@@ -95,14 +95,16 @@ namespace SlidingTiles {
         GameState gameState{GameState::Initializing};
 
         /**
-         * @brief ZeroMQ needs a context
+         * @brief A shared_ptr to the context of the ZeroMQ. It gets set by
+         * the Constructor
          */
-        zmq::context_t context{1};
-        
+        std::shared_ptr<zmq::context_t> contextPtr;
+
         /**
-         * @brief the ZeroMQ socket of type subscriber
+         * @brief The ZeroMQ socket of type subscriber. It is set by the 
+         * constructor.
          */
-        zmq::socket_t socket{context, ZMQ_SUB};
+        std::unique_ptr<zmq::socket_t> socket;
 
     };
 }

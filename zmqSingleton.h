@@ -48,7 +48,7 @@ namespace SlidingTiles {
         static const std::string RECEIVER_SOCKET;
 
 
-        static const std::string INITIALISING;
+        static const std::string CONFIGURATION_LOADED;
 
         static const std::string GAME_WON;
 

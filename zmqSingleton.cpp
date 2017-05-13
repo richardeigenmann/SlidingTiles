@@ -19,7 +19,7 @@ void ZmqSingleton::publish(const std::string & message) {
 
 const std::string ZmqSingleton::PUBLISHER_SOCKET = "tcp://*:64123";
 const std::string ZmqSingleton::RECEIVER_SOCKET = "tcp://localhost:64123";
-const std::string ZmqSingleton::INITIALISING = "Initialising";
+const std::string ZmqSingleton::CONFIGURATION_LOADED = "Configuration Loaded";
 const std::string ZmqSingleton::GAME_STARTED = "Game Started";
 const std::string ZmqSingleton::GAME_WON = "Game Won";
 const std::string ZmqSingleton::SET_TILE = "Set Tile";

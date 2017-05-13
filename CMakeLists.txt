@@ -88,6 +88,7 @@ SET(SOURCE_FILES
     winnerBlingBling.cpp
     zmqSingleton.cpp
     debugMessageListener.cpp
+    attitudeSoundPlayer.cpp
 )
 
 set( UNIT_TESTS
@@ -104,6 +105,7 @@ set( UNIT_TESTS
     button.tests.cpp
     move.tests.cpp
     debugMessageListener.cpp
+    attitudeSoundPlayer.cpp
 )
 
 ADD_EXECUTABLE(sliding-tiles main.cpp ${SOURCE_FILES})

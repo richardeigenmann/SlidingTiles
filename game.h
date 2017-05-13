@@ -52,8 +52,6 @@ namespace SlidingTiles {
         SlidingTiles::GameView gameView;
 
 
-
-
         /**
          * @brief handler method for when the user wants to play a new random game
          */
@@ -167,11 +165,6 @@ namespace SlidingTiles {
          * a label to show the par number of moves
          */
         Label parLabel;
-
-        /**
-         * an object with attitude sounds to be played randomly when the users is taking too long or restarts a level
-         */
-        RandomSoundPlayer attitudeSounds;
 
         /**
          * Creates a DebugMessageListener which listens to the messages published on the ZMQ bus

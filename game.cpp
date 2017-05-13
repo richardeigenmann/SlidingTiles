@@ -20,27 +20,6 @@ namespace SlidingTiles {
     constexpr float Game::VICTORY_ROLL_TIME;
 
     Game::Game() {
-        // read a JSON file and parse it
-        const std::string CONFIG_FILENAME = "assets/sliding-tiles.json";
-        std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
-        std::ifstream configIfstream(CONFIG_FILENAME);
-        if (!configIfstream) {
-            throw std::runtime_error("Could not read configuration file: " + CONFIG_FILENAME);
-        }
-        json configJson;
-        configIfstream >> configJson;
-        configIfstream.close();
-        levelsArray = configJson["levels"];
-        winnerBlingBling.loadSounds(configJson["winnerSoundBites"]);
-        attitudeSounds.loadSounds(configJson["attitudeSoundBites"]);
-
-        levelLabel.setPosition(400, 120);
-        movesLabel.setPosition(400, 150);
-        parLabel.setPosition(400, 180);
-
-
-        gameView.setGameBoard(&gameBoard);
-
         std::cout << "Game connecting to ZeroMQ socket: "
                 << ZmqSingleton::RECEIVER_SOCKET << std::endl;
         contextPtr = ZmqSingleton::getInstance().getContext();
@@ -53,17 +32,40 @@ namespace SlidingTiles {
                     + ZmqSingleton::RECEIVER_SOCKET + ": " + e.what());
         }
 
+
+        // read a JSON file and parse it
+        const std::string CONFIG_FILENAME = "assets/sliding-tiles.json";
+        std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
+        std::ifstream configIfstream(CONFIG_FILENAME);
+        if (!configIfstream) {
+            throw std::runtime_error("Could not read configuration file: " + CONFIG_FILENAME);
+        }
+        json configJson;
+        configIfstream >> configJson;
+        configIfstream.close();
+
+        // send the configuration to all listeners
+        configJson["state"] = ZmqSingleton::CONFIGURATION_LOADED;
+        ZmqSingleton::getInstance().publish(configJson.dump());
+
+
+        levelLabel.setPosition(400, 120);
+        movesLabel.setPosition(400, 150);
+        parLabel.setPosition(400, 180);
+
+
+        gameView.setGameBoard(&gameBoard);
+
+
         UpdatingSingleton::getInstance().add(*this);
-
-
     }
 
     Game::~Game() {
+        socket->close();
         UpdatingSingleton::getInstance().remove(*this);
     }
 
     void Game::run() {
-        loadLevel();
         sf::RenderWindow* window = RenderingSingleton::getInstance().getRenderWindow();
         while (window->isOpen()) {
             sf::Event event;
@@ -96,7 +98,6 @@ namespace SlidingTiles {
         if (gameState == GameState::Playing) {
             std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
             if (solutionPath.size() > 0) {
-                //gameBoard.setWinnerTiles(solutionPath);
                 gameState = GameState::VictoryRolling;
 
                 json jsonMessage{};
@@ -110,9 +111,7 @@ namespace SlidingTiles {
                 ZmqSingleton::getInstance().publish(jsonMessage.dump());
 
                 victoryRollingTime = VICTORY_ROLL_TIME;
-            } else {
-                //gameBoard.clearWinnerTiles();
-            }
+            } 
         }
 
         if (gameState == GameState::VictoryRolling) {
@@ -128,11 +127,14 @@ namespace SlidingTiles {
             std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
             auto jsonMessage = json::parse(message);
             std::string state = jsonMessage["state"].get<std::string>();
-            if (state == ZmqSingleton::LOAD_NEXT_LEVEL) {
+            if (state == ZmqSingleton::CONFIGURATION_LOADED) {
+                levelsArray = jsonMessage["levels"];
+                loadLevel();
+            } else if (state == ZmqSingleton::LOAD_NEXT_LEVEL) {
                 doLevelUp();
             } else if (state == ZmqSingleton::LOAD_RANDOM_LEVEL) {
                 doRandomGame();
-            }else if (state == ZmqSingleton::RESTART_LEVEL) {
+            } else if (state == ZmqSingleton::RESTART_LEVEL) {
                 onRestartButtonClick();
             }
         }
@@ -142,7 +144,6 @@ namespace SlidingTiles {
 
     void Game::onRestartButtonClick() {
         loadLevel();
-        attitudeSounds.playRandomSound();
     }
 
     void Game::doRandomGame() {
