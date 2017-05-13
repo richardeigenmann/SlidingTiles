@@ -507,7 +507,7 @@ void DebugMessageListener::update(const float dt) {
 }
 ```
 
-The ZmqSingleton create the context and socket as a private member variable:
+The ZmqSingleton creates the context and socket as a private member variable:
 
 ```c++
 std::shared_ptr<zmq::context_t> contextPtr = std::make_shared<zmq::context_t>(1);

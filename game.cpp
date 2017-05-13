@@ -37,9 +37,7 @@ namespace SlidingTiles {
         levelLabel.setPosition(400, 120);
         movesLabel.setPosition(400, 150);
         parLabel.setPosition(400, 180);
-        randomSfmlButton.setPosition(400, 230);
-        nextSfmlButton.setPosition(400, 270);
-        restartSfmlButton.setPosition(400, 310);
+
 
         gameView.setGameBoard(&gameBoard);
 

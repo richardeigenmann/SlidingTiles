@@ -12,6 +12,7 @@
 #include "updatingSingleton.h"
 #include "debugMessageListener.h"
 
+
 namespace SlidingTiles {
 
     /**
@@ -140,19 +141,6 @@ namespace SlidingTiles {
          *@brief The amount of time left for the victory roll in seconds.  
          */
         float victoryRollingTime{0.0f};
-
-        /**
-         * a Button for a random level
-         */
-        Button randomSfmlButton{"assets/button_random.png", ZmqSingleton::LOAD_RANDOM_LEVEL};
-        /**
-         * a Button to go to the next level
-         */
-        Button nextSfmlButton{"assets/button_next.png", ZmqSingleton::LOAD_NEXT_LEVEL};
-        /**
-         * a restart button
-         */
-        Button restartSfmlButton{"assets/button_restart.png", ZmqSingleton::RESTART_LEVEL};
 
         /**
          * a label to show the current level

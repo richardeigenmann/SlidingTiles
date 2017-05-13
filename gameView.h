@@ -3,11 +3,14 @@
 #include "gameBoard.h"
 #include "renderingSingleton.h"
 #include "renderable.h"
+#include "randomButton.h"
+#include "nextButton.h"
+#include "restartButton.h"
 
 namespace SlidingTiles {
 
     /**
-     * @brief The view class for the tile that knows how to render itself
+     * @brief The view class that ensures everything that needs to be shown in shown
      */
     class GameView : public Renderable {
     public:
@@ -44,6 +47,21 @@ namespace SlidingTiles {
          * @brief a vector to hold the unique_ptr to the TileView objects
          */
         std::vector<std::unique_ptr<TileView>> tileViews;
+        
+                /**
+         * a Button for a random level
+         */
+        RandomButton randomSfmlButton{};
+        
+        /**
+         * a Button to go to the next level
+         */
+        NextButton nextSfmlButton{};
+        /**
+         * a restart button
+         */
+        RestartButton restartSfmlButton{};
+
 
     };
 
