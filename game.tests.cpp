@@ -49,7 +49,7 @@ TEST(Game, DoRandomGame) {
  * send a window->close event. The run() is expected to shut down withing
  * 10 ms.
  */
-TEST(Game, Run) {
+TEST(Game, DISABLED_Run) {
     Game game{};
     sf::RenderWindow* window = RenderingSingleton::getInstance().getRenderWindow();
     window->setActive(false);
@@ -68,7 +68,7 @@ TEST(Game, Run) {
 }
 
 
-TEST(Game, DoLevelUp) {
+TEST(Game, DISABLED_DoLevelUp) {
     Game game{};
     game.doLevelUp();
     //ASSERT_THAT(1, Eq(1));

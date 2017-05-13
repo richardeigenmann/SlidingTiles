@@ -25,7 +25,7 @@ namespace SlidingTiles {
             UpdatingSingleton::getInstance().add(*this);
             socket.connect(ZmqSingleton::RECEIVER_SOCKET);
             socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
-            std::cout << "TileView[" << tileGameCoordinates.x << "][" << tileGameCoordinates.y << "] registered subscriber\n";
+            //std::cout << "TileView[" << tileGameCoordinates.x << "][" << tileGameCoordinates.y << "] registered subscriber\n";
         };
 
         /**
@@ -56,14 +56,6 @@ namespace SlidingTiles {
          * @param dt The passing time since last call in seconds
          */
         void update(const float dt) override;
-
-
-
-
-
-
-
-
 
     private:
         /**

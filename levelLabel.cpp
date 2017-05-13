@@ -10,8 +10,6 @@ LevelLabel::LevelLabel() {
     setPosition(400, 120);
 
     UpdatingSingleton::getInstance().add(*this);
-    std::cout << "LevelLabel connecting to ZeroMQ socket: "
-            << ZmqSingleton::RECEIVER_SOCKET << std::endl;
     contextPtr = ZmqSingleton::getInstance().getContext();
     try {
         socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);
