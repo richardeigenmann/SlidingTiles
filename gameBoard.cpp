@@ -26,7 +26,7 @@ void GameBoard::loadGame(const std::string game[boardSize][boardSize]) {
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
             jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            ZmqSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage);
         }
     }
     solution.clear();
@@ -44,7 +44,7 @@ void GameBoard::loadGame(const std::vector<std::string> & game) {
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
             jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            ZmqSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage);
         }
     }
     solution.clear();
@@ -63,7 +63,7 @@ void GameBoard::loadGame(const std::wstring & game) {
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
             jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            ZmqSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage);
         }
     }
     solution.clear();
@@ -85,7 +85,7 @@ void GameBoard::loadGame(const std::string & game) {
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
             jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            ZmqSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage);
         }
     }
     solution.clear();
@@ -238,7 +238,7 @@ void GameBoard::slideTile(const Move & move) {
         jsonMessage["startPosition"]["y"] = move.startPosition.y;
         jsonMessage["newPosition"]["x"] = newPosition.x;
         jsonMessage["newPosition"]["y"] = newPosition.y;
-        ZmqSingleton::getInstance().publish(jsonMessage.dump());
+        ZmqSingleton::getInstance().publish(jsonMessage);
 
         tiles[newPosition.x][newPosition.y] = slidingTile;
         tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;

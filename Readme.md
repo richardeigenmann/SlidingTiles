@@ -525,7 +525,8 @@ std::shared_ptr<zmq::context_t> & getContext() {
 And it facilitates publishing a message:
 
 ```c++
-void ZmqSingleton::publish(const std::string & message) {
+void ZmqSingleton::publish(const json & jsonMessage) {
+    std::string message = jsonMessage.dump();
     zmq::message_t zmqMessage(message.size());
     memcpy(zmqMessage.data(), message.data(), message.size());
     socket.send(zmqMessage);
@@ -543,7 +544,7 @@ jsonMessage["par"] = par;
 for (const auto & solutionStep : solutionPath) {
     jsonMessage["solutionTiles"].push_back({solutionStep.x, solutionStep.y});
 }
-ZmqSingleton::getInstance().publish(jsonMessage.dump());
+ZmqSingleton::getInstance().publish(jsonMessage);
 ```
 
 

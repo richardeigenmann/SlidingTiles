@@ -46,7 +46,7 @@ namespace SlidingTiles {
 
         // send the configuration to all listeners
         configJson["state"] = ZmqSingleton::CONFIGURATION_LOADED;
-        ZmqSingleton::getInstance().publish(configJson.dump());
+        ZmqSingleton::getInstance().publish(configJson);
 
         gameView.setGameBoard(&gameBoard);
         UpdatingSingleton::getInstance().add(*this);
@@ -75,6 +75,10 @@ namespace SlidingTiles {
                         gameBoard.printGame();
                     } else if (event.text.unicode == 110) { //n
                         doLevelUp();
+                    } else if (event.text.unicode == 100) { //d
+                        json jsonMessage{};
+                        jsonMessage["state"] = ZmqSingleton::DEBUG;
+                        ZmqSingleton::getInstance().publish(jsonMessage);
                     } else
                         std::cout << "ASCII character typed: " << event.text.unicode << " --> " << static_cast<char> (event.text.unicode) << std::endl;
                 }
@@ -100,7 +104,7 @@ namespace SlidingTiles {
                 for (const auto & solutionStep : solutionPath) {
                     jsonMessage["solutionTiles"].push_back({solutionStep.x, solutionStep.y});
                 }
-                ZmqSingleton::getInstance().publish(jsonMessage.dump());
+                ZmqSingleton::getInstance().publish(jsonMessage);
 
                 victoryRollingTime = VICTORY_ROLL_TIME;
             }
@@ -180,7 +184,7 @@ namespace SlidingTiles {
             jsonMessage["state"] = ZmqSingleton::MOUSE_CLICKED;
             jsonMessage["x"] = mousePosition.x;
             jsonMessage["y"] = mousePosition.y;
-            ZmqSingleton::getInstance().publish(jsonMessage.dump());
+            ZmqSingleton::getInstance().publish(jsonMessage);
         }
     }
 
@@ -211,7 +215,7 @@ namespace SlidingTiles {
         jsonMessage["state"] = ZmqSingleton::GAME_STARTED;
         jsonMessage["level"] = level;
         jsonMessage["par"] = jsonLevel["Par"].get<int>();
-        ZmqSingleton::getInstance().publish(jsonMessage.dump());
+        ZmqSingleton::getInstance().publish(jsonMessage);
     }
 
     void Game::doLevelUp() {

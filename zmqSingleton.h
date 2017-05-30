@@ -3,6 +3,9 @@
 #include <string>
 #include "zmq.hpp"
 #include <memory>
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 namespace SlidingTiles {
 
@@ -31,11 +34,13 @@ namespace SlidingTiles {
             return instance;
         }
 
+
+
         /**
          * @brief Publishes the supplied message to all ZMQ receivers
          * @param message The message (in JSON format) to publish
          */
-        void publish(const std::string & message);
+        void publish(const json & message);
 
         /**
          * @brief the socket definition for the publishing socket
@@ -57,11 +62,12 @@ namespace SlidingTiles {
         static const std::string SET_TILE;
         static const std::string SLIDE_TILE;
         static const std::string MOUSE_CLICKED;
-        
+
         static const std::string LOAD_NEXT_LEVEL;
         static const std::string LOAD_RANDOM_LEVEL;
         static const std::string RESTART_LEVEL;
-        
+
+        static const std::string DEBUG;
 
         /**
          * @brief returns a shared_ptr to the context for the ZeroMQ messaging.

@@ -59,7 +59,7 @@ void Button::update(const float dt) {
             if (mouseReleased(sf::Vector2i{x, y})) {
                 json commandMessage{};
                 commandMessage["state"] = command;
-                ZmqSingleton::getInstance().publish(commandMessage.dump());
+                ZmqSingleton::getInstance().publish(commandMessage);
             }
         }
     }

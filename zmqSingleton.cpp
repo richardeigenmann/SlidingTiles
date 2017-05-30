@@ -1,6 +1,7 @@
 #include "zmqSingleton.h"
 
 using namespace SlidingTiles;
+using json = nlohmann::json;
 
 ZmqSingleton::ZmqSingleton() {
     try {
@@ -11,7 +12,8 @@ ZmqSingleton::ZmqSingleton() {
     }
 }
 
-void ZmqSingleton::publish(const std::string & message) {
+void ZmqSingleton::publish(const json & jsonMessage) {
+    std::string message = jsonMessage.dump();
     zmq::message_t zmqMessage(message.size());
     memcpy(zmqMessage.data(), message.data(), message.size());
     socket.send(zmqMessage);
@@ -28,3 +30,4 @@ const std::string ZmqSingleton::MOUSE_CLICKED = "Mouse Clicked";
 const std::string ZmqSingleton::LOAD_NEXT_LEVEL = "Load Next Level";
 const std::string ZmqSingleton::LOAD_RANDOM_LEVEL = "Load Random Level";
 const std::string ZmqSingleton::RESTART_LEVEL = "Restart Level";
+const std::string ZmqSingleton::DEBUG = "Debug";

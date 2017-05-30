@@ -25,6 +25,8 @@ namespace SlidingTiles {
             UpdatingSingleton::getInstance().add(*this);
             socket.connect(ZmqSingleton::RECEIVER_SOCKET);
             socket.setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+            id = count;
+            ++count;
             //std::cout << "TileView[" << tileGameCoordinates.x << "][" << tileGameCoordinates.y << "] registered subscriber\n";
         };
 
@@ -114,6 +116,11 @@ namespace SlidingTiles {
         zmq::socket_t socket{context, ZMQ_SUB};
 
         /**
+         * @brief parses the message and invokes the appropriate action
+         */
+        void handleMessage(std::string & message);
+
+        /**
          * @brief settor for the winner flag
          */
         void setWinner(const bool & status) {
@@ -150,6 +157,21 @@ namespace SlidingTiles {
             tileType = newType;
         };
 
+        /**
+         * @brief prints debug information about the tileView
+         */
+        void debug() {
+            std::cout << "TileView id:" << id << " game: [" << tileGameCoordinates.x << "][" << tileGameCoordinates.y << "]" << std::endl;
+        }
 
+        /**
+         * @brief counter
+         */
+        static int count;
+
+        /**
+         * @brief My id
+         */
+        int id;
     };
 } // namespace SlidingTiles
