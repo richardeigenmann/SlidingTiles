@@ -19,8 +19,10 @@ void ZmqSingleton::publish(const json & jsonMessage) {
     socket.send(zmqMessage);
 }
 
-const std::string ZmqSingleton::PUBLISHER_SOCKET = "tcp://*:64123";
-const std::string ZmqSingleton::RECEIVER_SOCKET = "tcp://localhost:64123";
+//const std::string ZmqSingleton::PUBLISHER_SOCKET = "tcp://*:64123";
+const std::string ZmqSingleton::PUBLISHER_SOCKET = "inproc://#1";
+//const std::string ZmqSingleton::RECEIVER_SOCKET = "tcp://localhost:64123";
+const std::string ZmqSingleton::RECEIVER_SOCKET = "inproc://#1";
 const std::string ZmqSingleton::CONFIGURATION_LOADED = "Configuration Loaded";
 const std::string ZmqSingleton::GAME_STARTED = "Game Started";
 const std::string ZmqSingleton::GAME_WON = "Game Won";
