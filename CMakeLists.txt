@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 PROJECT(sliding-tiles)
 
 # To run with Clang:
-# cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang .. 
+# cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang ..
 
 SET(CMAKE_CXX_STANDARD 14)
 IF (WIN32)
@@ -175,8 +175,8 @@ TARGET_INCLUDE_DIRECTORIES( unit-tests PUBLIC
     ${ZeroMQ_INCLUDE_DIR}
 )
 target_link_libraries( unit-tests LINK_PUBLIC
-    gtest 
-    gmock 
+    gtest
+    gmock
     ${SFML_LIBRARIES}
     ${ZeroMQ_LIBRARIES}
 )
@@ -217,3 +217,14 @@ TARGET_INCLUDE_DIRECTORIES(levelGenerator PUBLIC
 TARGET_LINK_LIBRARIES(levelGenerator LINK_PUBLIC
     ${ZeroMQ_LIBRARIES}
 )
+
+
+set(CPACK_PACKAGE_VERSION ${VERSION})
+set(CPACK_GENERATOR "RPM")
+set(CPACK_PACKAGE_NAME "sliding-tiles")
+set(CPACK_PACKAGE_RELEASE 1)
+set(CPACK_PACKAGE_CONTACT "Richard Eigenmann")
+set(CPACK_PACKAGE_VENDOR "Richard Eigenmann")
+set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
+include(CPack)
