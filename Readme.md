@@ -60,6 +60,7 @@ doxygen ../Doxyfile
 ```
 
 Then open the file in html/index.html in the browser
+A manually compiled Doxygen build is available here: https://richardeigenmann.github.io/SlidingTiles/doxygen/annotated.html
 
 
 ## Testing
