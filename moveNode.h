@@ -39,8 +39,15 @@ namespace SlidingTiles {
             depth = newDepth;
         }
 
+        /**
+         * @brief a pointer to the parent MoveNode, defaults to nullptr
+         */
         const MoveNode * parent {nullptr};
         
+        /**
+         * @brief rsets the parent of this MoveNode
+         * @param parentNode the new parent node
+         */
         void setParent( const MoveNode & parentNode ) {
             //std::cout << "Setting parent on node #" << id << " to #" << parentNode.id << "\n";
             parent = &parentNode;

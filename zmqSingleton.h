@@ -52,21 +52,54 @@ namespace SlidingTiles {
          */
         static const std::string RECEIVER_SOCKET;
 
-
+        /**
+         * @brief the configuration has been loaded
+         */
         static const std::string CONFIGURATION_LOADED;
 
+        /**
+         * @brief the Game was won
+         */
         static const std::string GAME_WON;
 
+        /**
+         * @brief signifies that the game has started
+         */
         static const std::string GAME_STARTED;
 
+        /**
+         * @brief set a specific tile
+         */
         static const std::string SET_TILE;
+        
+        /**
+         * @brief slide the tile as specified in the details of the message
+         */
         static const std::string SLIDE_TILE;
+
+        /**
+         * @brief the mouse was clicked further information available in the message
+         */
         static const std::string MOUSE_CLICKED;
 
+        /**
+         * @brief load the next level
+         */
         static const std::string LOAD_NEXT_LEVEL;
+
+        /**
+         * @brief search for a new random level and start to play it
+         */
         static const std::string LOAD_RANDOM_LEVEL;
+
+        /**
+         * @brief restart the same level
+         */
         static const std::string RESTART_LEVEL;
 
+        /**
+         * @brief when sent instructs the listening objects to output debug information
+         */
         static const std::string DEBUG;
 
         /**

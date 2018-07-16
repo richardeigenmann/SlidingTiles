@@ -14,7 +14,7 @@ namespace SlidingTiles {
     public:
 
         /**
-         * @brief Constructor for the level Label
+         * @brief Constructor for the level label
          */
         LevelLabel();
 
@@ -24,7 +24,7 @@ namespace SlidingTiles {
         ~LevelLabel();
 
         /**
-         * @brief update callback
+         * @brief update callback from ZeroMQ
          */
         void update(const float dt) override;
 
@@ -40,6 +40,12 @@ namespace SlidingTiles {
          * constructor.
          */
         std::unique_ptr<zmq::socket_t> socket;
+
+        /**
+        * @brief sets the label to the text Level: n 
+        * @param level The new level
+        */
+        void setLevel( int level );
 
     };
 }

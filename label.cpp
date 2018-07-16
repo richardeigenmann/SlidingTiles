@@ -8,7 +8,8 @@ Label::Label() {
 
     text.setFont(font);
     text.setCharacterSize(16);
-    text.setColor(sf::Color::Black);
+    text.setFillColor(sf::Color::Black);
+    text.setOutlineColor(sf::Color::Black);
     RenderingSingleton::getInstance().add(*this);
 }
 

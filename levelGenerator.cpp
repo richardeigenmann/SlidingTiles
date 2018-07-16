@@ -1,5 +1,5 @@
 #include "puzzleSolver.h"
-#include <chrono> // std::chrono::system_clock
+#include <chrono>
 
 using namespace SlidingTiles;
 

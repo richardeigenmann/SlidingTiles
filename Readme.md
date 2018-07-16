@@ -5,14 +5,22 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7b1389d37d244865a6c12f7d028364fc)](https://www.codacy.com/app/richardeigenmann/SlidingTiles?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=richardeigenmann/SlidingTiles&amp;utm_campaign=Badge_Grade)
 
 ## Screenshot
+
 ![Screenshot](http://opentechschool-zurich.github.io/cpp-co-learning/topics/games/monkey-keg/Richard/sliding-tiles/doc/Screenshot.png)
 
-## Description:
-This program creates a window and places tiles in a grid.
-The tiles can be slid around by dragging the mouse.
-When the start and end tile match up in a path you win.
+## Description
+
+This game places tiles in a grid. The blue one is a start tile and the red one is an end tile. The idea is to move the other tiles around one by one until a path is created from the start to the end.
+
+## Keyboard shortcuts
+
+* r - New Random Game: searches for a new game to play
+* n - Next Game does a levelUp
+* p - Prints the Game board
+* d - Debug mode. Instructs all components to output debug information
 
 ### Patterns
+
 * Singleton
 * Observer
 * Pub-Sub Messaging
@@ -22,9 +30,11 @@ When the start and end tile match up in a path you win.
 * Unit Testing
 
 ### Algorithms
+
 * Breadth-First-Search
 
 ### Frameworks
+
 * SFML
 * ZeroMQ
 * Google Test
@@ -32,20 +42,21 @@ When the start and end tile match up in a path you win.
 * TravisCI
 
 ### Features
+
 * cross platform (sort of)
 * Graphics & Sound
 * Animation
 * C++ 11
 * Code Coverage
 
-
 ## Build and run
+
 ```bash
 mkdir -p build
 cd build
-cmake .. 
-# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang .. 
-# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++-6 -DCMAKE_CC_COMPILER=/usr/bin/gcc .. 
+cmake ..
+# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang ..
+# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++-6 -DCMAKE_CC_COMPILER=/usr/bin/gcc ..
 make
 ./sliding-tiles
 ```
@@ -57,6 +68,7 @@ Currently broken because of broken UTF-8 support
 This is a CMake project. That means that we let CMake create the solution files in the build directory from the CMakeLists.txt file
 
 You need to install
+
 * [CMake](https://cmake.org/download)
 * [Python 2.x, not 3.x](https://www.python.org/downloads/release)
 * [SFML](https://www.sfml-dev.org/download.php)
@@ -80,6 +92,7 @@ You should now have a sliding-tiles.exe file in the sliding-tiles/build/Debug di
 To run the unit tests. Right click in the Solution Explorer on "unit-tests" and pick "Set as StartUp project". Now you can run them without the debugger by pressing Ctrl-F5 or perhaps with the debugger by pressing F5 (but the terminal window closes on you then).
 
 ## Doxygen Documentation
+
 ```bash
 mkdir -p build
 cd build
@@ -89,8 +102,8 @@ doxygen ../Doxyfile
 Then open the file in html/index.html in the browser
 A manually compiled Doxygen build is available here: https://richardeigenmann.github.io/SlidingTiles/doxygen/annotated.html
 
-
 ## Testing
+
 ```bash
 mkdir -p build
 cd build
@@ -102,6 +115,7 @@ make test
 ```
 
 ## Code Coverage
+
 To generate code coverage reports from the unit tests run the below steps.
 The CodeCoverage.cmake file used gcov from the gcc installation and lcov
 which has to be installed separately to generate an html coverage report.
@@ -114,9 +128,11 @@ make
 make sliding-tiles_coverage
 # open the file coverage/index.html with a browser
 ```
-## Notable Points:
+
+## Notable Points
 
 ### Segfault on textures
+
 What's the difference between
 
 ```c++
@@ -126,6 +142,7 @@ sf::Texture & getTexture(const TileType & tileType) {
 ```
 
 And this?
+
 ```c++
 sf::Texture getTexture(const TileType & tileType) {
     return texturesMap[tileType];
@@ -133,6 +150,7 @@ sf::Texture getTexture(const TileType & tileType) {
 ```
 
 And what kind of difference could it possibly make to this code?
+
 ```c++
 void TileView::render() {
     sf::Sprite sprite;
@@ -145,8 +163,7 @@ void TileView::render() {
 Turns out a huge difference: The difference is that easy-to-overlook little
 ampersand in the return value declaration of the getTexture method.
 
-Without the
-ampersand the method returns a copy of the texture from the texturesMap (which
+Without the ampersand the method returns a copy of the texture from the texturesMap (which
 exists only once in the singleton). Whilst perhaps not optimally efficient
 why should this be a problem? After all, the texture exists till the closing
 brace in the render method. A few hundred segfaults later my suspicion is that
@@ -158,7 +175,6 @@ By adding the ampersand the getTexture method returns a reference to the texture
 in the map. This is also on the stack but the texturesMap is a long living object
 in the singleton so it does not go away and any delayed draw can happily access
 it.
-
 
 ### Searching for a solution - A breadth first search!
 
@@ -201,6 +217,7 @@ search:
 (From Wikipedia: https://en.wikipedia.org/wiki/Breadth-first_search )
 
 Here is "my" code to find the shortest solution path:
+
 ```c++
 bool PuzzleSolver::hasASolution(const MoveNode & node) {
     // inspired by https://gist.github.com/douglas-vaz/5072998
@@ -442,8 +459,6 @@ of the UpdatingSingleton in the
 [updatingSingleton.cpp](updatingSingleton.cpp) and [updatable.h](updatable.h) 
 files.
 
-
-
 ## Messaging
 
 The early versions of the game were built on the premise that the Game class
@@ -484,7 +499,7 @@ was received. The best place to review this is the DebugMessageListener class:
 [debugMessageListener.cpp](debugMessageListener.cpp)
 
 ```c++
-// The constructor for a listener needs to bind to the ZeroMQ context and open 
+// The constructor for a listener needs to bind to the ZeroMQ context and open
 // a ZMQ_SUB socket which it can connect to as a tcp port, in process etc.
 // It also extends the Updatable and registers there so that it gets update() callbacks.
 DebugMessageListener::DebugMessageListener() {
@@ -548,8 +563,8 @@ for (const auto & solutionStep : solutionPath) {
 ZmqSingleton::getInstance().publish(jsonMessage);
 ```
 
-
 ## Copyright information
+
 This project is copyrighted by Richard Eigenmann, Zürich, 2016,2017. I have not yet
 decided on a license. Please contact me with any questions.
 

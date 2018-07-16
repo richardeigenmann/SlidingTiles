@@ -17,11 +17,6 @@ namespace SlidingTiles {
     class PuzzleSolver {
     public:
         /**
-         * @brief My game board
-         */
-        //GameBoard gameBoard;
-
-        /**
          * @brief returns all moves that are possible on the current gameboard
          */
         void possibleMoves(MoveNode & parentNode);
@@ -42,13 +37,8 @@ namespace SlidingTiles {
         void buildTree(GameBoard & gameBoard, int depth);
         
         /**
-         * @brief figures out if the moves tree holds a solution and stores it 
-         * in the supplied gameBoard
-         * @details Used a breadth-first search to visit all MoveNode nodes. 
-         * Since each MoveNode has the endGameState we can load that state
-         * into a GameBoard and ask the GameBoard if it is solved.
-         * @param node the root node from which to start the search
-         * @return the depth at which the node was found or -1 is no solution
+         * @brief saves the solution to the supplied GameBoard
+         * @param gameBoard the GameBoard to which the solution is to be saved
          */
         void saveSolution(GameBoard & gameBoard);
         

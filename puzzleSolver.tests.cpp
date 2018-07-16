@@ -10,10 +10,7 @@ TEST(PuzzleSolver, possibleMovesNone) {
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    //MoveNode rootNode = puzzleSolver.getTree(gameBoard.serialiseGame());
     puzzleSolver.buildTree(gameBoard, 2);
-    //std::vector<SlidingTiles::MoveNode> possibleMoves = puzzleSolver.possibleMoves(rootNode);
-    //ASSERT_THAT(possibleMoves.size(), 0);
     ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 0);
 }
 
@@ -53,11 +50,9 @@ TEST(PuzzleSolver, possibleMovesOne) {
 TEST(PuzzleSolver, possibleMovesTwo) {
     std::wstring game{L"├┫          -   "};
     PuzzleSolver puzzleSolver;
-    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     puzzleSolver.buildTree(gameBoard, 3);
-    //ASSERT_THAT(rootNode.possibleMoves.size(), 2);
     ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 2);
     int up{0};
     int down{0};
@@ -85,7 +80,6 @@ TEST(PuzzleSolver, possibleMovesFour) {
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
     ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 4);
     int up{0};
@@ -145,7 +139,6 @@ TEST(PuzzleSolver, addPossibleMoves) {
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
     ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 1);
 
@@ -178,7 +171,6 @@ TEST(PuzzleSolver, addPossibleMoves3Deep) {
     PuzzleSolver puzzleSolver;
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
-    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
     ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 1);
 
@@ -245,7 +237,6 @@ TEST(PuzzleSolver, isSolvedIn1Move) {
     PuzzleSolver puzzleSolver;
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
-    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
     puzzleSolver.saveSolution(gameBoard);
     ASSERT_THAT(gameBoard.solution.size(), 1) << "There should be at least one solution for this puzzle";
@@ -256,7 +247,6 @@ TEST(PuzzleSolver, isSolvedIn2Moves) {
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
     puzzleSolver.saveSolution(gameBoard);
     ASSERT_THAT(gameBoard.solution.size(), 2) << "There should be at least one solution for this puzzle";
@@ -267,7 +257,6 @@ TEST(PuzzleSolver, noSolution) {
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
     PuzzleSolver puzzleSolver;
-    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
     puzzleSolver.saveSolution(gameBoard);
     ASSERT_THAT(gameBoard.solution.size(), 0) << "There should be no solution for this puzzle";
@@ -278,7 +267,6 @@ TEST(PuzzleSolver, depth) {
     PuzzleSolver puzzleSolver;
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
-    //MoveNode rootNode = puzzleSolver.getTree(game, 3);
     puzzleSolver.buildTree(gameBoard, 3);
     ASSERT_THAT(gameBoard.rootNode.depth, 0);
 
@@ -293,5 +281,4 @@ TEST(PuzzleSolver, depth) {
 
     MoveNode firstChildChildChild = firstChildChild.possibleMoves.at(0);
     ASSERT_THAT(firstChildChildChild.depth, 3);
-
 }
