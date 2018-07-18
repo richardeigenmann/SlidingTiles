@@ -37,12 +37,12 @@ namespace SlidingTiles {
         /**
          * @brief pointer to the gameBoard
          */
-        SlidingTiles::GameBoard* gameBoard;
+        GameBoard* gameBoard;
 
         /**
          * @brief set the Game Board
          */
-        void setGameBoard(SlidingTiles::GameBoard * gB) {
+        void setGameBoard(GameBoard * gB) {
             gameBoard = gB;
         }
 
@@ -69,7 +69,7 @@ namespace SlidingTiles {
         /**
          * Add the AttitudeSoundPlayer
          */
-        AttitudeSoundPlayer AttitudeSoundPlayer{};
+        AttitudeSoundPlayer attitudeSoundPlayer{};
 
         /**
          * Add the LevelLabel
