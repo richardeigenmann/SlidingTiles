@@ -20,19 +20,6 @@ namespace SlidingTiles {
     constexpr float Game::VICTORY_ROLL_TIME;
 
     Game::Game() {
-        std::cout << "Game connecting to ZeroMQ socket: "
-                << ZmqSingleton::RECEIVER_SOCKET << std::endl;
-        contextPtr = ZmqSingleton::getInstance().getContext();
-        try {
-            socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);
-            socket->connect(ZmqSingleton::RECEIVER_SOCKET);
-            socket->setsockopt(ZMQ_SUBSCRIBE, 0, 0);
-        } catch (const zmq::error_t & e) {
-            throw std::runtime_error("ZeroMQ Error when connecting Game to socket "
-                    + ZmqSingleton::RECEIVER_SOCKET + ": " + e.what());
-        }
-
-
         // read a JSON file and parse it
         const std::string CONFIG_FILENAME = "assets/sliding-tiles.json";
         std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
@@ -53,7 +40,6 @@ namespace SlidingTiles {
     }
 
     Game::~Game() {
-        socket->close();
         UpdatingSingleton::getInstance().remove(*this);
     }
 
@@ -119,7 +105,7 @@ namespace SlidingTiles {
         }
 
         zmq::message_t reply;
-        if (socket->recv(&reply, ZMQ_NOBLOCK)) {
+        if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
             std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
             auto jsonMessage = json::parse(message);
             std::string state = jsonMessage["state"].get<std::string>();
@@ -144,7 +130,7 @@ namespace SlidingTiles {
 
     void Game::doRandomGame() {
         PuzzleSolver puzzleSolver;
-        gameBoard.loadGame(puzzleSolver.generateRandomGame(3, 4).serialiseGame());
+        gameBoard.loadGame(puzzleSolver.generateRandomGame(8, 2).serialiseGame());
     }
 
     void Game::doMousePressed(const sf::Vector2i & mousePosition) {
@@ -163,7 +149,6 @@ namespace SlidingTiles {
                     // horizontal movement
                     sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x + copysign(1, deltaX), movingTilePosition.y);
                     if (deltaX > 0) {
-                        //gameBoard.slideTile(Move{movingTilePosition, Direction::GoRight});
                         doMove(Move{movingTilePosition, Direction::GoRight});
                     } else {
                         doMove(Move{movingTilePosition, Direction::GoLeft});

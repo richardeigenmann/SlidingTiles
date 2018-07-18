@@ -10,12 +10,7 @@ TEST(ButtonTest, Constructor) {
 }
 
 TEST(ButtonTest, ConstructorBadFilename) {
-    try {
-        Button button{"assets/no_such_file.png", ZmqSingleton::LOAD_NEXT_LEVEL};
-        FAIL();
-    } catch (std::runtime_error e) {
-        ASSERT_EQ("Failed to load texture: assets/no_such_file.png", e.what());
-    }
+    ASSERT_THROW((Button {"assets/no_such_file.png", ZmqSingleton::LOAD_NEXT_LEVEL}), std::runtime_error);
 }
 
 TEST(ButtonTest, setPosition) {

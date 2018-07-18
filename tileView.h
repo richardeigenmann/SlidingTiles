@@ -23,27 +23,14 @@ namespace SlidingTiles {
         TileView(sf::Vector2i tileCoordinates) : tileGameCoordinates(tileCoordinates) {
             RenderingSingleton::getInstance().add(*this);
             UpdatingSingleton::getInstance().add(*this);
-
-            contextPtr = ZmqSingleton::getInstance().getContext();
-            try {
-                socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);
-                socket->connect(ZmqSingleton::RECEIVER_SOCKET);
-                socket->setsockopt(ZMQ_SUBSCRIBE, 0, 0);
-            } catch (const zmq::error_t & e) {
-                throw std::runtime_error("ZeroMQ Error when connecting Button to socket "
-                        + ZmqSingleton::RECEIVER_SOCKET + ": " + e.what());
-            }
-
             id = count;
             ++count;
-            //std::cout << "TileView[" << tileGameCoordinates.x << "][" << tileGameCoordinates.y << "] registered subscriber\n";
         };
 
         /**
          * @brief Destructor
          */
         ~TileView() {
-            socket->close();
             RenderingSingleton::getInstance().remove(*this);
             UpdatingSingleton::getInstance().remove(*this);
         }
@@ -172,17 +159,5 @@ namespace SlidingTiles {
          * @brief My id
          */
         int id;
-
-        /**
-         * @brief A shared_ptr to the context of the ZeroMQ. It gets set by
-         * the Constructor
-         */
-        std::shared_ptr<zmq::context_t> contextPtr;
-
-        /**
-         * @brief The ZeroMQ socket of type subscriber. It is set by the 
-         * constructor.
-         */
-        std::unique_ptr<zmq::socket_t> socket;
     };
 } // namespace SlidingTiles

@@ -39,7 +39,7 @@ namespace SlidingTiles {
         }
 
         zmq::message_t reply;
-        if (socket->recv(&reply, ZMQ_NOBLOCK)) {
+        if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
             std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
             handleMessage(message);
         }

@@ -17,9 +17,6 @@ namespace SlidingTiles {
          */
         void setTilePosition(const sf::Vector2i & newGameBoardPosition) {
             myPosition = newGameBoardPosition;
-            /*for (auto& pair : tileObservers) {
-                pair.second->setCoordinates(newGameBoardPosition);
-            }*/
         }
 
         /**
