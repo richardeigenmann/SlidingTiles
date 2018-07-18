@@ -8,8 +8,15 @@ Label::Label() {
 
     text.setFont(font);
     text.setCharacterSize(16);
-    text.setFillColor(sf::Color::Black);
-    text.setOutlineColor(sf::Color::Black);
+
+    // Travis uses an old Ubuntu that only has SFML 2.1 which doesn't have setFillColor and setOutlineColor
+    #if SFML_VERSION_MAJOR == 2 && SFML_VERSION_MINOR < 4
+        text.setColor(sf::Color::Black);
+    #else
+        text.setFillColor(sf::Color::Black);
+        text.setOutlineColor(sf::Color::Black);
+    #endif
+
     RenderingSingleton::getInstance().add(*this);
 }
 
