@@ -18,7 +18,6 @@ TEST(RenderingSingleton, TileSize) {
 
 TEST(RenderingSingleton, Coordinates00) {
     sf::Vector2i gridZeroZero = RenderingSingleton::getInstance().gridZeroZero;
-    int tileSize = RenderingSingleton::tileSize;
     sf::Vector2i pixelCoordinates = RenderingSingleton::getInstance().calculateCoordinates(sf::Vector2i{0, 0});
     ASSERT_EQ(gridZeroZero.x, pixelCoordinates.x);
     ASSERT_EQ(gridZeroZero.y, pixelCoordinates.y);
