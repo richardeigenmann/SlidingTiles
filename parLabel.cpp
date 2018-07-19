@@ -1,4 +1,5 @@
 #include "parLabel.h"
+#include <sstream>
 
 using namespace SlidingTiles;
 using json = nlohmann::json;
@@ -17,16 +18,18 @@ ParLabel::~ParLabel() {
 }
 
 void ParLabel::update(const float dt) {
-    zmq::message_t reply;
-    if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
-        std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-        auto jsonMessage = json::parse(message);
-        std::string state = jsonMessage["state"].get<std::string>();
-        if (state == ZmqSingleton::GAME_STARTED) {
-            int par = jsonMessage["par"];
-            std::ostringstream parText;
-            parText << "Par: " << par;
-            setText(parText.str());
-        }
+    auto msg = getZmqMessage();
+    if (msg) {
+        handleMessage(msg.value());
+    }
+}
+
+void ParLabel::handleMessage(const json & jsonMessage) {
+    std::string state = jsonMessage["state"].get<std::string>();
+    if (state == ZmqSingleton::GAME_STARTED) {
+        int par = jsonMessage["par"];
+        std::ostringstream parText;
+        parText << "Par: " << par;
+        setText(parText.str());
     }
 }

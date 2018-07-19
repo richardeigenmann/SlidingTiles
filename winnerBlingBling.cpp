@@ -42,18 +42,20 @@ void WinnerBlingBling::endBlingBling() {
 }
 
 void WinnerBlingBling::update(const float dt) {
-    zmq::message_t reply;
-    if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
-        std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-        auto jsonMessage = json::parse(message);
-        std::string state = jsonMessage["state"].get<std::string>();
-        if (state == ZmqSingleton::CONFIGURATION_LOADED) {
-            loadSounds(jsonMessage["winnerSoundBites"]);
-        } else if (state == ZmqSingleton::GAME_WON) {
-            startBlingBling(jsonMessage["victoryRollTime"], jsonMessage["moves"], jsonMessage["par"]);
-        } else if (state == ZmqSingleton::GAME_STARTED) {
-            endBlingBling();
-        }
+    auto msg = getZmqMessage();
+    if (msg) {
+        handleMessage(msg.value());
+    }
+}
+
+void WinnerBlingBling::handleMessage(const json & jsonMessage) {
+    std::string state = jsonMessage["state"].get<std::string>();
+    if (state == ZmqSingleton::CONFIGURATION_LOADED) {
+        loadSounds(jsonMessage["winnerSoundBites"]);
+    } else if (state == ZmqSingleton::GAME_WON) {
+        startBlingBling(jsonMessage["victoryRollTime"], jsonMessage["moves"], jsonMessage["par"]);
+    } else if (state == ZmqSingleton::GAME_STARTED) {
+        endBlingBling();
     }
 }
 

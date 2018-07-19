@@ -2,13 +2,14 @@
 
 #include "label.h"
 #include "updatingSingleton.h"
+#include "zmqSubscriber.h"
 
 namespace SlidingTiles {
 
     /**
      * @brief The Label showing and updating the level
      */
-    class LevelLabel : public Label, public Updateable {
+    class LevelLabel : public Label, public Updateable, public ZmqSubscriber {
     public:
 
         /**
@@ -25,6 +26,12 @@ namespace SlidingTiles {
          * @brief update callback from ZeroMQ
          */
         void update(const float dt) override;
+
+        /**
+         * @brief handle a new ZMQ message
+         */
+        void handleMessage(const json & jsonMessage);
+
 
     private:
         /**

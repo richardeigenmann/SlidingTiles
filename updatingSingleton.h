@@ -3,10 +3,13 @@
 #include "updateable.h"
 #include <map>
 
+
 namespace SlidingTiles {
 
     /**
-     * @brief Singleton class that calls the updatables
+     * @brief Singleton class that calls the updatables with a delta time
+     * parameter to remind them to update their animation or check for new
+     * zmq messages.
      */
     class UpdatingSingleton {
     public:

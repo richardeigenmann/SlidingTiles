@@ -4,12 +4,13 @@
 #include "zmq.hpp"
 #include "updatingSingleton.h"
 #include "zmqSingleton.h"
+#include "zmqSubscriber.h"
 
 namespace SlidingTiles {
     /**
      * @brief A base button class
      */
-    class DebugMessageListener : public Updateable {
+    class DebugMessageListener : public Updateable, public ZmqSubscriber {
     public:
         /**
          * @brief Constructor for DebugMessageListener
@@ -25,5 +26,11 @@ namespace SlidingTiles {
          * @brief update callback
          */
         void update(const float dt) override;
+
+        /**
+         * @brief handle a new ZMQ message
+         */
+        void handleMessage(const json & jsonMessage);
+
     };
 }

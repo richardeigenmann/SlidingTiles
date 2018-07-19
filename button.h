@@ -3,13 +3,14 @@
 #include <string>
 #include "renderingSingleton.h"
 #include "updatingSingleton.h"
+#include "zmqSubscriber.h"
 
 namespace SlidingTiles {
 
     /**
      * @brief A base button class
      */
-    class Button : public Renderable, public Updateable {
+    class Button : public Renderable, public Updateable, public ZmqSubscriber {
     public:
         /**
          * @brief Constructor for the button
@@ -51,6 +52,11 @@ namespace SlidingTiles {
          * @brief update callback
          */
         void update(const float dt) override;
+
+        /**
+         * @brief handle a new ZMQ message
+         */
+        void handleMessage(const json & jsonMessage);
 
     private:
         /**

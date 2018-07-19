@@ -4,13 +4,14 @@
 #include "zmqSingleton.h"
 #include "updatingSingleton.h"
 #include "json.hpp"
+#include "zmqSubscriber.h"
 
 namespace SlidingTiles {
 
     /**
      * @brief The Label showing and updating the par
      */
-    class ParLabel : public Label, public Updateable {
+    class ParLabel : public Label, public Updateable, public ZmqSubscriber {
     public:
 
         /**
@@ -27,5 +28,10 @@ namespace SlidingTiles {
          * @brief update callback
          */
         void update(const float dt) override;
+
+        /**
+         * @brief handle a new ZMQ message
+         */
+        void handleMessage(const json & jsonMessage);
     };
 }

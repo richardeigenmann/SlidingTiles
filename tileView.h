@@ -8,13 +8,14 @@
 #include "zmqSingleton.h"
 #include <iostream>
 #include "updatingSingleton.h"
+#include "zmqSubscriber.h"
 
 namespace SlidingTiles {
 
     /**
      * @brief The view class for the tile that knows how to render itself
      */
-    class TileView : public Renderable, public Updateable {
+    class TileView : public Renderable, public Updateable, public ZmqSubscriber {
     public:
 
         /**
@@ -54,6 +55,11 @@ namespace SlidingTiles {
          * @param dt The passing time since last call in seconds
          */
         void update(const float dt) override;
+
+        /**
+         * @brief handle a new ZMQ message
+         */
+        void handleMessage(const json & jsonMessage);
 
     private:
         /**
@@ -100,11 +106,6 @@ namespace SlidingTiles {
          * @brief the type of the tile
          */
         TileType tileType{TileType::Empty};
-
-        /**
-         * @brief parses the message and invokes the appropriate action
-         */
-        void handleMessage(std::string & message);
 
         /**
          * @brief settor for the winner flag

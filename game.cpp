@@ -104,26 +104,25 @@ namespace SlidingTiles {
             }
         }
 
-        zmq::message_t reply;
-        if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
-            std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-            auto jsonMessage = json::parse(message);
-            std::string state = jsonMessage["state"].get<std::string>();
-            if (state == ZmqSingleton::CONFIGURATION_LOADED) {
-                levelsArray = jsonMessage["levels"];
-                loadLevel();
-            } else if (state == ZmqSingleton::LOAD_NEXT_LEVEL) {
-                doLevelUp();
-            } else if (state == ZmqSingleton::LOAD_RANDOM_LEVEL) {
-                doRandomGame();
-            } else if (state == ZmqSingleton::RESTART_LEVEL) {
-                onRestartButtonClick();
-            }
+        auto msg = getZmqMessage();
+        if (msg) {
+            handleMessage(msg.value());
         }
-
-
     }
 
+    void Game::handleMessage(const json & jsonMessage) {
+        std::string state = jsonMessage["state"].get<std::string>();
+        if (state == ZmqSingleton::CONFIGURATION_LOADED) {
+            levelsArray = jsonMessage["levels"];
+            loadLevel();
+        } else if (state == ZmqSingleton::LOAD_NEXT_LEVEL) {
+            doLevelUp();
+        } else if (state == ZmqSingleton::LOAD_RANDOM_LEVEL) {
+            doRandomGame();
+        } else if (state == ZmqSingleton::RESTART_LEVEL) {
+            onRestartButtonClick();
+        }
+    }
     void Game::onRestartButtonClick() {
         loadLevel();
     }

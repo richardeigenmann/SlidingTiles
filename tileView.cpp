@@ -38,15 +38,13 @@ namespace SlidingTiles {
             }
         }
 
-        zmq::message_t reply;
-        if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
-            std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-            handleMessage(message);
+        auto msg = getZmqMessage();
+        if (msg) {
+            handleMessage(msg.value());
         }
     }
 
-    void TileView::handleMessage(std::string & message) {
-        auto jsonMessage = json::parse(message);
+    void TileView::handleMessage(const json & jsonMessage) {
         std::string state = jsonMessage["state"].get<std::string>();
         if (state == ZmqSingleton::SLIDE_TILE) {
             int startPositionX = jsonMessage["startPosition"]["x"];
@@ -88,6 +86,7 @@ namespace SlidingTiles {
 
         }
     }
+
 
     void TileView::transition(const sf::Vector2i & newGameBoardPosition) {
         tileGameCoordinates = newGameBoardPosition;

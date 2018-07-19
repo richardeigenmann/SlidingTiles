@@ -452,7 +452,6 @@ Check out the whole implementation of the RenderingSingleton in the
 [renderingSingleton.h](renderingSingleton.h) and 
 [renderingSingleton.cpp](renderingSingleton.cpp) files.
 
-
 The same concept is used for the update cycle. Check out the whole implementation 
 of the UpdatingSingleton in the 
 [updatingSingleton.h](updatingSingleton.h) and 

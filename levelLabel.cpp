@@ -1,5 +1,6 @@
 #include "levelLabel.h"
 #include "json.hpp"
+#include <sstream>
 
 using namespace SlidingTiles;
 using json = nlohmann::json;
@@ -21,15 +22,17 @@ LevelLabel::~LevelLabel() {
  * Listens for the ZmqSingleton::GAME_STARTED message and updates the level label
  */
 void LevelLabel::update(const float dt) {
-    zmq::message_t reply;
-    if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
-        std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-        auto jsonMessage = json::parse(message);
-        std::string state = jsonMessage["state"].get<std::string>();
-        if (state == ZmqSingleton::GAME_STARTED) {
-            int level = jsonMessage["level"];
-            setLevel( level );
-        }
+    auto msg = getZmqMessage();
+    if (msg) {
+        handleMessage(msg.value());
+    }
+}
+
+void LevelLabel::handleMessage(const json & jsonMessage) {
+    std::string state = jsonMessage["state"].get<std::string>();
+    if (state == ZmqSingleton::GAME_STARTED) {
+        int level = jsonMessage["level"];
+        setLevel( level );
     }
 }
 

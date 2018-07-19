@@ -10,6 +10,7 @@
 #include "gameState.h"
 #include "updatingSingleton.h"
 #include "debugMessageListener.h"
+#include "zmqSubscriber.h"
 
 
 namespace SlidingTiles {
@@ -18,7 +19,7 @@ namespace SlidingTiles {
      * @brief The main game object. This class acts like the Controller and the 
      * Model in MVC and it owns the view (GameView)
      */
-    class Game : public Updateable {
+    class Game : public Updateable, public ZmqSubscriber {
     public:
         /**
          * @brief Constructor for the game
@@ -34,6 +35,11 @@ namespace SlidingTiles {
          * @brief update call to modify the model with a delta time in seconds
          */
         void update(const float dt) override;
+
+        /**
+         * @brief handle a new ZMQ message
+         */
+        void handleMessage(const json & jsonMessage);
 
         /**
          * @brief entry point for the game

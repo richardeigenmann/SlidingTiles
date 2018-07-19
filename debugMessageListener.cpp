@@ -11,10 +11,8 @@ DebugMessageListener::~DebugMessageListener() {
 }
 
 void DebugMessageListener::update(const float dt) {
-    zmq::message_t reply;
-    if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
-        std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-        std::cout << "DebugMessageListener received: " << message << std::endl;
+    auto msg = getZmqMessage();
+    if (msg) {
+        std::cout << "DebugMessageListener received: " << msg.value() << std::endl;
     }
-
 }

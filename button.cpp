@@ -36,19 +36,21 @@ bool Button::mouseReleased(const sf::Vector2i & mousePosition) {
 }
 
 void Button::update(const float dt) {
-    zmq::message_t reply;
-    if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
-        std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-        auto jsonMessage = json::parse(message);
-        std::string state = jsonMessage["state"].get<std::string>();
-        if (state == ZmqSingleton::MOUSE_CLICKED) {
-            int x = jsonMessage["x"];
-            int y = jsonMessage["y"];
-            if (mouseReleased(sf::Vector2i{x, y})) {
-                json commandMessage{};
-                commandMessage["state"] = command;
-                ZmqSingleton::getInstance().publish(commandMessage);
-            }
+    auto msg = getZmqMessage();
+    if (msg) {
+        handleMessage(msg.value());
+    }
+}
+
+void Button::handleMessage(const json & jsonMessage) {
+    std::string state = jsonMessage["state"].get<std::string>();
+    if (state == ZmqSingleton::MOUSE_CLICKED) {
+        int x = jsonMessage["x"];
+        int y = jsonMessage["y"];
+        if (mouseReleased(sf::Vector2i{x, y})) {
+            json commandMessage{};
+            commandMessage["state"] = command;
+            ZmqSingleton::getInstance().publish(commandMessage);
         }
     }
 }
