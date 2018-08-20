@@ -79,7 +79,7 @@ void GameBoard::loadGame(const std::string & game) {
             Tile* tile = &tiles[x][y];
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(std::wstring{utf16[y * 4 + x]});
-            //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
+            std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
             json jsonMessage{};
             jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;

@@ -10,7 +10,7 @@ TEST(TexturesSingleton, ObjectCreation) {
 TEST(TexturesSingleton, LoadTextures) {
     std::map<TileType, sf::Texture> textureMap = TexturesSingleton::getInstance().getTexturesMap();
     ASSERT_GT(textureMap.size(), 1);
-    EXPECT_EQ(textureMap.size(), 15);
+    EXPECT_EQ(textureMap.size(), 16);
 }
 
 TEST(TexturesSingleton, RetrieveTextureFromMap) {

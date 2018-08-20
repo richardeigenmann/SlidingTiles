@@ -5,6 +5,7 @@ TEST(TileType, Empty) {
     TileType t = TileType::Empty;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("Empty", s);
     std::string single = tileTypeToChar(t);
@@ -15,6 +16,7 @@ TEST(TileType, Horizontal) {
     TileType t = TileType::Horizontal;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_TRUE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("Horizontal", s);
     std::string single = tileTypeToChar(t);
@@ -25,6 +27,7 @@ TEST(TileType, Vertical) {
     TileType t = TileType::Vertical;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_TRUE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("Vertical", s);
     std::string single = tileTypeToChar(t);
@@ -35,6 +38,7 @@ TEST(TileType, StartTop) {
     TileType t = TileType::StartTop;
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("StartTop", s);
     std::string single = tileTypeToChar(t);
@@ -45,6 +49,7 @@ TEST(TileType, StartBottom) {
     TileType t = TileType::StartBottom;
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("StartBottom", s);
     std::string single = tileTypeToChar(t);
@@ -55,6 +60,7 @@ TEST(TileType, StartLeft) {
     TileType t = TileType::StartLeft;
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("StartLeft", s);
     std::string single = tileTypeToChar(t);
@@ -65,6 +71,7 @@ TEST(TileType, StartRight) {
     TileType t = TileType::StartRight;
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("StartRight", s);
     std::string single = tileTypeToChar(t);
@@ -75,6 +82,7 @@ TEST(TileType, EndTop) {
     TileType t = TileType::EndTop;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("EndTop", s);
     std::string single = tileTypeToChar(t);
@@ -85,6 +93,7 @@ TEST(TileType, EndBottom) {
     TileType t = TileType::EndBottom;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("EndBottom", s);
     std::string single = tileTypeToChar(t);
@@ -95,6 +104,7 @@ TEST(TileType, EndRight) {
     TileType t = TileType::EndRight;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("EndRight", s);
     std::string single = tileTypeToChar(t);
@@ -105,6 +115,7 @@ TEST(TileType, EndLeft) {
     TileType t = TileType::EndLeft;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
+    ASSERT_FALSE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("EndLeft", s);
     std::string single = tileTypeToChar(t);
@@ -115,6 +126,7 @@ TEST(TileType, LeftTop) {
     TileType t = TileType::LeftTop;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_TRUE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("LeftTop", s);
     std::string single = tileTypeToChar(t);
@@ -125,6 +137,7 @@ TEST(TileType, LeftBottom) {
     TileType t = TileType::LeftBottom;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_TRUE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("LeftBottom", s);
     std::string single = tileTypeToChar(t);
@@ -135,6 +148,7 @@ TEST(TileType, TopRight) {
     TileType t = TileType::TopRight;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_TRUE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("TopRight", s);
     std::string single = tileTypeToChar(t);
@@ -145,16 +159,30 @@ TEST(TileType, BottomRight) {
     TileType t = TileType::BottomRight;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_TRUE(isMoveableType( t ));
     std::string s = tileTypeToString(t);
     ASSERT_EQ("BottomRight", s);
     std::string single = tileTypeToChar(t);
     ASSERT_EQ("┌", single);
 }
 
+TEST(TileType, Obstacle) {
+    TileType t = TileType::Obstacle;
+    ASSERT_FALSE(isStartTileType( t ));
+    ASSERT_FALSE(isEndTileType( t ));
+    ASSERT_FALSE(isMoveableType( t ));
+    std::string s = tileTypeToString( t );
+    ASSERT_EQ("Obstacle", s);
+    std::string single = tileTypeToChar(t);
+    ASSERT_EQ("o", single);
+}
+
+
 TEST(TileType, Unknown) {
     TileType t = static_cast<TileType> (65536);
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
+    ASSERT_TRUE(isMoveableType( t )); // Actually undefined behaviour
     std::string s = tileTypeToString(t);
     ASSERT_EQ("Unknown Type", s);
     std::string single = tileTypeToChar(t);
@@ -237,6 +265,7 @@ TEST(TileType, isGameTileType) {
     int LeftBottom{0};
     int TopRight{0};
     int BottomRight{0};
+    int Obstacle{0};
     int Unexpected{0};
     for (int i = 0; i < 100; ++i) {
         TileType t = randomGameTileType();
@@ -259,6 +288,9 @@ TEST(TileType, isGameTileType) {
             case TileType::BottomRight:
                 ++BottomRight;
                 break;
+            case TileType::Obstacle:
+                ++Obstacle;
+                break;
             default:
                 ++Unexpected;
         }
@@ -268,5 +300,6 @@ TEST(TileType, isGameTileType) {
     EXPECT_GT(LeftTop, 0) << "After 100 random game tiles we should have returned more than 0 LeftTop tiles";
     EXPECT_GT(LeftBottom, 0) << "After 100 random game tiles we should have returned more than 0 LeftBottom tiles";
     EXPECT_GT(TopRight, 0) << "After 100 random game tiles we should have returned more than 0 TopRight tiles";
+    EXPECT_GT(Obstacle, 0) << "After 100 random game tiles we should have returned more than 0 Obstacle tiles";
     ASSERT_EQ(Unexpected, 0) << "After 100 random game tiles we must not have unexpected tiles";
 }

@@ -36,6 +36,8 @@ TexturesSingleton::TexturesSingleton() {
     texturesMap[TileType::TopRight] = texture;
     texture.loadFromFile("assets/bottomright.png");
     texturesMap[TileType::BottomRight] = texture;
+    texture.loadFromFile("assets/obstacle.png");
+    texturesMap[TileType::Obstacle] = texture;
     texture.loadFromFile("assets/empty.png");
     texturesMap[TileType::Empty] = texture;
 };

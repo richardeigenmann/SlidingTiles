@@ -49,9 +49,6 @@ namespace SlidingTiles {
                 std::cout << "Haven't got a texture for tileType: " << tileTypeToString(tileType) << "! Returning an empty Texture instead.\n";
                 return texturesMap[TileType::Empty];
             } else {
-                //sf::Texture t = texturesMap[tileType];
-                //sf::Vector2u textureSize = t.getSize();
-                //std::cout << "returning Texture for tileType: " << tileTypeToString(tileType) << " size is: " << textureSize.x << " x " << textureSize.y << "\n";
                 return texturesMap[tileType];
             }
 

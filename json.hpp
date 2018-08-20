@@ -1,7 +1,7 @@
 /*
     __ _____ _____ _____
  __|  |   __|     |   | |  JSON for Modern C++
-|  |  |__   |  |  | | | |  version 3.1.2
+|  |  |__   |  |  | | | |  version 3.2.0
 |_____|_____|_____|_|___|  https://github.com/nlohmann/json
 
 Licensed under the MIT License <http://opensource.org/licenses/MIT>.
@@ -31,8 +31,8 @@ SOFTWARE.
 #define NLOHMANN_JSON_HPP
 
 #define NLOHMANN_JSON_VERSION_MAJOR 3
-#define NLOHMANN_JSON_VERSION_MINOR 1
-#define NLOHMANN_JSON_VERSION_PATCH 2
+#define NLOHMANN_JSON_VERSION_MINOR 2
+#define NLOHMANN_JSON_VERSION_PATCH 0
 
 #include <algorithm> // all_of, find, for_each
 #include <cassert> // assert
@@ -157,10 +157,12 @@ using json = basic_json<>;
     #define JSON_THROW(exception) throw exception
     #define JSON_TRY try
     #define JSON_CATCH(exception) catch(exception)
+    #define JSON_INTERNAL_CATCH(exception) catch(exception)
 #else
     #define JSON_THROW(exception) std::abort()
     #define JSON_TRY if(true)
     #define JSON_CATCH(exception) if(false)
+    #define JSON_INTERNAL_CATCH(exception) if(false)
 #endif
 
 // override exception macros
@@ -175,6 +177,11 @@ using json = basic_json<>;
 #if defined(JSON_CATCH_USER)
     #undef JSON_CATCH
     #define JSON_CATCH JSON_CATCH_USER
+    #define JSON_INTERNAL_CATCH JSON_CATCH_USER
+#endif
+#if defined(JSON_INTERNAL_CATCH_USER)
+    #undef JSON_INTERNAL_CATCH
+    #define JSON_INTERNAL_CATCH JSON_INTERNAL_CATCH_USER
 #endif
 
 // manual branch prediction
@@ -231,41 +238,17 @@ contains a `mapped_type`, whereas `std::vector` fails the test.
                 std::is_integral<decltype(detect(std::declval<T>()))>::value; \
     }
 
-// #include <nlohmann/detail/meta.hpp>
+// #include <nlohmann/detail/meta/cpp_future.hpp>
 
 
 #include <ciso646> // not
 #include <cstddef> // size_t
-#include <limits> // numeric_limits
 #include <type_traits> // conditional, enable_if, false_type, integral_constant, is_constructible, is_integral, is_same, remove_cv, remove_reference, true_type
-#include <utility> // declval
-
-// #include <nlohmann/json_fwd.hpp>
-
-// #include <nlohmann/detail/macro_scope.hpp>
-
 
 namespace nlohmann
 {
-/*!
-@brief detail namespace with internal helper functions
-
-This namespace collects functions that should not be exposed,
-implementations of some @ref basic_json methods, and meta-programming helpers.
-
-@since version 2.1.0
-*/
 namespace detail
 {
-/////////////
-// helpers //
-/////////////
-
-template<typename> struct is_basic_json : std::false_type {};
-
-NLOHMANN_BASIC_JSON_TPL_DECLARATION
-struct is_basic_json<NLOHMANN_BASIC_JSON_TPL> : std::true_type {};
-
 // alias templates to reduce boilerplate
 template<bool B, typename T = void>
 using enable_if_t = typename std::enable_if<B, T>::type;
@@ -327,6 +310,54 @@ template<class B> struct negation : std::integral_constant<bool, not B::value> {
 // dispatch utility (taken from ranges-v3)
 template<unsigned N> struct priority_tag : priority_tag < N - 1 > {};
 template<> struct priority_tag<0> {};
+
+// taken from ranges-v3
+template<typename T>
+struct static_const
+{
+    static constexpr T value{};
+};
+
+template<typename T>
+constexpr T static_const<T>::value;
+}
+}
+
+// #include <nlohmann/detail/meta/type_traits.hpp>
+
+
+#include <ciso646> // not
+#include <limits> // numeric_limits
+#include <type_traits> // false_type, is_constructible, is_integral, is_same, true_type
+#include <utility> // declval
+
+// #include <nlohmann/json_fwd.hpp>
+
+// #include <nlohmann/detail/meta/cpp_future.hpp>
+
+// #include <nlohmann/detail/macro_scope.hpp>
+
+
+namespace nlohmann
+{
+/*!
+@brief detail namespace with internal helper functions
+
+This namespace collects functions that should not be exposed,
+implementations of some @ref basic_json methods, and meta-programming helpers.
+
+@since version 2.1.0
+*/
+namespace detail
+{
+/////////////
+// helpers //
+/////////////
+
+template<typename> struct is_basic_json : std::false_type {};
+
+NLOHMANN_BASIC_JSON_TPL_DECLARATION
+struct is_basic_json<NLOHMANN_BASIC_JSON_TPL> : std::true_type {};
 
 ////////////////////////
 // has_/is_ functions //
@@ -500,16 +531,6 @@ struct is_compatible_type
       is_compatible_complete_type<BasicJsonType, CompatibleType>>
 {
 };
-
-// taken from ranges-v3
-template<typename T>
-struct static_const
-{
-    static constexpr T value{};
-};
-
-template<typename T>
-constexpr T static_const<T>::value;
 }
 }
 
@@ -943,7 +964,9 @@ inline bool operator<(const value_t lhs, const value_t rhs) noexcept
 
 // #include <nlohmann/detail/macro_scope.hpp>
 
-// #include <nlohmann/detail/meta.hpp>
+// #include <nlohmann/detail/meta/cpp_future.hpp>
+
+// #include <nlohmann/detail/meta/type_traits.hpp>
 
 // #include <nlohmann/detail/value_t.hpp>
 
@@ -952,6 +975,16 @@ namespace nlohmann
 {
 namespace detail
 {
+template<typename BasicJsonType>
+void from_json(const BasicJsonType& j, typename std::nullptr_t& n)
+{
+    if (JSON_UNLIKELY(not j.is_null()))
+    {
+        JSON_THROW(type_error::create(302, "type must be null, but is " + std::string(j.type_name())));
+    }
+    n = nullptr;
+}
+
 // overloads for basic_json template parameters
 template<typename BasicJsonType, typename ArithmeticType,
          enable_if_t<std::is_arithmetic<ArithmeticType>::value and
@@ -1318,7 +1351,9 @@ constexpr const auto& from_json = detail::static_const<detail::from_json_fn>::va
 #include <valarray> // valarray
 #include <vector> // vector
 
-// #include <nlohmann/detail/meta.hpp>
+// #include <nlohmann/detail/meta/cpp_future.hpp>
+
+// #include <nlohmann/detail/meta/type_traits.hpp>
 
 // #include <nlohmann/detail/value_t.hpp>
 
@@ -2272,8 +2307,10 @@ class lexer
                 return "end of input";
             case token_type::literal_or_value:
                 return "'[', '{', or a literal";
+            // LCOV_EXCL_START
             default: // catch non-enum values
-                return "unknown token"; // LCOV_EXCL_LINE
+                return "unknown token";
+                // LCOV_EXCL_STOP
         }
     }
 
@@ -2925,11 +2962,13 @@ class lexer
                 goto scan_number_any1;
             }
 
+            // LCOV_EXCL_START
             default:
             {
                 // all other characters are rejected outside scan_number()
-                assert(false); // LCOV_EXCL_LINE
+                assert(false);
             }
+                // LCOV_EXCL_STOP
         }
 
 scan_number_minus:
@@ -3353,7 +3392,7 @@ scan_number_done:
             {
                 // escape control characters
                 char cs[9];
-                snprintf(cs, 9, "<U+%.4hhX>", static_cast<unsigned char>(c));
+                snprintf(cs, 9, "<U+%.4X>", static_cast<unsigned char>(c));
                 result += cs;
             }
             else
@@ -3522,6 +3561,218 @@ scan_number_done:
 
 // #include <nlohmann/detail/macro_scope.hpp>
 
+// #include <nlohmann/detail/meta/is_sax.hpp>
+
+
+#include <cstdint> // size_t
+#include <utility> // declval
+
+// #include <nlohmann/detail/meta/detected.hpp>
+
+
+#include <type_traits>
+
+// #include <nlohmann/detail/meta/void_t.hpp>
+
+
+namespace nlohmann
+{
+namespace detail
+{
+template <typename...>
+using void_t = void;
+}
+}
+
+
+// http://en.cppreference.com/w/cpp/experimental/is_detected
+namespace nlohmann
+{
+namespace detail
+{
+struct nonesuch
+{
+    nonesuch() = delete;
+    ~nonesuch() = delete;
+    nonesuch(nonesuch const&) = delete;
+    void operator=(nonesuch const&) = delete;
+};
+
+template <class Default,
+          class AlwaysVoid,
+          template <class...> class Op,
+          class... Args>
+struct detector
+{
+    using value_t = std::false_type;
+    using type = Default;
+};
+
+template <class Default, template <class...> class Op, class... Args>
+struct detector<Default, void_t<Op<Args...>>, Op, Args...>
+{
+    using value_t = std::true_type;
+    using type = Op<Args...>;
+};
+
+template <template <class...> class Op, class... Args>
+using is_detected = typename detector<nonesuch, void, Op, Args...>::value_t;
+
+template <template <class...> class Op, class... Args>
+using detected_t = typename detector<nonesuch, void, Op, Args...>::type;
+
+template <class Default, template <class...> class Op, class... Args>
+using detected_or = detector<Default, void, Op, Args...>;
+
+template <class Default, template <class...> class Op, class... Args>
+using detected_or_t = typename detected_or<Default, Op, Args...>::type;
+
+template <class Expected, template <class...> class Op, class... Args>
+using is_detected_exact = std::is_same<Expected, detected_t<Op, Args...>>;
+
+template <class To, template <class...> class Op, class... Args>
+using is_detected_convertible =
+    std::is_convertible<detected_t<Op, Args...>, To>;
+}
+}
+
+// #include <nlohmann/detail/meta/type_traits.hpp>
+
+
+namespace nlohmann
+{
+namespace detail
+{
+template <typename T>
+using null_function_t = decltype(std::declval<T&>().null());
+
+template <typename T>
+using boolean_function_t =
+    decltype(std::declval<T&>().boolean(std::declval<bool>()));
+
+template <typename T, typename Integer>
+using number_integer_function_t =
+    decltype(std::declval<T&>().number_integer(std::declval<Integer>()));
+
+template <typename T, typename Unsigned>
+using number_unsigned_function_t =
+    decltype(std::declval<T&>().number_unsigned(std::declval<Unsigned>()));
+
+template <typename T, typename Float, typename String>
+using number_float_function_t = decltype(std::declval<T&>().number_float(
+                                    std::declval<Float>(), std::declval<const String&>()));
+
+template <typename T, typename String>
+using string_function_t =
+    decltype(std::declval<T&>().string(std::declval<String&>()));
+
+template <typename T>
+using start_object_function_t =
+    decltype(std::declval<T&>().start_object(std::declval<std::size_t>()));
+
+template <typename T, typename String>
+using key_function_t =
+    decltype(std::declval<T&>().key(std::declval<String&>()));
+
+template <typename T>
+using end_object_function_t = decltype(std::declval<T&>().end_object());
+
+template <typename T>
+using start_array_function_t =
+    decltype(std::declval<T&>().start_array(std::declval<std::size_t>()));
+
+template <typename T>
+using end_array_function_t = decltype(std::declval<T&>().end_array());
+
+template <typename T, typename Exception>
+using parse_error_function_t = decltype(std::declval<T&>().parse_error(
+        std::declval<std::size_t>(), std::declval<const std::string&>(),
+        std::declval<const Exception&>()));
+
+template <typename SAX, typename BasicJsonType>
+struct is_sax
+{
+  private:
+    static_assert(is_basic_json<BasicJsonType>::value,
+                  "BasicJsonType must be of type basic_json<...>");
+
+    using number_integer_t = typename BasicJsonType::number_integer_t;
+    using number_unsigned_t = typename BasicJsonType::number_unsigned_t;
+    using number_float_t = typename BasicJsonType::number_float_t;
+    using string_t = typename BasicJsonType::string_t;
+    using exception_t = typename BasicJsonType::exception;
+
+  public:
+    static constexpr bool value =
+        is_detected_exact<bool, null_function_t, SAX>::value &&
+        is_detected_exact<bool, boolean_function_t, SAX>::value &&
+        is_detected_exact<bool, number_integer_function_t, SAX,
+        number_integer_t>::value &&
+        is_detected_exact<bool, number_unsigned_function_t, SAX,
+        number_unsigned_t>::value &&
+        is_detected_exact<bool, number_float_function_t, SAX, number_float_t,
+        string_t>::value &&
+        is_detected_exact<bool, string_function_t, SAX, string_t>::value &&
+        is_detected_exact<bool, start_object_function_t, SAX>::value &&
+        is_detected_exact<bool, key_function_t, SAX, string_t>::value &&
+        is_detected_exact<bool, end_object_function_t, SAX>::value &&
+        is_detected_exact<bool, start_array_function_t, SAX>::value &&
+        is_detected_exact<bool, end_array_function_t, SAX>::value &&
+        is_detected_exact<bool, parse_error_function_t, SAX, exception_t>::value;
+};
+
+template <typename SAX, typename BasicJsonType>
+struct is_sax_static_asserts
+{
+  private:
+    static_assert(is_basic_json<BasicJsonType>::value,
+                  "BasicJsonType must be of type basic_json<...>");
+
+    using number_integer_t = typename BasicJsonType::number_integer_t;
+    using number_unsigned_t = typename BasicJsonType::number_unsigned_t;
+    using number_float_t = typename BasicJsonType::number_float_t;
+    using string_t = typename BasicJsonType::string_t;
+    using exception_t = typename BasicJsonType::exception;
+
+  public:
+    static_assert(is_detected_exact<bool, null_function_t, SAX>::value,
+                  "Missing/invalid function: bool null()");
+    static_assert(is_detected_exact<bool, boolean_function_t, SAX>::value,
+                  "Missing/invalid function: bool boolean(bool)");
+    static_assert(is_detected_exact<bool, boolean_function_t, SAX>::value,
+                  "Missing/invalid function: bool boolean(bool)");
+    static_assert(
+        is_detected_exact<bool, number_integer_function_t, SAX,
+        number_integer_t>::value,
+        "Missing/invalid function: bool number_integer(number_integer_t)");
+    static_assert(
+        is_detected_exact<bool, number_unsigned_function_t, SAX,
+        number_unsigned_t>::value,
+        "Missing/invalid function: bool number_unsigned(number_unsigned_t)");
+    static_assert(is_detected_exact<bool, number_float_function_t, SAX,
+                  number_float_t, string_t>::value,
+                  "Missing/invalid function: bool number_float(number_float_t, const string_t&)");
+    static_assert(
+        is_detected_exact<bool, string_function_t, SAX, string_t>::value,
+        "Missing/invalid function: bool string(string_t&)");
+    static_assert(is_detected_exact<bool, start_object_function_t, SAX>::value,
+                  "Missing/invalid function: bool start_object(std::size_t)");
+    static_assert(is_detected_exact<bool, key_function_t, SAX, string_t>::value,
+                  "Missing/invalid function: bool key(string_t&)");
+    static_assert(is_detected_exact<bool, end_object_function_t, SAX>::value,
+                  "Missing/invalid function: bool end_object()");
+    static_assert(is_detected_exact<bool, start_array_function_t, SAX>::value,
+                  "Missing/invalid function: bool start_array(std::size_t)");
+    static_assert(is_detected_exact<bool, end_array_function_t, SAX>::value,
+                  "Missing/invalid function: bool end_array()");
+    static_assert(
+        is_detected_exact<bool, parse_error_function_t, SAX, exception_t>::value,
+        "Missing/invalid function: bool parse_error(std::size_t, const "
+        "std::string&, const exception&)");
+};
+}
+}
+
 // #include <nlohmann/detail/input/input_adapters.hpp>
 
 // #include <nlohmann/detail/input/json_sax.hpp>
@@ -3541,6 +3792,11 @@ namespace nlohmann
 
 /*!
 @brief SAX interface
+
+This class describes the SAX interface used by @ref nlohmann::json::sax_parse.
+Each function is called in different situations while the input is parsed. The
+boolean return value informs the parser whether to continue processing the
+input.
 */
 template<typename BasicJsonType>
 struct json_sax
@@ -3553,9 +3809,6 @@ struct json_sax
     using number_float_t = typename BasicJsonType::number_float_t;
     /// type for strings
     using string_t = typename BasicJsonType::string_t;
-
-    /// constant to indicate that no size limit is given for array or object
-    static constexpr auto no_limit = std::size_t(-1);
 
     /*!
     @brief a null value was read
@@ -3596,21 +3849,23 @@ struct json_sax
     @brief a string was read
     @param[in] val  string value
     @return whether parsing should proceed
+    @note It is safe to move the passed string.
     */
     virtual bool string(string_t& val) = 0;
 
     /*!
     @brief the beginning of an object was read
-    @param[in] elements  number of object elements or no_limit if unknown
+    @param[in] elements  number of object elements or -1 if unknown
     @return whether parsing should proceed
     @note binary formats may report the number of elements
     */
-    virtual bool start_object(std::size_t elements = no_limit) = 0;
+    virtual bool start_object(std::size_t elements) = 0;
 
     /*!
     @brief an object key was read
     @param[in] val  object key
     @return whether parsing should proceed
+    @note It is safe to move the passed string.
     */
     virtual bool key(string_t& val) = 0;
 
@@ -3622,11 +3877,11 @@ struct json_sax
 
     /*!
     @brief the beginning of an array was read
-    @param[in] elements  number of array elements or no_limit if unknown
+    @param[in] elements  number of array elements or -1 if unknown
     @return whether parsing should proceed
     @note binary formats may report the number of elements
     */
-    virtual bool start_array(std::size_t elements = no_limit) = 0;
+    virtual bool start_array(std::size_t elements) = 0;
 
     /*!
     @brief the end of an array was read
@@ -3665,7 +3920,7 @@ constructor contains the parsed value.
 @tparam BasicJsonType  the JSON type
 */
 template<typename BasicJsonType>
-class json_sax_dom_parser : public json_sax<BasicJsonType>
+class json_sax_dom_parser
 {
   public:
     using number_integer_t = typename BasicJsonType::number_integer_t;
@@ -3678,51 +3933,51 @@ class json_sax_dom_parser : public json_sax<BasicJsonType>
                        parsing
     @param[in] allow_exceptions_  whether parse errors yield exceptions
     */
-    json_sax_dom_parser(BasicJsonType& r, const bool allow_exceptions_ = true)
+    explicit json_sax_dom_parser(BasicJsonType& r, const bool allow_exceptions_ = true)
         : root(r), allow_exceptions(allow_exceptions_)
     {}
 
-    bool null() override
+    bool null()
     {
         handle_value(nullptr);
         return true;
     }
 
-    bool boolean(bool val) override
+    bool boolean(bool val)
     {
         handle_value(val);
         return true;
     }
 
-    bool number_integer(number_integer_t val) override
+    bool number_integer(number_integer_t val)
     {
         handle_value(val);
         return true;
     }
 
-    bool number_unsigned(number_unsigned_t val) override
+    bool number_unsigned(number_unsigned_t val)
     {
         handle_value(val);
         return true;
     }
 
-    bool number_float(number_float_t val, const string_t&) override
+    bool number_float(number_float_t val, const string_t&)
     {
         handle_value(val);
         return true;
     }
 
-    bool string(string_t& val) override
+    bool string(string_t& val)
     {
         handle_value(val);
         return true;
     }
 
-    bool start_object(std::size_t len) override
+    bool start_object(std::size_t len)
     {
         ref_stack.push_back(handle_value(BasicJsonType::value_t::object));
 
-        if (JSON_UNLIKELY(len != json_sax<BasicJsonType>::no_limit and len > ref_stack.back()->max_size()))
+        if (JSON_UNLIKELY(len != std::size_t(-1) and len > ref_stack.back()->max_size()))
         {
             JSON_THROW(out_of_range::create(408,
                                             "excessive object size: " + std::to_string(len)));
@@ -3731,24 +3986,24 @@ class json_sax_dom_parser : public json_sax<BasicJsonType>
         return true;
     }
 
-    bool key(string_t& val) override
+    bool key(string_t& val)
     {
         // add null at given key and store the reference for later
         object_element = &(ref_stack.back()->m_value.object->operator[](val));
         return true;
     }
 
-    bool end_object() override
+    bool end_object()
     {
         ref_stack.pop_back();
         return true;
     }
 
-    bool start_array(std::size_t len) override
+    bool start_array(std::size_t len)
     {
         ref_stack.push_back(handle_value(BasicJsonType::value_t::array));
 
-        if (JSON_UNLIKELY(len != json_sax<BasicJsonType>::no_limit and len > ref_stack.back()->max_size()))
+        if (JSON_UNLIKELY(len != std::size_t(-1) and len > ref_stack.back()->max_size()))
         {
             JSON_THROW(out_of_range::create(408,
                                             "excessive array size: " + std::to_string(len)));
@@ -3757,14 +4012,14 @@ class json_sax_dom_parser : public json_sax<BasicJsonType>
         return true;
     }
 
-    bool end_array() override
+    bool end_array()
     {
         ref_stack.pop_back();
         return true;
     }
 
     bool parse_error(std::size_t, const std::string&,
-                     const detail::exception& ex) override
+                     const detail::exception& ex)
     {
         errored = true;
         if (allow_exceptions)
@@ -3774,16 +4029,18 @@ class json_sax_dom_parser : public json_sax<BasicJsonType>
             {
                 case 1:
                     JSON_THROW(*reinterpret_cast<const detail::parse_error*>(&ex));
-                case 2:
-                    JSON_THROW(*reinterpret_cast<const detail::invalid_iterator*>(&ex));  // LCOV_EXCL_LINE
-                case 3:
-                    JSON_THROW(*reinterpret_cast<const detail::type_error*>(&ex));  // LCOV_EXCL_LINE
                 case 4:
                     JSON_THROW(*reinterpret_cast<const detail::out_of_range*>(&ex));
+                // LCOV_EXCL_START
+                case 2:
+                    JSON_THROW(*reinterpret_cast<const detail::invalid_iterator*>(&ex));
+                case 3:
+                    JSON_THROW(*reinterpret_cast<const detail::type_error*>(&ex));
                 case 5:
-                    JSON_THROW(*reinterpret_cast<const detail::other_error*>(&ex));  // LCOV_EXCL_LINE
+                    JSON_THROW(*reinterpret_cast<const detail::other_error*>(&ex));
                 default:
-                    assert(false);  // LCOV_EXCL_LINE
+                    assert(false);
+                    // LCOV_EXCL_STOP
             }
         }
         return false;
@@ -3839,7 +4096,7 @@ class json_sax_dom_parser : public json_sax<BasicJsonType>
 };
 
 template<typename BasicJsonType>
-class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
+class json_sax_dom_callback_parser
 {
   public:
     using number_integer_t = typename BasicJsonType::number_integer_t;
@@ -3857,43 +4114,43 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
         keep_stack.push_back(true);
     }
 
-    bool null() override
+    bool null()
     {
         handle_value(nullptr);
         return true;
     }
 
-    bool boolean(bool val) override
+    bool boolean(bool val)
     {
         handle_value(val);
         return true;
     }
 
-    bool number_integer(number_integer_t val) override
+    bool number_integer(number_integer_t val)
     {
         handle_value(val);
         return true;
     }
 
-    bool number_unsigned(number_unsigned_t val) override
+    bool number_unsigned(number_unsigned_t val)
     {
         handle_value(val);
         return true;
     }
 
-    bool number_float(number_float_t val, const string_t&) override
+    bool number_float(number_float_t val, const string_t&)
     {
         handle_value(val);
         return true;
     }
 
-    bool string(string_t& val) override
+    bool string(string_t& val)
     {
         handle_value(val);
         return true;
     }
 
-    bool start_object(std::size_t len) override
+    bool start_object(std::size_t len)
     {
         // check callback for object start
         const bool keep = callback(static_cast<int>(ref_stack.size()), parse_event_t::object_start, discarded);
@@ -3905,7 +4162,7 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
         // check object limit
         if (ref_stack.back())
         {
-            if (JSON_UNLIKELY(len != json_sax<BasicJsonType>::no_limit and len > ref_stack.back()->max_size()))
+            if (JSON_UNLIKELY(len != std::size_t(-1) and len > ref_stack.back()->max_size()))
             {
                 JSON_THROW(out_of_range::create(408,
                                                 "excessive object size: " + std::to_string(len)));
@@ -3915,7 +4172,7 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
         return true;
     }
 
-    bool key(string_t& val) override
+    bool key(string_t& val)
     {
         BasicJsonType k = BasicJsonType(val);
 
@@ -3932,7 +4189,7 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
         return true;
     }
 
-    bool end_object() override
+    bool end_object()
     {
         if (ref_stack.back())
         {
@@ -3967,7 +4224,7 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
         return true;
     }
 
-    bool start_array(std::size_t len) override
+    bool start_array(std::size_t len)
     {
         const bool keep = callback(static_cast<int>(ref_stack.size()), parse_event_t::array_start, discarded);
         keep_stack.push_back(keep);
@@ -3978,7 +4235,7 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
         // check array limit
         if (ref_stack.back())
         {
-            if (JSON_UNLIKELY(len != json_sax<BasicJsonType>::no_limit and len > ref_stack.back()->max_size()))
+            if (JSON_UNLIKELY(len != std::size_t(-1) and len > ref_stack.back()->max_size()))
             {
                 JSON_THROW(out_of_range::create(408,
                                                 "excessive array size: " + std::to_string(len)));
@@ -3988,7 +4245,7 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
         return true;
     }
 
-    bool end_array() override
+    bool end_array()
     {
         bool keep = true;
 
@@ -4020,7 +4277,7 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
     }
 
     bool parse_error(std::size_t, const std::string&,
-                     const detail::exception& ex) override
+                     const detail::exception& ex)
     {
         errored = true;
         if (allow_exceptions)
@@ -4030,16 +4287,18 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
             {
                 case 1:
                     JSON_THROW(*reinterpret_cast<const detail::parse_error*>(&ex));
-                case 2:
-                    JSON_THROW(*reinterpret_cast<const detail::invalid_iterator*>(&ex));  // LCOV_EXCL_LINE
-                case 3:
-                    JSON_THROW(*reinterpret_cast<const detail::type_error*>(&ex));  // LCOV_EXCL_LINE
                 case 4:
                     JSON_THROW(*reinterpret_cast<const detail::out_of_range*>(&ex));
+                // LCOV_EXCL_START
+                case 2:
+                    JSON_THROW(*reinterpret_cast<const detail::invalid_iterator*>(&ex));
+                case 3:
+                    JSON_THROW(*reinterpret_cast<const detail::type_error*>(&ex));
                 case 5:
-                    JSON_THROW(*reinterpret_cast<const detail::other_error*>(&ex));  // LCOV_EXCL_LINE
+                    JSON_THROW(*reinterpret_cast<const detail::other_error*>(&ex));
                 default:
-                    assert(false);  // LCOV_EXCL_LINE
+                    assert(false);
+                    // LCOV_EXCL_STOP
             }
         }
         return false;
@@ -4097,6 +4356,13 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
         }
         else
         {
+            // skip this value if we already decided to skip the parent
+            // (https://github.com/nlohmann/json/issues/971#issuecomment-413678360)
+            if (not ref_stack.back())
+            {
+                return {false, nullptr};
+            }
+
             assert(ref_stack.back()->is_array() or ref_stack.back()->is_object());
             if (ref_stack.back()->is_array())
             {
@@ -4143,7 +4409,7 @@ class json_sax_dom_callback_parser : public json_sax<BasicJsonType>
 };
 
 template<typename BasicJsonType>
-class json_sax_acceptor : public json_sax<BasicJsonType>
+class json_sax_acceptor
 {
   public:
     using number_integer_t = typename BasicJsonType::number_integer_t;
@@ -4151,62 +4417,62 @@ class json_sax_acceptor : public json_sax<BasicJsonType>
     using number_float_t = typename BasicJsonType::number_float_t;
     using string_t = typename BasicJsonType::string_t;
 
-    bool null() override
+    bool null()
     {
         return true;
     }
 
-    bool boolean(bool) override
+    bool boolean(bool)
     {
         return true;
     }
 
-    bool number_integer(number_integer_t) override
+    bool number_integer(number_integer_t)
     {
         return true;
     }
 
-    bool number_unsigned(number_unsigned_t) override
+    bool number_unsigned(number_unsigned_t)
     {
         return true;
     }
 
-    bool number_float(number_float_t, const string_t&) override
+    bool number_float(number_float_t, const string_t&)
     {
         return true;
     }
 
-    bool string(string_t&) override
+    bool string(string_t&)
     {
         return true;
     }
 
-    bool start_object(std::size_t) override
+    bool start_object(std::size_t = std::size_t(-1))
     {
         return true;
     }
 
-    bool key(string_t&) override
+    bool key(string_t&)
     {
         return true;
     }
 
-    bool end_object() override
+    bool end_object()
     {
         return true;
     }
 
-    bool start_array(std::size_t) override
+    bool start_array(std::size_t = std::size_t(-1))
     {
         return true;
     }
 
-    bool end_array() override
+    bool end_array()
     {
         return true;
     }
 
-    bool parse_error(std::size_t, const std::string&, const detail::exception&) override
+    bool parse_error(std::size_t, const std::string&, const detail::exception&)
     {
         return false;
     }
@@ -4259,8 +4525,6 @@ class parser
         /// the parser finished reading a JSON value
         value
     };
-
-    using json_sax_t = json_sax<BasicJsonType>;
 
     using parser_callback_t =
         std::function<bool(int depth, parse_event_t event, BasicJsonType& parsed)>;
@@ -4350,8 +4614,10 @@ class parser
         return sax_parse(&sax_acceptor, strict);
     }
 
-    bool sax_parse(json_sax_t* sax, const bool strict = true)
+    template <typename SAX>
+    bool sax_parse(SAX* sax, const bool strict = true)
     {
+        (void)detail::is_sax_static_asserts<SAX, BasicJsonType> {};
         const bool result = sax_parse_internal(sax);
 
         // strict mode: next byte must be EOF
@@ -4366,7 +4632,8 @@ class parser
     }
 
   private:
-    bool sax_parse_internal(json_sax_t* sax)
+    template <typename SAX>
+    bool sax_parse_internal(SAX* sax)
     {
         // stack to remember the hieararchy of structured values we are parsing
         // true = array; false = object
@@ -4383,7 +4650,7 @@ class parser
                 {
                     case token_type::begin_object:
                     {
-                        if (JSON_UNLIKELY(not sax->start_object()))
+                        if (JSON_UNLIKELY(not sax->start_object(std::size_t(-1))))
                         {
                             return false;
                         }
@@ -4431,7 +4698,7 @@ class parser
 
                     case token_type::begin_array:
                     {
-                        if (JSON_UNLIKELY(not sax->start_array()))
+                        if (JSON_UNLIKELY(not sax->start_array(std::size_t(-1))))
                         {
                             return false;
                         }
@@ -4856,7 +5123,7 @@ template<typename BasicJsonType> struct internal_iterator
 
 // #include <nlohmann/detail/macro_scope.hpp>
 
-// #include <nlohmann/detail/meta.hpp>
+// #include <nlohmann/detail/meta/cpp_future.hpp>
 
 // #include <nlohmann/detail/value_t.hpp>
 
@@ -5725,6 +5992,8 @@ class output_adapter
 
 // #include <nlohmann/detail/macro_scope.hpp>
 
+// #include <nlohmann/detail/meta/is_sax.hpp>
+
 // #include <nlohmann/detail/value_t.hpp>
 
 
@@ -5739,14 +6008,14 @@ namespace detail
 /*!
 @brief deserialization of CBOR, MessagePack, and UBJSON values
 */
-template<typename BasicJsonType>
+template<typename BasicJsonType, typename SAX = json_sax_dom_parser<BasicJsonType>>
 class binary_reader
 {
     using number_integer_t = typename BasicJsonType::number_integer_t;
     using number_unsigned_t = typename BasicJsonType::number_unsigned_t;
     using number_float_t = typename BasicJsonType::number_float_t;
     using string_t = typename BasicJsonType::string_t;
-    using json_sax_t = json_sax<BasicJsonType>;
+    using json_sax_t = SAX;
 
   public:
     /*!
@@ -5756,6 +6025,7 @@ class binary_reader
     */
     explicit binary_reader(input_adapter_t adapter) : ia(std::move(adapter))
     {
+        (void)detail::is_sax_static_asserts<SAX, BasicJsonType> {};
         assert(ia);
     }
 
@@ -5771,7 +6041,7 @@ class binary_reader
                    const bool strict = true)
     {
         sax = sax_;
-        bool result;
+        bool result = false;
 
         switch (format)
         {
@@ -5787,8 +6057,10 @@ class binary_reader
                 result = parse_ubjson_internal();
                 break;
 
+            // LCOV_EXCL_START
             default:
-                assert(false);  // LCOV_EXCL_LINE
+                assert(false);
+                // LCOV_EXCL_STOP
         }
 
         // strict mode: next byte must be EOF
@@ -6030,7 +6302,7 @@ class binary_reader
             }
 
             case 0x9F: // array (indefinite length)
-                return get_cbor_array(json_sax_t::no_limit);
+                return get_cbor_array(std::size_t(-1));
 
             // map (0x00..0x17 pairs of data items follow)
             case 0xA0:
@@ -6084,7 +6356,7 @@ class binary_reader
             }
 
             case 0xBF: // map (indefinite length)
-                return get_cbor_object(json_sax_t::no_limit);
+                return get_cbor_object(std::size_t(-1));
 
             case 0xF4: // false
                 return sax->boolean(false);
@@ -6729,7 +7001,7 @@ class binary_reader
     }
 
     /*!
-    @param[in] len  the length of the array or json_sax_t::no_limit for an
+    @param[in] len  the length of the array or std::size_t(-1) for an
                     array of indefinite size
     @return whether array creation completed
     */
@@ -6740,7 +7012,7 @@ class binary_reader
             return false;
         }
 
-        if (len != json_sax_t::no_limit)
+        if (len != std::size_t(-1))
             for (std::size_t i = 0; i < len; ++i)
             {
                 if (JSON_UNLIKELY(not parse_cbor_internal()))
@@ -6763,7 +7035,7 @@ class binary_reader
     }
 
     /*!
-    @param[in] len  the length of the object or json_sax_t::no_limit for an
+    @param[in] len  the length of the object or std::size_t(-1) for an
                     object of indefinite size
     @return whether object creation completed
     */
@@ -6775,7 +7047,7 @@ class binary_reader
         }
 
         string_t key;
-        if (len != json_sax_t::no_limit)
+        if (len != std::size_t(-1))
         {
             for (std::size_t i = 0; i < len; ++i)
             {
@@ -7267,7 +7539,7 @@ class binary_reader
         }
         else
         {
-            if (JSON_UNLIKELY(not sax->start_array()))
+            if (JSON_UNLIKELY(not sax->start_array(std::size_t(-1))))
             {
                 return false;
             }
@@ -7337,7 +7609,7 @@ class binary_reader
         }
         else
         {
-            if (JSON_UNLIKELY(not sax->start_object()))
+            if (JSON_UNLIKELY(not sax->start_object(std::size_t(-1))))
             {
                 return false;
             }
@@ -9471,7 +9743,7 @@ char* to_chars(char* first, char* last, FloatType value)
 
 // #include <nlohmann/detail/macro_scope.hpp>
 
-// #include <nlohmann/detail/meta.hpp>
+// #include <nlohmann/detail/meta/cpp_future.hpp>
 
 // #include <nlohmann/detail/output/output_adapters.hpp>
 
@@ -11005,7 +11277,7 @@ class basic_json
     friend class ::nlohmann::detail::iter_impl;
     template<typename BasicJsonType, typename CharType>
     friend class ::nlohmann::detail::binary_writer;
-    template<typename BasicJsonType>
+    template<typename BasicJsonType, typename SAX>
     friend class ::nlohmann::detail::binary_reader;
     template<typename BasicJsonType>
     friend class ::nlohmann::detail::json_sax_dom_parser;
@@ -11038,7 +11310,7 @@ class basic_json
 
   public:
     using value_t = detail::value_t;
-    /// @copydoc nlohmann::json_pointer
+    /// JSON Pointer, see @ref nlohmann::json_pointer
     using json_pointer = ::nlohmann::json_pointer<basic_json>;
     template<typename T, typename SFINAE>
     using json_serializer = JSONSerializer<T, SFINAE>;
@@ -11046,6 +11318,8 @@ class basic_json
     using initializer_list_t = std::initializer_list<detail::json_ref<basic_json>>;
 
     using input_format_t = detail::input_format_t;
+    /// SAX interface type, see @ref nlohmann::json_sax
+    using json_sax_t = json_sax<basic_json>;
 
     ////////////////
     // exceptions //
@@ -11779,7 +12053,7 @@ class basic_json
                     object = nullptr;  // silence warning, see #821
                     if (JSON_UNLIKELY(t == value_t::null))
                     {
-                        JSON_THROW(other_error::create(500, "961c151d2e87f2686a955a9be24d316f1362bf21 3.1.2")); // LCOV_EXCL_LINE
+                        JSON_THROW(other_error::create(500, "961c151d2e87f2686a955a9be24d316f1362bf21 3.2.0")); // LCOV_EXCL_LINE
                     }
                     break;
                 }
@@ -11947,8 +12221,6 @@ class basic_json
     */
     using parser_callback_t = typename parser::parser_callback_t;
 
-    using json_sax_t = typename parser::json_sax_t;
-
     //////////////////
     // constructors //
     //////////////////
@@ -12110,7 +12382,7 @@ class basic_json
     was provided), strong guarantee holds: if an exception is thrown, there are
     no changes to any JSON value.
 
-    @since version 3.1.2
+    @since version 3.2.0
     */
     template <typename BasicJsonType,
               detail::enable_if_t<
@@ -13343,7 +13615,7 @@ class basic_json
     @complexity Depending on the implementation of the called `from_json()`
                 method.
 
-    @since version 3.1.2
+    @since version 3.2.0
     */
     template<typename BasicJsonType, detail::enable_if_t<
                  not std::is_same<BasicJsonType, basic_json>::value and
@@ -13664,7 +13936,7 @@ class basic_json
                    not detail::is_basic_json<ValueType>::value
 #ifndef _MSC_VER  // fix for issue #167 operator<< ambiguity under VS2015
                    and not std::is_same<ValueType, std::initializer_list<typename string_t::value_type>>::value
-#if defined(JSON_HAS_CPP_17) && _MSC_VER <= 1914
+#if defined(JSON_HAS_CPP_17) && defined(_MSC_VER) and _MSC_VER <= 1914
                    and not std::is_same<ValueType, typename std::string_view>::value
 #endif
 #endif
@@ -14272,7 +14544,7 @@ class basic_json
             {
                 return ptr.get_checked(this);
             }
-            JSON_CATCH (out_of_range&)
+            JSON_INTERNAL_CATCH (out_of_range&)
             {
                 return default_value;
             }
@@ -16848,7 +17120,64 @@ class basic_json
         return parser(i).accept(true);
     }
 
-    static bool sax_parse(detail::input_adapter&& i, json_sax_t* sax,
+    /*!
+    @brief generate SAX events
+
+    The SAX event lister must follow the interface of @ref json_sax.
+
+    This function reads from a compatible input. Examples are:
+    - an array of 1-byte values
+    - strings with character/literal type with size of 1 byte
+    - input streams
+    - container with contiguous storage of 1-byte values. Compatible container
+      types include `std::vector`, `std::string`, `std::array`,
+      `std::valarray`, and `std::initializer_list`. Furthermore, C-style
+      arrays can be used with `std::begin()`/`std::end()`. User-defined
+      containers can be used as long as they implement random-access iterators
+      and a contiguous storage.
+
+    @pre Each element of the container has a size of 1 byte. Violating this
+    precondition yields undefined behavior. **This precondition is enforced
+    with a static assertion.**
+
+    @pre The container storage is contiguous. Violating this precondition
+    yields undefined behavior. **This precondition is enforced with an
+    assertion.**
+    @pre Each element of the container has a size of 1 byte. Violating this
+    precondition yields undefined behavior. **This precondition is enforced
+    with a static assertion.**
+
+    @warning There is no way to enforce all preconditions at compile-time. If
+             the function is called with a noncompliant container and with
+             assertions switched off, the behavior is undefined and will most
+             likely yield segmentation violation.
+
+    @param[in] i  input to read from
+    @param[in,out] sax  SAX event listener
+    @param[in] format  the format to parse (JSON, CBOR, MessagePack, or UBJSON)
+    @param[in] strict  whether the input has to be consumed completely
+
+    @return return value of the last processed SAX event
+
+    @throw parse_error.101 if a parse error occurs; example: `""unexpected end
+    of input; expected string literal""`
+    @throw parse_error.102 if to_unicode fails or surrogate error
+    @throw parse_error.103 if to_unicode fails
+
+    @complexity Linear in the length of the input. The parser is a predictive
+    LL(1) parser. The complexity can be higher if the SAX consumer @a sax has
+    a super-linear complexity.
+
+    @note A UTF-8 byte order mark is silently ignored.
+
+    @liveexample{The example below demonstrates the `sax_parse()` function
+    reading from string and processing the events with a user-defined SAX
+    event consumer.,sax_parse}
+
+    @since version 3.2.0
+    */
+    template <typename SAX>
+    static bool sax_parse(detail::input_adapter&& i, SAX* sax,
                           input_format_t format = input_format_t::json,
                           const bool strict = true)
     {
@@ -16858,7 +17187,7 @@ class basic_json
             case input_format_t::json:
                 return parser(std::move(i)).sax_parse(sax, strict);
             default:
-                return binary_reader(std::move(i)).sax_parse(format, sax, strict);
+                return detail::binary_reader<basic_json, SAX>(std::move(i)).sax_parse(format, sax, strict);
         }
     }
 
@@ -16931,11 +17260,11 @@ class basic_json
         return parser(detail::input_adapter(first, last)).accept(true);
     }
 
-    template<class IteratorType, typename std::enable_if<
+    template<class IteratorType, class SAX, typename std::enable_if<
                  std::is_base_of<
                      std::random_access_iterator_tag,
                      typename std::iterator_traits<IteratorType>::iterator_category>::value, int>::type = 0>
-    static bool sax_parse(IteratorType first, IteratorType last, json_sax_t* sax)
+    static bool sax_parse(IteratorType first, IteratorType last, SAX* sax)
     {
         return parser(detail::input_adapter(first, last)).sax_parse(sax);
     }
@@ -18048,11 +18377,13 @@ class basic_json
                         break;
                     }
 
+                    // LCOV_EXCL_START
                     default:
                     {
                         // if there exists a parent it cannot be primitive
-                        assert(false);  // LCOV_EXCL_LINE
+                        assert(false);
                     }
+                        // LCOV_EXCL_STOP
                 }
             }
         };
@@ -18194,7 +18525,7 @@ class basic_json
                         // the "path" location must exist - use at()
                         success = (result.at(ptr) == get_value("test", "value", false));
                     }
-                    JSON_CATCH (out_of_range&)
+                    JSON_INTERNAL_CATCH (out_of_range&)
                     {
                         // ignore out of range errors: success remains false
                     }
@@ -18472,11 +18803,10 @@ namespace std
 @since version 1.0.0
 */
 template<>
-inline void swap(nlohmann::json& j1,
-                 nlohmann::json& j2) noexcept(
-                     is_nothrow_move_constructible<nlohmann::json>::value and
-                     is_nothrow_move_assignable<nlohmann::json>::value
-                 )
+inline void swap<nlohmann::json>(nlohmann::json& j1, nlohmann::json& j2) noexcept(
+    is_nothrow_move_constructible<nlohmann::json>::value and
+    is_nothrow_move_assignable<nlohmann::json>::value
+)
 {
     j1.swap(j2);
 }
@@ -18565,6 +18895,7 @@ inline nlohmann::json::json_pointer operator "" _json_pointer(const char* s, std
 #endif
 
 // clean up
+#undef JSON_INTERNAL_CATCH
 #undef JSON_CATCH
 #undef JSON_THROW
 #undef JSON_TRY

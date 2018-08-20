@@ -16,7 +16,8 @@ enum TileType {
     LeftTop,
     LeftBottom,
     TopRight,
-    BottomRight
+    BottomRight,
+    Obstacle
 };
 
 /**
@@ -59,6 +60,12 @@ TileType randomStartTileType();
  * @brief Returns if a TileType is an end tile 
  */
 bool isEndTileType(const TileType & t);
+
+
+/**
+ * @brief Returns if a TileType is an end tile 
+ */
+bool isMoveableType(const TileType & t);
 
 /**
  * @brief Returns if a random end TileType

@@ -32,6 +32,8 @@ std::string tileTypeToString(const TileType & t) {
             return "TopRight";
         case TileType::BottomRight:
             return "BottomRight";
+        case TileType::Obstacle:
+            return "Obstacle";
         default:
             return "Unknown Type";
     }
@@ -66,6 +68,8 @@ TileType stringToTileType(const std::string & s) {
         return TileType::TopRight;
     } else if (s == "BottomRight") {
         return TileType::BottomRight;
+    } else if (s == "Obstacle") {
+        return TileType::Obstacle;
     } else {
         return TileType::Empty;
     }
@@ -103,6 +107,8 @@ std::string tileTypeToChar(const TileType & t) {
             return "└";
         case TileType::BottomRight:
             return "┌";
+        case TileType::Obstacle:
+            return "o";
         default:
             return "?";
     }
@@ -140,6 +146,8 @@ std::wstring tileTypeToWstringChar(const TileType & t) {
             return L"└";
         case TileType::BottomRight:
             return L"┌";
+        case TileType::Obstacle:
+            return L"o";
         default:
             return L"?";
     }
@@ -200,6 +208,14 @@ bool isEndTileType(const TileType & t) {
 }
 
 /**
+ * @brief Returns if a TileType is moveable
+ */
+bool isMoveableType(const TileType & t) {
+    return !  (t == TileType::Empty || t == TileType::Obstacle || isStartTileType( t ) ||  isEndTileType( t ));
+}
+
+
+/**
  * @brief Returns if a random end TileType
  */
 TileType randomEndTileType() {
@@ -239,7 +255,7 @@ bool isGameTileType(const TileType & t) {
 
 TileType randomGameTileType() {
     TileType gameTileType{TileType::Empty};
-    switch (rand() % 6) {
+    switch (rand() % 7) {
         case 0: gameTileType = TileType::Horizontal;
             break;
         case 1: gameTileType = TileType::Vertical;
@@ -251,6 +267,8 @@ TileType randomGameTileType() {
         case 4: gameTileType = TileType::TopRight;
             break;
         case 5: gameTileType = TileType::BottomRight;
+            break;
+        case 6: gameTileType = TileType::Obstacle;
             break;
     }
 
