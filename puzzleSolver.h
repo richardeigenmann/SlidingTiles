@@ -19,14 +19,14 @@ namespace SlidingTiles {
         /**
          * @brief returns all moves that are possible on the current gameboard
          */
-        void possibleMoves(MoveNode & parentNode);
+        std::experimental::optional<MoveNode> possibleMoves(MoveNode & parentNode);
 
         /**
          * @brief Adds the possibleMoves as MoveNodes to the supplied MoveNode
          * @param moveNode the node on which to Search and add the new Moves
          * @param levels how many levels deep to search 1 .. n
          */
-        void addPossibleMoves(MoveNode & moveNode, const int levels);
+        std::experimental::optional<MoveNode> addPossibleMoves(MoveNode & moveNode, const int levels);
 
         
         /**
@@ -34,7 +34,7 @@ namespace SlidingTiles {
          * @param gameBoard The GameBoard on which to build the tree
          * @param depth The depth to which the tree should be built
          */
-        void buildTree(GameBoard & gameBoard, int depth);
+        std::experimental::optional<MoveNode> buildTree(GameBoard & gameBoard, int depth);
         
         /**
          * @brief saves the solution to the supplied GameBoard

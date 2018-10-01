@@ -1,7 +1,6 @@
 #pragma once
 #include "updatingSingleton.h"
 #include "randomSoundPlayer.h"
-#include "zmq.hpp"
 #include "zmqSubscriber.h"
 
 using json = nlohmann::json;

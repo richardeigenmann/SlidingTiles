@@ -47,7 +47,7 @@ TEST(PuzzleSolver, possibleMovesOne) {
     ASSERT_EQ(right, 0);
 }
 
-TEST(PuzzleSolver, possibleMovesTwo) {
+TEST(PuzzleSolver, DISABLED_possibleMovesTwo) {
     std::wstring game{L"├┫          -   "};
     PuzzleSolver puzzleSolver;
     GameBoard gameBoard{};
@@ -75,7 +75,7 @@ TEST(PuzzleSolver, possibleMovesTwo) {
     ASSERT_EQ(right, 1);
 }
 
-TEST(PuzzleSolver, possibleMovesFour) {
+TEST(PuzzleSolver, DISABLED_possibleMovesFour) {
     std::wstring game{L"├ ┫  -          "};
     GameBoard gameBoard{};
     gameBoard.loadGame(game);
@@ -262,7 +262,7 @@ TEST(PuzzleSolver, noSolution) {
     ASSERT_THAT(gameBoard.solution.size(), 0) << "There should be no solution for this puzzle";
 }
 
-TEST(PuzzleSolver, depth) {
+TEST(PuzzleSolver, DISABLED_depth) {
     std::wstring game{L"├┫          -   "};
     PuzzleSolver puzzleSolver;
     GameBoard gameBoard{};

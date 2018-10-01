@@ -6,7 +6,7 @@ using namespace SlidingTiles;
 
 const int PuzzleSolver::DEFAULT_DEPTH;
 
-void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
+std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & parentNode) {
     assert(parentNode.startPosition.x >= -1 && parentNode.startPosition.x <= GameBoard::boardSize);
     assert(parentNode.startPosition.y >= -1 && parentNode.startPosition.y <= GameBoard::boardSize);
 
@@ -23,8 +23,7 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
                     if ( gameBoard.isSolved().size() ) {
-                        std::cout << "We have a solution and could stop building the tree here\n."
-                            << childNode.toString() << std::endl;
+                        return childNode;
                     }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
                 }
@@ -35,8 +34,7 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
                     if ( gameBoard.isSolved().size() ) {
-                        std::cout << "We have a solution and could stop building the tree here\n."
-                            << childNode.toString() << std::endl;
+                        return childNode;
                     }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
                 }
@@ -47,8 +45,7 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
                     if ( gameBoard.isSolved().size() ) {
-                        std::cout << "We have a solution and could stop building the tree here\n."
-                            << childNode.toString() << std::endl;
+                        return childNode;
                     }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
                 }
@@ -59,37 +56,46 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
                     if ( gameBoard.isSolved().size() ) {
-                        std::cout << "We have a solution and could stop building the tree here\n."
-                            << childNode.toString() << std::endl;
+                        return childNode;
                     }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
                 }
             }
         }
+        return {};
 }
 
-void PuzzleSolver::addPossibleMoves(MoveNode &parentNode, const int levels) {
+std::experimental::optional<MoveNode> PuzzleSolver::addPossibleMoves(MoveNode &parentNode, const int levels) {
     assert(parentNode.startPosition.x >= -1 && parentNode.startPosition.x <= GameBoard::boardSize);
     assert(parentNode.startPosition.y >= -1 && parentNode.startPosition.y <= GameBoard::boardSize);
     //std::cout << "\n\naddPossibleMoves levels: " << levels << " " << parentNode.toString();
 
-    possibleMoves(parentNode);
+    auto opt = possibleMoves(parentNode);
+    if (opt) {
+        return opt;
+        std::cout << "Hurray we have a solution!\n" << opt.value().enumerateMoves() << "\n";
+
+    }
     //std::cout << "Entering if with levels: " << levels << "\n";
     for (MoveNode & mn : parentNode.possibleMoves) {
         // note the & above to ensure we work with the members and not a copy
         mn.depth = parentNode.depth + 1;
         if (levels > 0) {
-            addPossibleMoves(mn, levels - 1);
+            opt = addPossibleMoves(mn, levels - 1);
+            if (opt) {
+                return opt;
+            }
         }
     }
+    return {};
     // note do the insert after the recursive call above because insert copies the object and it might copy without the content in the vector!
     //parentNode.possibleMoves.insert(std::end(parentNode.possibleMoves), std::begin(possMoves), std::end(possMoves));
 }
 
-void PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) {
+std::experimental::optional<MoveNode> PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) {
     gameBoard.rootNode.possibleMoves.clear();
     gameBoard.rootNode.endingBoard = gameBoard.serialiseGame();
-    addPossibleMoves(gameBoard.rootNode, depth);
+    return addPossibleMoves(gameBoard.rootNode, depth);
 }
 
 void PuzzleSolver::saveSolution(GameBoard & gameBoard) {
@@ -123,24 +129,29 @@ GameBoard PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t m
     while (true) {
         GameBoard gameBoard{};
         gameBoard.randomGame(emptyTiles);
-        buildTree(gameBoard, maxDepth);
-        saveSolution(gameBoard);
+        auto solution = buildTree(gameBoard, maxDepth);
+        //saveSolution(gameBoard);
+        if (solution) {
+            std::cout << "\n{\n\t\"SerializedGame\": \""
+            << gameBoard.serialiseGameToString()
+            << '\"'
+            << ",\n"
+            << solution.value().enumerateMoves() << "\n"
+            << "},\n";
 
-        if (gameBoard.solution.size() > 0) {
-            return gameBoard;
-        } else {
-            std::cout << "Discarding game as it can't be solved in " << maxDepth << " moves\n";
+            //if (gameBoard.solution.size() > 0) {
+                return gameBoard;
+            //}
+
         }
+        std::cout << "Discarding game as it can't be solved in " << maxDepth << " moves\n";
+        
     }
 }
 
 void PuzzleSolver::generateGame(std::size_t emptyTiles, std::size_t maxDepth) {
     GameBoard gameBoard = generateRandomGame(emptyTiles, maxDepth);
 
-    std::cout << "\n{\n\t\"SerializedGame\": \""
-            << gameBoard.serialiseGameToString()
-            << '\"'
-            << ",\n\t\"Par\": " << gameBoard.solution.size() << "\n},\n";
 }
 
 void PuzzleSolver::generateGames(std::size_t games) {

@@ -5,6 +5,7 @@
 #include <sstream>
 #include "move.h"
 #include <iostream>
+#include <string>
 
 namespace SlidingTiles {
 
@@ -97,6 +98,35 @@ namespace SlidingTiles {
                 ss << possibleMoves[i].toString(indent + 2);
             }
             return ss.str();
+        }
+
+        /**
+         * @brief print the solution
+         */
+        std::string enumerateMoves() {
+            std::vector<std::string> output;
+
+            const MoveNode * movePtr = this;
+
+            do {
+                std::stringstream ss;
+                ss << "{\"x\":" << movePtr->startPosition.x
+                    << ",\"y\":" << movePtr->startPosition.y << ",\"Direction\":\"" << directionToString(movePtr->direction)
+                    << "\"}";
+
+                output.push_back(ss.str());
+                movePtr = movePtr->parent;
+            } while ( movePtr != nullptr );
+
+            std::string out{"\t\"Solution\":["};
+            for (unsigned i = output.size()-1; i-- > 0; ) {
+                out += output.at(i);
+                if (i) { out += ","; }
+            }
+            out += "],\n";
+            out += "\t\"Par\":";
+            out += std::to_string( output.size()-1 );
+            return out;
         }
 
         /**
