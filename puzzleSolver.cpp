@@ -119,17 +119,9 @@ GameBoard PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t m
 void PuzzleSolver::generateGame(std::size_t emptyTiles, std::size_t maxDepth) {
     GameBoard gameBoard = generateRandomGame(emptyTiles, maxDepth);
 
-    std::size_t difficulty{0};
-    if (gameBoard.solution.size() > 3) {
-        ++difficulty;
-    }
-    if (gameBoard.solution.size() > 5) {
-        ++difficulty;
-    }
-
     std::cout << "\n{\n\t\"SerializedGame\": \""
             << gameBoard.serialiseGameToString()
-            << "\",\n\t\"Difficulty\": " << difficulty
+            << '\"'
             << ",\n\t\"Par\": " << gameBoard.solution.size() << "\n},\n";
 }
 

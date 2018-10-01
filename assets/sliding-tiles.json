@@ -2,67 +2,54 @@
     "levels": [
         { 
             "SerializedGame": "   ┬ |     ┻   o",
-            "Difficulty": 0,
             "Par": 2
         },
         { 
             "SerializedGame": "└||--├ -└┘┐┫┐┘└-",
-            "Difficulty": 0,
             "Par": 2
         },
         {
             "SerializedGame": "┳      |┴       ",
-            "Difficulty": 0,
             "Par": 3
         },
         { 
             "SerializedGame": "└┳┬|┐┌└┘-┐|-| --",
-            "Difficulty": 1,
             "Par": 4
         },
         { 
             "SerializedGame": "-┘┌-┐┐| ├┌|└┣┘┐└",
-            "Difficulty": 1,
             "Par": 4
         },
         {
             "SerializedGame": "┌┘┌┬┘┌||┘ ┐┘└┘|┻",
-            "Difficulty": 0,
             "Par": 4
         },
         {
             "SerializedGame": "┌ ┐-┘┘-┫┘┴ -└-┘ ",
-            "Difficulty": 0,
             "Par": 4
         },
         {
             "SerializedGame": "  └└-┐┘|┣   ├└ |",
-            "Difficulty": 0,
             "Par": 5
         },
         {
             "SerializedGame": " ┳ └     ┴   |  ",
-            "Difficulty": 0,
             "Par": 4
         },
         {
             "SerializedGame": "|┌|  ┴└┐| |┫| ┐┐",
-            "Difficulty": 0,
             "Par": 5
         },
         {
             "SerializedGame": "┳┘┐|└-┘┘┌| -┐├┘└",
-            "Difficulty": 2,
             "Par": 7
         },
         {
             "SerializedGame": "| └ ┘┘┫ ┌┴ └└ --",
-            "Difficulty": 2,
             "Par": 7
         },
         {
             "SerializedGame": "┘┌└└┌┳┘└-|└┐ -└┴",
-            "Difficulty": 2,
             "Par": 7
         }
 
