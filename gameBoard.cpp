@@ -8,6 +8,8 @@
 #include <locale>
 #include <codecvt>
 #include "json.hpp"
+#include <stdexcept>
+#include "tileType.h"
 
 using namespace SlidingTiles;
 using json = nlohmann::json;
@@ -92,8 +94,66 @@ void GameBoard::loadGame(const std::string & game) {
 }
 
 void GameBoard::randomGame(const int emptyTiles) {
+    for (size_t passes=0; passes<200; ++passes) {
+        randomGameImpl(emptyTiles);
+        if ( ! isSolved().size() ) {
+            solution.clear();
+            return;
+        } else {
+            std::cout << "No good. Already solved. Trying again.\n";
+        }
+    }
+    throw std::runtime_error("Something is terribly wrong. We rendered 200 game boards and got a solved board 200 times? What a conincidence...");
+}
+
+Tile GameBoard::pickStartTile(const sf::Vector2i & startPos) {
+    Tile startTile{};
+    startTile.setTilePosition(startPos);
+    TileType type = randomStartTileType();
+    // correct tiles that don't work
+    if (startPos.x == 0 && type == TileType::StartLeft) {
+        // can't go left on column 0
+        type = TileType::StartRight;
+    } else if (startPos.y == 0 && type == TileType::StartTop) {
+        // can't go up on row 0
+        type = TileType::StartBottom;
+    } else if (startPos.x == boardSize-1 && type == TileType::StartRight) {
+        // can't go right on right column
+        type = TileType::StartLeft;
+    } else if (startPos.y == boardSize-1 && type == TileType::StartBottom) {
+        // can't go down on bottom row
+        type = TileType::StartTop;
+    }
+    startTile.setTileType(type);
+    return startTile;
+}
+
+
+Tile GameBoard::pickEndTile(const sf::Vector2i & endPos) {
+    Tile endTile{};
+    endTile.setTilePosition(endPos);
+    TileType type = randomEndTileType();
+    // correct tiles that don't work
+    if (endPos.x == 0 && type == TileType::EndLeft) {
+        // can't come from left on column 0
+        type = TileType::EndRight;
+    } else if (endPos.y == 0 && type == TileType::EndTop) {
+        // can't come from top on row 0
+        type = TileType::EndBottom;
+    } else if (endPos.x == boardSize-1 && type == TileType::EndRight) {
+        // can't come from right on right column
+        type = TileType::EndLeft;
+    } else if (endPos.y == boardSize-1 && type == TileType::EndBottom) {
+        // can't go up to bottom row
+        type = TileType::EndTop;
+    }
+    endTile.setTileType(type);
+    return endTile;
+}
+
+void GameBoard::randomGameImpl(const int emptyTiles) {
     assert(emptyTiles > 0 && emptyTiles < boardSize * boardSize - 2);
-    std::cout << "Searching for a game..\n";
+    std::cout << "Setting up a random board\n";
 
     std::vector<sf::Vector2i> positions{};
     for (int x = 0; x < boardSize; ++x) {
@@ -105,16 +165,10 @@ void GameBoard::randomGame(const int emptyTiles) {
     std::shuffle(std::begin(positions), std::end(positions), std::default_random_engine(seed));
 
     sf::Vector2i startPos = positions[0];
-    Tile startTile{};
-    startTile.setTilePosition(startPos);
-    startTile.setTileType(randomStartTileType());
-    tiles[startPos.x][startPos.y] = startTile;
+    tiles[startPos.x][startPos.y] = pickStartTile(startPos);
 
     sf::Vector2i endPos = positions[1];
-    Tile endTile{};
-    endTile.setTilePosition(endPos);
-    endTile.setTileType(randomEndTileType());
-    tiles[endPos.x][endPos.y] = endTile;
+    tiles[endPos.x][endPos.y] = pickEndTile(endPos);
 
     for (int i = 0; i < emptyTiles; ++i) {
         sf::Vector2i emptyPos = positions[2 + i];
@@ -147,7 +201,6 @@ void GameBoard::randomGame(const int emptyTiles) {
         tile.setTileType(tileType);
         tiles[tilePos.x][tilePos.y] = tile;
     }
-    solution.clear();
 }
 
 std::vector<std::string> GameBoard::serialiseGame() {

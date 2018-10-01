@@ -22,6 +22,10 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
+                    if ( gameBoard.isSolved().size() ) {
+                        std::cout << "We have a solution and could stop building the tree here\n."
+                            << childNode.toString() << std::endl;
+                    }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
                 }
                 if (parentNode.direction != Direction::GoUp && gameBoard.canSlideTile(Move{position, Direction::GoDown})) {
@@ -30,6 +34,10 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
+                    if ( gameBoard.isSolved().size() ) {
+                        std::cout << "We have a solution and could stop building the tree here\n."
+                            << childNode.toString() << std::endl;
+                    }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
                 }
                 if (parentNode.direction != Direction::GoRight && gameBoard.canSlideTile(Move{position, Direction::GoLeft})) {
@@ -38,6 +46,10 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
+                    if ( gameBoard.isSolved().size() ) {
+                        std::cout << "We have a solution and could stop building the tree here\n."
+                            << childNode.toString() << std::endl;
+                    }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
                 }
                 if (parentNode.direction != Direction::GoLeft && gameBoard.canSlideTile(Move{position, Direction::GoRight})) {
@@ -46,6 +58,10 @@ void PuzzleSolver::possibleMoves(MoveNode & parentNode) {
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
+                    if ( gameBoard.isSolved().size() ) {
+                        std::cout << "We have a solution and could stop building the tree here\n."
+                            << childNode.toString() << std::endl;
+                    }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
                 }
             }
@@ -112,6 +128,8 @@ GameBoard PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t m
 
         if (gameBoard.solution.size() > 0) {
             return gameBoard;
+        } else {
+            std::cout << "Discarding game as it can't be solved in " << maxDepth << " moves\n";
         }
     }
 }

@@ -44,8 +44,11 @@ namespace SlidingTiles {
         void loadGame(const std::string & game);
 
         /**
-         * @brief sets up a random game
+         * @brief sets up a random game by placing random tiles on the board.
+         *        Games that are directly solved without moving a tile are 
+         *        discarded.
          * @param emptyTiles the number of empty tiles to place defaults to 3
+         * @throws a runtime_error if we can't get a non-solved game board placed after 200 tries
          */
         void randomGame(const int emptyTiles = 3);
 
@@ -118,7 +121,8 @@ namespace SlidingTiles {
         /**
          * @brief returns if the puzzle is in a solved state by checking the path
          * from the start tile to the end tile.
-         * @return a vector with the tile positions of the solution if solved otherwise returns an empty vector
+         * @return a vector with the tile positions of the solution if solved otherwise 
+         * returns an empty vector
          */
         std::vector<sf::Vector2i> isSolved();
 
@@ -148,6 +152,25 @@ namespace SlidingTiles {
                 for (int y = 0; y < boardSize; ++y)
                     tiles[x][y].setWinner(false);
         }*/
+    private:
+        /** 
+         * @brief picks start tile that works on the board.
+         * @throws a runtime_error if there is a problem placing the tile
+         */
+        Tile pickStartTile(const sf::Vector2i & startPos);
+
+        /** 
+         * @brief picks an end tile that works on the board.
+         * @throws a runtime_error if there is a problem placing the tile
+         */
+        Tile pickEndTile(const sf::Vector2i & endPos);
+
+
+        /**
+         * @brief sets up a random game by placing random tiles on the board.
+         * @param emptyTiles the number of empty tiles to place defaults to 3
+         */
+        void randomGameImpl(const int emptyTiles = 3);
 
     };
 
