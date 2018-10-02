@@ -73,8 +73,6 @@ std::experimental::optional<MoveNode> PuzzleSolver::addPossibleMoves(MoveNode &p
     auto opt = possibleMoves(parentNode);
     if (opt) {
         return opt;
-        std::cout << "Hurray we have a solution!\n" << opt.value().enumerateMoves() << "\n";
-
     }
     //std::cout << "Entering if with levels: " << levels << "\n";
     for (MoveNode & mn : parentNode.possibleMoves) {
