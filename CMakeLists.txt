@@ -4,7 +4,7 @@ PROJECT(sliding-tiles)
 # To run with Clang:
 # cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang ..
 
-SET(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_STANDARD 17)
 IF (WIN32)
   SET(SFML_ROOT "C:/Users/Richard/Documents/SFML-2.4.2")
   SET(CMAKE_MODULE_PATH "${SFML_ROOT}/cmake/Modules" "${PROJECT_SOURCE_DIR}" "${CMAKE_MODULE_PATH}")
@@ -69,7 +69,7 @@ SET(sliding-tiles-assets
     ${sliding-tiles_assets_dir}/button_next.png
 )
 
-SET(SOURCE_FILES
+SET( SOURCE_FILES
     game.cpp
     gameView.cpp
     tileView.cpp
@@ -132,6 +132,8 @@ TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
     ${ZeroMQ_LIBRARIES}
 )
 
+#INSTALL(TARGETS sliding-tiles "/usr/local/bin")
+
 IF (WIN32)
   ADD_CUSTOM_COMMAND( TARGET sliding-tiles POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -160,6 +162,8 @@ set( gtest_force_shared_crt ON CACHE BOOL "" FORCE )
 # Add googletest directly to our build. This adds
 # the following targets: gtest, gtest_main, gmock
 # and gmock_main
+option(INSTALL_GMOCK "Install Googletest's GMock?" OFF)
+option(INSTALL_GTEST "Install Googletest's GTest?" OFF)
 add_subdirectory( ${CMAKE_BINARY_DIR}/googletest-src
                  ${CMAKE_BINARY_DIR}/googletest-build )
 
@@ -218,7 +222,7 @@ TARGET_LINK_LIBRARIES(levelGenerator LINK_PUBLIC
 )
 
 
-set(CPACK_PACKAGE_VERSION ${VERSION})
+# set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_GENERATOR "RPM;TZ;ZIP;TBZ2;DEB")
 set(CPACK_PACKAGE_NAME "sliding-tiles")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Sliding Tiles Game")
@@ -233,6 +237,9 @@ set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
 SET(CPACK_RPM_PACKAGE_REQUIRES "libzmq5 libsfml2")
+SET(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/richardeigenmann/SlidingTiles")
+SET(CPACK_PACKAGE_EXECUTABLES "sliding-tiles;Slding Tiles Game")
+#SET(CPACK_SET_DESTDIR "/usr/local/bin/")
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/assets/" DESTINATION "assets")
 install(FILES "${PROJECT_SOURCE_DIR}/build/sliding-tiles" DESTINATION ".")
 include(CPack)
