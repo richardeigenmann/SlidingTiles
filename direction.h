@@ -6,7 +6,7 @@ namespace SlidingTiles {
     /**
      * @brief The direction you can go
      */
-    enum Direction {
+    enum class Direction {
         Unknown, GoLeft, GoRight, GoUp, GoDown
     };
 

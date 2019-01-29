@@ -18,7 +18,7 @@ namespace SlidingTiles {
          * Background, Normal and OnTop. This is the order in which the
          * renderables will be drawn.
          */
-        enum RenderPriority {
+        enum class RenderPriority {
             Background,
             Normal,
             OnTop

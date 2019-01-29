@@ -5,7 +5,7 @@ namespace SlidingTiles {
     /**
      * @brief the game states
      */
-    enum GameState {
+    enum class GameState {
         Initializing,
         Playing,
         VictoryRolling

@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-enum TileType {
+enum class TileType {
     Empty,
     Horizontal,
     Vertical,
