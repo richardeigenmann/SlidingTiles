@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace SlidingTiles {
 
     /**
@@ -29,16 +31,28 @@ namespace SlidingTiles {
          * Inheriting classes can override this function to change the priority.
          * @return The RenderPriority enum value
          */
-        virtual RenderPriority getRenderPriority() {
+        virtual RenderPriority getRenderPriority() const {
             return RenderPriority::Normal;
         }
         
         
+
+
         /**
          * Returns the renderable priority in a string
          * @return 
          */
-        std::string toString() {
+        friend std::ostream& operator<<(std::ostream& os, const Renderable& r) {
+            os << r.toString();
+            return os;
+        }
+        
+    private:
+        /**
+         * Returns the renderable priority in a string
+         * @return 
+         */
+        std::string toString() const {
             if (getRenderPriority() == RenderPriority::Background) {
                 return "RenderPriority::Background";
             } else if (getRenderPriority() == RenderPriority::Normal) {

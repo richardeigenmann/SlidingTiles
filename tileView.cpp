@@ -95,7 +95,7 @@ namespace SlidingTiles {
         transitioning = true;
     }
 
-    Renderable::RenderPriority TileView::getRenderPriority() {
+    Renderable::RenderPriority TileView::getRenderPriority() const {
         if (transitioning) {
             return Renderable::RenderPriority::OnTop;
         } else {

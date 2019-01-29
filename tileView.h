@@ -47,7 +47,7 @@ namespace SlidingTiles {
          * @return RenderPriority::OnTop for transitioning slides, 
          * RenderPriority::Normal for the other ones
          */
-        Renderable::RenderPriority getRenderPriority() override;
+        Renderable::RenderPriority getRenderPriority() const override;
 
         /**
          * @brief need to be called periodically with a delta time to
