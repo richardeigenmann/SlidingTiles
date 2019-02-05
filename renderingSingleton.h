@@ -14,7 +14,7 @@ namespace SlidingTiles {
         /**
          * @brief Deleted to enforce singleton pattern
          */
-        RenderingSingleton(RenderingSingleton const&) = delete;
+        explicit RenderingSingleton(RenderingSingleton const&) = delete;
 
         /**
          * @brief Deleted to enforce singleton pattern
@@ -105,7 +105,7 @@ namespace SlidingTiles {
         /**
          * @brief Private constructor for singleton
          */
-        RenderingSingleton();
+        explicit RenderingSingleton();
 
         /**
          * @brief the rendering window

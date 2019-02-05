@@ -11,7 +11,7 @@ namespace SlidingTiles {
     class ZmqSubscriber {
     public:
 
-        ZmqSubscriber () {
+        explicit ZmqSubscriber () {
             contextPtr = ZmqSingleton::getInstance().getContext();
             try {
                 socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);

@@ -15,7 +15,7 @@ namespace SlidingTiles {
         /**
          * @brief Deleted to enforce singleton pattern
          */
-        TexturesSingleton(TexturesSingleton const&) = delete;
+        explicit TexturesSingleton(TexturesSingleton const&) = delete;
 
         /**
          * @brief Deleted to enforce singleton pattern
@@ -60,7 +60,7 @@ namespace SlidingTiles {
          * @brief Private constructor for singleton which loads the textures from disk
          * upon initialisation
          */
-        TexturesSingleton();
+        explicit TexturesSingleton();
 
         /**
          * @brief map keyed by TileType with the textures

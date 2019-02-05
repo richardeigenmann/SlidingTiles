@@ -17,7 +17,7 @@ namespace SlidingTiles {
          * @param textureFilename takes the filename of the button bitmap as parameter
          * @param command to issue when clicked
          */
-        Button(const std::string & textureFilename, const std::string & command);
+        explicit Button(const std::string & textureFilename, const std::string & command);
 
         /**
          * @brief Destructor

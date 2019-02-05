@@ -17,7 +17,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for the level Label
          */
-        MovesLabel();
+        explicit MovesLabel();
 
         /**
          * @brief Destructor

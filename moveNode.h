@@ -21,7 +21,7 @@ namespace SlidingTiles {
          * @param startPosition the game board coordinates of the moving tile
          * @param direction the direction to move in
          */
-        MoveNode(const sf::Vector2i & startPosition = sf::Vector2i{-1, -1}, const SlidingTiles::Direction & direction = Direction::Unknown)
+        explicit MoveNode(const sf::Vector2i & startPosition = sf::Vector2i{-1, -1}, const SlidingTiles::Direction & direction = Direction::Unknown)
         : Move(startPosition, direction) {
             id = count;
             ++count;

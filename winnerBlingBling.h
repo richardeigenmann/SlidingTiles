@@ -23,7 +23,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for winner bling bling
          */
-        WinnerBlingBling();
+        explicit WinnerBlingBling();
 
         /**
          * @brief Destructor for winner bling bling

@@ -15,7 +15,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for DebugMessageListener
          */
-        DebugMessageListener();
+        explicit DebugMessageListener();
 
         /**
          * @brief Destructor for DebugMessageListener

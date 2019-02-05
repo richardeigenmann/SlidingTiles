@@ -16,7 +16,7 @@ namespace SlidingTiles {
         /**
          * @brief Deleted to enforce singleton pattern
          */
-        UpdatingSingleton(UpdatingSingleton const&) = delete;
+        explicit UpdatingSingleton(UpdatingSingleton const&) = delete;
 
         /**
          * @brief Deleted to enforce singleton pattern
@@ -62,7 +62,7 @@ namespace SlidingTiles {
         /**
          * @brief Private constructor for singleton
          */
-        UpdatingSingleton() {};
+        explicit UpdatingSingleton() {};
 
         /**
          * @brief The map of Updateable

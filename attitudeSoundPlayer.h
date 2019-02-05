@@ -14,7 +14,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor 
          */
-        AttitudeSoundPlayer();
+        explicit AttitudeSoundPlayer();
 
         /**
          * @brief Destructor

@@ -19,7 +19,7 @@ namespace SlidingTiles {
         /**
          * @brief Deleted Constructor to enforce singleton pattern
          */
-        ZmqSingleton(ZmqSingleton const&) = delete;
+        explicit ZmqSingleton(ZmqSingleton const&) = delete;
 
         /**
          * @brief Deleted Copy Constructor to enforce singleton pattern
@@ -118,7 +118,7 @@ namespace SlidingTiles {
         /**
          * @brief Private constructor for the Singleton
          */
-        ZmqSingleton();
+        explicit ZmqSingleton();
 
         /**
          * @brief A shared_ptr to the context which is the core object for ZeroMQ

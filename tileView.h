@@ -21,7 +21,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructs a new TileView with the appropriate screen coordinates
          */
-        TileView(sf::Vector2i tileCoordinates) : tileGameCoordinates(tileCoordinates) {
+        explicit TileView(sf::Vector2i tileCoordinates) : tileGameCoordinates(tileCoordinates) {
             RenderingSingleton::getInstance().add(*this);
             UpdatingSingleton::getInstance().add(*this);
             id = count;

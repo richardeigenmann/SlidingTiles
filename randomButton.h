@@ -12,7 +12,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for the button with Random on it
          */
-        RandomButton() : Button("assets/button_random.png", ZmqSingleton::LOAD_RANDOM_LEVEL) {
+        explicit RandomButton() : Button("assets/button_random.png", ZmqSingleton::LOAD_RANDOM_LEVEL) {
             setPosition(400, 230);
         };
 

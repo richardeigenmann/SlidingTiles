@@ -24,7 +24,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for the game
          */
-        Game();
+        explicit Game();
 
         /**
          * @brief Destructor for the game

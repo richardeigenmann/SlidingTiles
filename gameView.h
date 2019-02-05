@@ -21,7 +21,7 @@ namespace SlidingTiles {
         /**
          * @brief constructor for the view of the game
          */
-        GameView();
+        explicit GameView();
 
         /**
          * @brief knows how to render the game

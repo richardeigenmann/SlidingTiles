@@ -15,7 +15,7 @@ namespace SlidingTiles {
      */
     class RandomSoundPlayer {
     public:
-        RandomSoundPlayer();
+        explicit RandomSoundPlayer();
         /**
          * @brief Load method that takes the filenames in the JSON array and loads
          * the corresponding files into the sounds vector.
