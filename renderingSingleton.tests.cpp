@@ -25,7 +25,6 @@ TEST(RenderingSingleton, Coordinates00) {
 
 TEST(RenderingSingleton, Coordinates23) {
     sf::Vector2i gridZeroZero = RenderingSingleton::getInstance().gridZeroZero;
-    int tileSize = RenderingSingleton::tileSize;
     int deltaX = 2 * RenderingSingleton::tileSize;
     int deltaY = 3 * RenderingSingleton::tileSize;
     sf::Vector2i pixelCoordinates =

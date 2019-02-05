@@ -25,7 +25,7 @@ void RandomSoundPlayer::addSound(const sf::SoundBuffer & soundBuffer) {
 }
 
 void RandomSoundPlayer::playRandomSound() {
-    assert(sounds.size() > 0 && "There are no sounds loaded. Was addSound(sf::SoundBuffer) called?");
+    assert(! sounds.empty() && "There are no sounds loaded. Was addSound(sf::SoundBuffer) called?");
     std::uniform_int_distribution<std::mt19937::result_type> uniformDistribution(0,sounds.size()-1);
     sound.setBuffer(sounds.at( uniformDistribution(randomNumberGenerator) ));
     sound.play();

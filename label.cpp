@@ -3,8 +3,9 @@
 using namespace SlidingTiles;
 
 Label::Label() {
-    if (!font.loadFromFile("assets/Raleway-Regular.ttf"))
+    if (!font.loadFromFile("assets/Raleway-Regular.ttf")) {
         std::cout << "Can't load font ./assets/Raleway-Regular.ttf" << std::endl;
+    }
 
     text.setFont(font);
     text.setCharacterSize(16);
