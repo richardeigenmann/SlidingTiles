@@ -22,7 +22,7 @@ std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & par
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
-                    if ( gameBoard.isSolved().size() ) {
+                    if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
@@ -33,7 +33,7 @@ std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & par
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
-                    if ( gameBoard.isSolved().size() ) {
+                    if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
@@ -44,7 +44,7 @@ std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & par
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
-                    if ( gameBoard.isSolved().size() ) {
+                    if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
@@ -55,7 +55,7 @@ std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & par
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
                     parentNode.possibleMoves.push_back(childNode);
-                    if ( gameBoard.isSolved().size() ) {
+                    if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
                     gameBoard.loadGame(parentNode.endingBoard); // restore
@@ -106,7 +106,7 @@ void PuzzleSolver::saveSolution(GameBoard & gameBoard) {
         MoveNode t = Q.front();
         Q.pop();
         gameBoard.loadGame(t.endingBoard);
-        if (gameBoard.isSolved().size() > 0) {
+        if ( ! gameBoard.isSolved().empty()) {
             while (t.parent != nullptr) {
                 auto iteratorFront = gameBoard.solution.begin();
                 gameBoard.solution.insert(iteratorFront, t);

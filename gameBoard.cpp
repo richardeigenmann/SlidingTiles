@@ -96,7 +96,7 @@ void GameBoard::loadGame(const std::string & game) {
 void GameBoard::randomGame(const int emptyTiles) {
     for (size_t passes=0; passes<200; ++passes) {
         randomGameImpl(emptyTiles);
-        if ( ! isSolved().size() ) {
+        if ( isSolved().empty() ) {
             solution.clear();
             return;
         } else {
