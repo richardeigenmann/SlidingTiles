@@ -19,12 +19,16 @@ namespace SlidingTiles {
         sf::Sprite sprite;
         sprite.setTexture(TexturesSingleton::getInstance().getTexture(tileType));
         sprite.setPosition(renderPosition.x, renderPosition.y);
-        if (winner)
+        if (winner) {
             sprite.setColor(sf::Color{0, 255, 0});
-        if (isStartTileType(tileType))
+        }
+        if (isStartTileType(tileType)) {
             sprite.setColor(sf::Color{96, 206, 237});
-        else if (isEndTileType(tileType))
-            sprite.setColor(sf::Color{255, 0, 0});
+        } else {
+            if (isEndTileType(tileType)) {
+                sprite.setColor(sf::Color{255, 0, 0});
+            }
+        }
 
         RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
     }
@@ -66,7 +70,7 @@ namespace SlidingTiles {
             int x = jsonMessage["position"]["x"];
             int y = jsonMessage["position"]["y"];
             std::string tileTypeString = jsonMessage["tileType"].get<std::string>();
-            TileType tileType = stringToTileType(tileTypeString);
+            //TileType tileType = stringToTileType(tileTypeString);
             if (tileGameCoordinates.x == x && tileGameCoordinates.y == y) {
                 setCoordinates(sf::Vector2i{x, y});
                 setTileType(stringToTileType(tileTypeString));
