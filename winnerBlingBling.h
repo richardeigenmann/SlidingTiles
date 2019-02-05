@@ -1,12 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <string>
 #include "json.hpp"
 #include "randomSoundPlayer.h"
 #include "renderable.h"
 #include "gameState.h"
-#include "zmq.hpp"
 #include "updatingSingleton.h"
 #include "renderingSingleton.h"
 #include "zmqSingleton.h"

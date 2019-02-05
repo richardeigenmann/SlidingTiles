@@ -1,6 +1,5 @@
 #pragma once
 #include "zmqSingleton.h"
-#include <experimental/optional>
 
 namespace SlidingTiles {
 

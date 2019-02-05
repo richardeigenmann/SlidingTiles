@@ -1,11 +1,6 @@
 #pragma once
 #include "gameView.h"
 #include "gameBoard.h"
-#include <SFML/System/Clock.hpp>
-#include <SFML/Graphics.hpp>
-#include "button.h"
-#include "label.h"
-#include "randomSoundPlayer.h"
 #include "winnerBlingBling.h"
 #include "gameState.h"
 #include "updatingSingleton.h"

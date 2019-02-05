@@ -1,9 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include "tile.h"
-#include <string>
-#include <vector>
 #include "moveNode.h"
 #include "solution.h"
 #include "direction.h"
