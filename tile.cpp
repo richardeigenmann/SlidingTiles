@@ -96,7 +96,7 @@ namespace SlidingTiles {
     }
 
     void Tile::setMoveable(const TileType & newType) {
-        if (newType == TileType::Empty
+        isMoveable = ! (newType == TileType::Empty
                 || newType == TileType::StartBottom
                 || newType == TileType::StartTop
                 || newType == TileType::StartLeft
@@ -105,10 +105,7 @@ namespace SlidingTiles {
                 || newType == TileType::EndTop
                 || newType == TileType::EndLeft
                 || newType == TileType::EndRight
-                || newType == TileType::Obstacle)
-            isMoveable = false;
-        else
-            isMoveable = true;
+                || newType == TileType::Obstacle);
     };
 
     void Tile::transition(const sf::Vector2i & newGameBoardPosition) {

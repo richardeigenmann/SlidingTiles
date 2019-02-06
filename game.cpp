@@ -17,7 +17,7 @@ using json = nlohmann::json;
 
 namespace SlidingTiles {
 
-    constexpr float Game::VICTORY_ROLL_TIME;
+    //constexpr float Game::VICTORY_ROLL_TIME;
 
     Game::Game() {
         // read a JSON file and parse it
@@ -48,9 +48,9 @@ namespace SlidingTiles {
         while (window->isOpen()) {
             sf::Event event;
             while (window->pollEvent(event)) {
-                if (event.type == sf::Event::Closed)
+                if (event.type == sf::Event::Closed) {
                     window->close();
-                else if (event.type == sf::Event::MouseButtonPressed) {
+                } else if (event.type == sf::Event::MouseButtonPressed) {
                     doMousePressed(sf::Vector2i{event.mouseButton.x, event.mouseButton.y});
                 } else if (event.type == sf::Event::MouseButtonReleased) {
                     doMouseReleased(sf::Vector2i{event.mouseButton.x, event.mouseButton.y});
@@ -61,12 +61,15 @@ namespace SlidingTiles {
                         gameBoard.printGame();
                     } else if (event.text.unicode == 110) { //n
                         doLevelUp();
-                    } else if (event.text.unicode == 100) { //d
-                        json jsonMessage{};
-                        jsonMessage["state"] = ZmqSingleton::DEBUG;
-                        ZmqSingleton::getInstance().publish(jsonMessage);
-                    } else
-                        std::cout << "ASCII character typed: " << event.text.unicode << " --> " << static_cast<char> (event.text.unicode) << std::endl;
+                    } else { 
+                        if (event.text.unicode == 100) { //d
+                            json jsonMessage{};
+                            jsonMessage["state"] = ZmqSingleton::DEBUG;
+                            ZmqSingleton::getInstance().publish(jsonMessage);
+                        } else {
+                            std::cout << "ASCII character typed: " << event.text.unicode << " --> " << static_cast<char> (event.text.unicode) << std::endl;
+                        }
+                    }
                 }
             }
 

@@ -119,6 +119,7 @@ TEST(GameBoard, randomGame) {
     ASSERT_EQ(startTiles, 1) << "A random game must have 1 start tile";
     ASSERT_EQ(endTiles, 1) << "A random game must have 1 end tile";
     ASSERT_GE(emptyTiles, 1) << "A random game must have at least 1 empty tile";
+    ASSERT_GE(gameTiles, 1) << "A random game must have at least 1 game tile";
 }
 
 TEST(GameBoard, findNextTilePosition) {
@@ -644,15 +645,16 @@ TEST(GameBoard, DISABLED_setWinnerTiles) {
     fakeSolutionPath.push_back(sf::Vector2i{0, 2});
     fakeSolutionPath.push_back(sf::Vector2i{1, 2});
     fakeSolutionPath.push_back(sf::Vector2i{1, 3});
-    //gameBoard.setWinnerTiles(fakeSolutionPath);
-    int on = 0, off = 0;
-    for (int x = 0; x < GameBoard::boardSize; ++x)
-        for (int y = 0; y < GameBoard::boardSize; ++y)
+    auto on = 0, off = 0;
+    for (int x = 0; x < GameBoard::boardSize; ++x) {
+        for (int y = 0; y < GameBoard::boardSize; ++y) {
             if (gameBoard.tiles[x][y].isWinner()) {
                 ++on;
             } else {
                 ++off;
             }
+        }
+    }
     ASSERT_THAT(on, 4);
     ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize - 4, off);
 }
@@ -666,28 +668,30 @@ TEST(GameBoard, DISABLED_clearWinnerTiles) {
     fakeSolutionPath.push_back(sf::Vector2i{0, 2});
     fakeSolutionPath.push_back(sf::Vector2i{1, 2});
     fakeSolutionPath.push_back(sf::Vector2i{1, 3});
-    //gameBoard.setWinnerTiles(fakeSolutionPath);
-    int on = 0, off = 0;
-    for (int x = 0; x < GameBoard::boardSize; ++x)
-        for (int y = 0; y < GameBoard::boardSize; ++y)
+    auto on = 0, off = 0;
+    for (int x = 0; x < GameBoard::boardSize; ++x) {
+        for (int y = 0; y < GameBoard::boardSize; ++y) {
             if (gameBoard.tiles[x][y].isWinner()) {
                 ++on;
             } else {
                 ++off;
             }
+        }
+    }
     ASSERT_THAT(on, 4);
     ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize - 4, off);
 
     on = 0;
     off = 0;
-    //gameBoard.clearWinnerTiles();
-    for (int x = 0; x < GameBoard::boardSize; ++x)
-        for (int y = 0; y < GameBoard::boardSize; ++y)
+    for (int x = 0; x < GameBoard::boardSize; ++x) {
+        for (int y = 0; y < GameBoard::boardSize; ++y) {
             if (gameBoard.tiles[x][y].isWinner()) {
                 ++on;
             } else {
                 ++off;
             }
+        }
+    }
     ASSERT_THAT(on, 0);
     ASSERT_THAT(GameBoard::boardSize * GameBoard::boardSize, off);
 }

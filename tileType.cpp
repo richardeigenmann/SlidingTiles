@@ -42,37 +42,50 @@ std::string tileTypeToString(const TileType & t) {
 TileType stringToTileType(const std::string & s) {
     if (s == "Horizontal") {
         return TileType::Horizontal;
-    } else if (s == "Vertical") {
+    } 
+    if (s == "Vertical") {
         return TileType::Vertical;
-    } else if (s == "StartTop") {
+    } 
+    if (s == "StartTop") {
         return TileType::StartTop;
-    } else if (s == "StartBottom") {
+    } 
+    if (s == "StartBottom") {
         return TileType::StartBottom;
-    } else if (s == "StartLeft") {
+    } 
+    if (s == "StartLeft") {
         return TileType::StartLeft;
-    } else if (s == "StartRight") {
+    } 
+    if (s == "StartRight") {
         return TileType::StartRight;
-    } else if (s == "EndTop") {
+    } 
+    if (s == "EndTop") {
         return TileType::EndTop;
-    } else if (s == "EndBottom") {
+    } 
+    if (s == "EndBottom") {
         return TileType::EndBottom;
-    } else if (s == "EndRight") {
+    } 
+    if (s == "EndRight") {
         return TileType::EndRight;
-    } else if (s == "EndLeft") {
+    } 
+    if (s == "EndLeft") {
         return TileType::EndLeft;
-    } else if (s == "LeftTop") {
+    } 
+    if (s == "LeftTop") {
         return TileType::LeftTop;
-    } else if (s == "LeftBottom") {
+    } 
+    if (s == "LeftBottom") {
         return TileType::LeftBottom;
-    } else if (s == "TopRight") {
+    } 
+    if (s == "TopRight") {
         return TileType::TopRight;
-    } else if (s == "BottomRight") {
+    } 
+    if (s == "BottomRight") {
         return TileType::BottomRight;
-    } else if (s == "Obstacle") {
+    } 
+    if (s == "Obstacle") {
         return TileType::Obstacle;
-    } else {
-        return TileType::Empty;
-    }
+    } 
+    return TileType::Empty;  
 }
 
 std::string tileTypeToChar(const TileType & t) {
