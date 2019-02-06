@@ -99,9 +99,8 @@ void GameBoard::randomGame(const int emptyTiles) {
         if ( isSolved().empty() ) {
             solution.clear();
             return;
-        } else {
-            std::cout << "No good. Already solved. Trying again.\n";
-        }
+        } 
+        std::cout << "No good. Already solved. Trying again.\n";
     }
     throw std::runtime_error("Something is terribly wrong. We rendered 200 game boards and got a solved board 200 times? What a conincidence...");
 }
@@ -235,12 +234,20 @@ sf::Vector2i GameBoard::getAdjacentTilePosition(const Move & move) {
 
     if (move.direction == Direction::GoDown) {
         ++adjacentPosition.y;
-    } else if (move.direction == Direction::GoUp)
-        --adjacentPosition.y;
-    else if (move.direction == Direction::GoLeft)
-        --adjacentPosition.x;
-    else if (move.direction == Direction::GoRight)
-        ++adjacentPosition.x;
+    } else { 
+        if (move.direction == Direction::GoUp) {
+           --adjacentPosition.y;
+        } else {
+            if (move.direction == Direction::GoLeft) {
+                --adjacentPosition.x;
+            } else { 
+                if (move.direction == Direction::GoRight) {
+                    ++adjacentPosition.x;
+                }
+            }
+        }
+    }
+
 
     if (adjacentPosition.x < 0 || adjacentPosition.y < 0 || adjacentPosition.x >= boardSize || adjacentPosition.y >= boardSize) {
         adjacentPosition.x = -1;
@@ -255,20 +262,23 @@ bool GameBoard::canSlideTile(const Move & move) {
     Tile movingTile = tiles[move.startPosition.x][move.startPosition.y];
     /*std::cout << "canSlideTile: [" << move.startPosition.x << "][" << move.startPosition.y
              << "] Direction: " << directionToString(move.direction) << "\n";*/
-    if (!movingTile.isMoveable)
+    if (!movingTile.isMoveable) {
         return false;
+    }
 
     sf::Vector2i newPosition = getAdjacentTilePosition(move);
     // check for move off the board
     if (newPosition.x >= boardSize
             || newPosition.y >= boardSize
             || newPosition.x < 0
-            || newPosition.y < 0)
+            || newPosition.y < 0) {
         return false;
+    }
 
     // check if newPosition already taken
-    if (tiles[newPosition.x][newPosition.y].getTileType() != TileType::Empty)
+    if (tiles[newPosition.x][newPosition.y].getTileType() != TileType::Empty) {
         return false;
+    }
 
     return true;
 }
@@ -345,22 +355,29 @@ sf::Vector2i GameBoard::getOutputPosition(const Move & move) {
         --nextTile.y;
     else if (type == TileType::BottomRight && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoUp)
         ++nextTile.x;
-    else if (type == TileType::BottomRight && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoLeft)
-        ++nextTile.y;
-    else if (type == TileType::TopRight && move.startPosition.y > 0 && move.direction == Direction::GoLeft)
-        --nextTile.y;
-    else if (type == TileType::TopRight && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoDown)
-        ++nextTile.x;
-    else if ((type == TileType::EndBottom && move.direction == Direction::GoUp)
-            || (type == TileType::EndLeft && move.direction == Direction::GoRight)
-            || (type == TileType::EndRight && move.direction == Direction::GoLeft)
-            || (type == TileType::EndTop && move.direction == Direction::GoDown)) {
-        nextTile.x = -2;
-        nextTile.y = -2;
-    } else {
-
-        nextTile.x = -1;
-        nextTile.y = -1;
+    else {
+        if (type == TileType::BottomRight && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoLeft) {
+            ++nextTile.y;
+        } else {
+            if (type == TileType::TopRight && move.startPosition.y > 0 && move.direction == Direction::GoLeft) {
+                --nextTile.y;
+            } else {
+                if (type == TileType::TopRight && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoDown) {
+                    ++nextTile.x;
+                } else {
+                    if ((type == TileType::EndBottom && move.direction == Direction::GoUp)
+                        || (type == TileType::EndLeft && move.direction == Direction::GoRight)
+                        || (type == TileType::EndRight && move.direction == Direction::GoLeft)
+                        || (type == TileType::EndTop && move.direction == Direction::GoDown)) {
+                        nextTile.x = -2;
+                        nextTile.y = -2;
+                    } else {
+                        nextTile.x = -1;
+                        nextTile.y = -1;
+                    }
+                }
+            }
+        }
     }
 
     assert(nextTile.x >= -2 && nextTile.x < boardSize);
@@ -382,7 +399,7 @@ std::vector<sf::Vector2i> GameBoard::isSolved() {
     std::vector<sf::Vector2i> solutionPath{};
 
     Tile startTile = findStartTile();
-    if (startTile.getTilePosition().x == -1) return solutionPath; // no start tile
+    if (startTile.getTilePosition().x == -1) { return solutionPath; } // no start tile
     solutionPath.push_back(startTile.getTilePosition());
 
     Move move{startTile.getTilePosition(), startTile.outputDirection(Direction::Unknown)};
@@ -394,8 +411,9 @@ std::vector<sf::Vector2i> GameBoard::isSolved() {
         }
     }
 
-    if (move.startPosition.x != -2)
+    if (move.startPosition.x != -2) {
         solutionPath = {};
+    }
     return solutionPath;
 }
 

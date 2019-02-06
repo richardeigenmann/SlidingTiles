@@ -12,7 +12,7 @@ std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & par
 
     GameBoard gameBoard{};
     gameBoard.loadGame(parentNode.endingBoard);
-    for (int x = 0; x < GameBoard::boardSize; ++x)
+    for (int x = 0; x < GameBoard::boardSize; ++x) {
         for (int y = 0; y < GameBoard::boardSize; ++y) {
             sf::Vector2i position{x, y};
             if (gameBoard.tiles[x][y].isMoveable) {
@@ -62,7 +62,8 @@ std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & par
                 }
             }
         }
-        return {};
+    }
+    return {};
 }
 
 std::experimental::optional<MoveNode> PuzzleSolver::addPossibleMoves(MoveNode &parentNode, const int levels) {

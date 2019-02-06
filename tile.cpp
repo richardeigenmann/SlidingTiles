@@ -116,38 +116,52 @@ namespace SlidingTiles {
      * Returns the direction coming out of the supplied tile and incoming direction.
      */
     Direction Tile::outputDirection(const Direction & incomingDirection) {
-        if (tileType == TileType::StartRight)
+        if (tileType == TileType::StartRight) {
             return Direction::GoRight;
-        else if (tileType == TileType::StartLeft)
+        }
+        if (tileType == TileType::StartLeft) {
             return Direction::GoLeft;
-        else if (tileType == TileType::StartTop)
+        }
+        if (tileType == TileType::StartTop) {
             return Direction::GoUp;
-        else if (tileType == TileType::StartBottom)
+        }
+        if (tileType == TileType::StartBottom) {
             return Direction::GoDown;
-        else if (tileType == TileType::Horizontal
-                && (incomingDirection == Direction::GoRight || incomingDirection == Direction::GoLeft))
+        }
+        if (tileType == TileType::Horizontal
+                && (incomingDirection == Direction::GoRight || incomingDirection == Direction::GoLeft)) {
             return incomingDirection;
-        else if (tileType == TileType::Vertical
-                && (incomingDirection == Direction::GoUp || incomingDirection == Direction::GoDown))
+        }
+        if (tileType == TileType::Vertical
+                && (incomingDirection == Direction::GoUp || incomingDirection == Direction::GoDown)) {
             return incomingDirection;
-        else if (tileType == TileType::LeftBottom && incomingDirection == Direction::GoRight)
+        }
+        if (tileType == TileType::LeftBottom && incomingDirection == Direction::GoRight) {
             return Direction::GoDown;
-        else if (tileType == TileType::LeftBottom && incomingDirection == Direction::GoUp)
+        }
+        if (tileType == TileType::LeftBottom && incomingDirection == Direction::GoUp) {
             return Direction::GoLeft;
-        else if (tileType == TileType::LeftTop && incomingDirection == Direction::GoDown)
+        }
+        if (tileType == TileType::LeftTop && incomingDirection == Direction::GoDown) {
             return Direction::GoLeft;
-        else if (tileType == TileType::LeftTop && incomingDirection == Direction::GoRight)
+        }
+        if (tileType == TileType::LeftTop && incomingDirection == Direction::GoRight) {
             return Direction::GoUp;
-        else if (tileType == TileType::TopRight && incomingDirection == Direction::GoDown)
+        }
+        if (tileType == TileType::TopRight && incomingDirection == Direction::GoDown) {
             return Direction::GoRight;
-        else if (tileType == TileType::TopRight && incomingDirection == Direction::GoLeft)
+        }
+        if (tileType == TileType::TopRight && incomingDirection == Direction::GoLeft) {
             return Direction::GoUp;
-        else if (tileType == TileType::BottomRight && incomingDirection == Direction::GoLeft)
+        }
+        if (tileType == TileType::BottomRight && incomingDirection == Direction::GoLeft) {
             return Direction::GoDown;
-        else if (tileType == TileType::BottomRight && incomingDirection == Direction::GoUp)
+        }
+        if (tileType == TileType::BottomRight && incomingDirection == Direction::GoUp) {
             return Direction::GoRight;
-        else
-            return Direction::Unknown;
+        }
+
+        return Direction::Unknown;
     }
 
     void Tile::setWinner(const bool & status) {

@@ -1,14 +1,17 @@
 #include "direction.h"
 
 std::string SlidingTiles::directionToString(const Direction & direction) {
-    if (direction == Direction::GoDown)
+    if (direction == Direction::GoDown) {
         return "GoDown";
-    else if (direction == Direction::GoRight)
+    }
+    if (direction == Direction::GoRight) {
         return "GoRight";
-    else if (direction == Direction::GoUp)
+    }
+    if (direction == Direction::GoUp) {
         return "GoUp";
-    else if (direction == Direction::GoLeft)
+    }
+    if (direction == Direction::GoLeft) {
         return "GoLeft";
-    else
-        return "Unknown";
+    }
+    return "Unknown";
 }
