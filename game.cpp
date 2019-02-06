@@ -17,7 +17,8 @@ using json = nlohmann::json;
 
 namespace SlidingTiles {
 
-    //constexpr float Game::VICTORY_ROLL_TIME;
+    //TODO: clang-tidy says unnecessary but travis fails if missing.
+    constexpr float Game::VICTORY_ROLL_TIME;
 
     Game::Game() {
         // read a JSON file and parse it
