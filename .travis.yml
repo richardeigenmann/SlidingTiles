@@ -14,6 +14,7 @@ addons:
     - libsfml-dev
     - libzmq3-dev
     - lcov
+    - g++-7
 
 before_install:
   - wget -nv -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
