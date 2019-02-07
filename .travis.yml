@@ -18,7 +18,6 @@ addons:
 
 before_install:
   - wget -nv -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
-  - sudo apt-add-repository -y 'deb http://llvm.org/apt/trusty llvm-toolchain-
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y xvfb doxygen g++-7
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7 
