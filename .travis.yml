@@ -14,14 +14,16 @@ addons:
     - libsfml-dev
     - libzmq3-dev
     - lcov
+    - doxygen
+    - xvfb
     - g++-7
 
 before_install:
   - wget -nv -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq -y xvfb doxygen
-  #- sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7 
-  #- sudo update-alternatives --config gcc
+  #- sudo apt-get update -qq
+  #- sudo apt-get install -qq -y  
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7 
+  - sudo update-alternatives --config gcc
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
