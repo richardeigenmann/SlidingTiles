@@ -18,7 +18,7 @@ using json = nlohmann::json;
 namespace SlidingTiles {
 
     //TODO: clang-tidy says unnecessary but travis fails if missing.
-    constexpr float Game::VICTORY_ROLL_TIME;
+    //constexpr float Game::VICTORY_ROLL_TIME;
 
     Game::Game() {
         // read a JSON file and parse it
@@ -83,12 +83,12 @@ namespace SlidingTiles {
     void Game::update(const float dt) {
         if (gameState == GameState::Playing) {
             std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
-            if (solutionPath.size() > 0) {
+            if ( ! solutionPath.empty() ) {
                 gameState = GameState::VictoryRolling;
 
                 json jsonMessage{};
                 jsonMessage["state"] = ZmqSingleton::GAME_WON;
-                jsonMessage["victoryRollTime"] = VICTORY_ROLL_TIME;
+                jsonMessage["victoryRollTime"] = Game::VICTORY_ROLL_TIME;
                 jsonMessage["moves"] = moves;
                 jsonMessage["par"] = levelsArray[level]["Par"].get<int>();
                 for (const auto & solutionStep : solutionPath) {
@@ -96,7 +96,7 @@ namespace SlidingTiles {
                 }
                 ZmqSingleton::getInstance().publish(jsonMessage);
 
-                victoryRollingTime = VICTORY_ROLL_TIME;
+                victoryRollingTime = Game::VICTORY_ROLL_TIME;
             }
         }
 
