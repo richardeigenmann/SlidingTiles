@@ -329,33 +329,33 @@ sf::Vector2i GameBoard::getOutputPosition(const Move & move) {
     TileType type = tiles[move.startPosition.x][move.startPosition.y].getTileType();
     sf::Vector2i nextTile{move.startPosition.x, move.startPosition.y};
 
-    if (type == TileType::StartRight && move.startPosition.x < boardSize - 1)
+    if (type == TileType::StartRight && move.startPosition.x < boardSize - 1) {
         ++nextTile.x;
-    else if (type == TileType::StartLeft && move.startPosition.x < boardSize - 1 && move.startPosition.x > 0)
+    } else if (type == TileType::StartLeft && move.startPosition.x < boardSize - 1 && move.startPosition.x > 0) {
         --nextTile.x;
-    else if (type == TileType::StartTop && move.startPosition.y > 0)
+    } else if (type == TileType::StartTop && move.startPosition.y > 0) {
         --nextTile.y;
-    else if (type == TileType::StartBottom && move.startPosition.y < boardSize - 1)
+    } else if (type == TileType::StartBottom && move.startPosition.y < boardSize - 1) {
         ++nextTile.y;
-    else if (type == TileType::Horizontal && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoRight)
+    } else if (type == TileType::Horizontal && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoRight) {
         ++nextTile.x;
-    else if (type == TileType::Horizontal && move.startPosition.x > 0 && move.direction == Direction::GoLeft)
+    } else if (type == TileType::Horizontal && move.startPosition.x > 0 && move.direction == Direction::GoLeft) {
         --nextTile.x;
-    else if (type == TileType::Vertical && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoDown)
+    } else if (type == TileType::Vertical && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoDown) {
         ++nextTile.y;
-    else if (type == TileType::Vertical && move.startPosition.y > 0 && move.direction == Direction::GoUp)
+    } else if (type == TileType::Vertical && move.startPosition.y > 0 && move.direction == Direction::GoUp) {
         --nextTile.y;
-    else if (type == TileType::LeftBottom && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoRight)
+    } else if (type == TileType::LeftBottom && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoRight) {
         ++nextTile.y;
-    else if (type == TileType::LeftBottom && move.startPosition.x > 0 && move.direction == Direction::GoUp)
+    } else if (type == TileType::LeftBottom && move.startPosition.x > 0 && move.direction == Direction::GoUp) {
         --nextTile.x;
-    else if (type == TileType::LeftTop && move.startPosition.x > 0 && move.direction == Direction::GoDown)
+    } else if (type == TileType::LeftTop && move.startPosition.x > 0 && move.direction == Direction::GoDown) {
         --nextTile.x;
-    else if (type == TileType::LeftTop && move.startPosition.y > 0 && move.direction == Direction::GoRight)
+    } else if (type == TileType::LeftTop && move.startPosition.y > 0 && move.direction == Direction::GoRight) {
         --nextTile.y;
-    else if (type == TileType::BottomRight && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoUp)
+    } else if (type == TileType::BottomRight && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoUp) {
         ++nextTile.x;
-    else {
+    } else {
         if (type == TileType::BottomRight && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoLeft) {
             ++nextTile.y;
         } else {

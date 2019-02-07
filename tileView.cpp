@@ -102,9 +102,8 @@ namespace SlidingTiles {
     Renderable::RenderPriority TileView::getRenderPriority() const {
         if (transitioning) {
             return Renderable::RenderPriority::OnTop;
-        } else {
-            return Renderable::RenderPriority::Normal;
         }
+        return Renderable::RenderPriority::Normal;
     }
 
 }

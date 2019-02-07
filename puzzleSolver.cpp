@@ -6,59 +6,59 @@ using namespace SlidingTiles;
 
 const int PuzzleSolver::DEFAULT_DEPTH;
 
-std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & parentNode) {
-    assert(parentNode.startPosition.x >= -1 && parentNode.startPosition.x <= GameBoard::boardSize);
-    assert(parentNode.startPosition.y >= -1 && parentNode.startPosition.y <= GameBoard::boardSize);
+std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & moveNode) {
+    assert(moveNode.startPosition.x >= -1 && moveNode.startPosition.x <= GameBoard::boardSize);
+    assert(moveNode.startPosition.y >= -1 && moveNode.startPosition.y <= GameBoard::boardSize);
 
     GameBoard gameBoard{};
-    gameBoard.loadGame(parentNode.endingBoard);
+    gameBoard.loadGame(moveNode.endingBoard);
     for (int x = 0; x < GameBoard::boardSize; ++x) {
         for (int y = 0; y < GameBoard::boardSize; ++y) {
             sf::Vector2i position{x, y};
             if (gameBoard.tiles[x][y].isMoveable) {
-                if (parentNode.direction != Direction::GoDown && gameBoard.canSlideTile(Move{position, Direction::GoUp})) {
+                if (moveNode.direction != Direction::GoDown && gameBoard.canSlideTile(Move{position, Direction::GoUp})) {
                     MoveNode childNode{position, Direction::GoUp};
-                    childNode.setParent(parentNode);
+                    childNode.setParent(moveNode);
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
-                    parentNode.possibleMoves.push_back(childNode);
+                    moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
-                    gameBoard.loadGame(parentNode.endingBoard); // restore
+                    gameBoard.loadGame(moveNode.endingBoard); // restore
                 }
-                if (parentNode.direction != Direction::GoUp && gameBoard.canSlideTile(Move{position, Direction::GoDown})) {
+                if (moveNode.direction != Direction::GoUp && gameBoard.canSlideTile(Move{position, Direction::GoDown})) {
                     MoveNode childNode{position, Direction::GoDown};
-                    childNode.setParent(parentNode);
+                    childNode.setParent(moveNode);
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
-                    parentNode.possibleMoves.push_back(childNode);
+                    moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
-                    gameBoard.loadGame(parentNode.endingBoard); // restore
+                    gameBoard.loadGame(moveNode.endingBoard); // restore
                 }
-                if (parentNode.direction != Direction::GoRight && gameBoard.canSlideTile(Move{position, Direction::GoLeft})) {
+                if (moveNode.direction != Direction::GoRight && gameBoard.canSlideTile(Move{position, Direction::GoLeft})) {
                     MoveNode childNode{position, Direction::GoLeft};
-                    childNode.setParent(parentNode);
+                    childNode.setParent(moveNode);
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
-                    parentNode.possibleMoves.push_back(childNode);
+                    moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
-                    gameBoard.loadGame(parentNode.endingBoard); // restore
+                    gameBoard.loadGame(moveNode.endingBoard); // restore
                 }
-                if (parentNode.direction != Direction::GoLeft && gameBoard.canSlideTile(Move{position, Direction::GoRight})) {
+                if (moveNode.direction != Direction::GoLeft && gameBoard.canSlideTile(Move{position, Direction::GoRight})) {
                     MoveNode childNode{position, Direction::GoRight};
-                    childNode.setParent(parentNode);
+                    childNode.setParent(moveNode);
                     gameBoard.slideTile(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGame());
-                    parentNode.possibleMoves.push_back(childNode);
+                    moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
-                    gameBoard.loadGame(parentNode.endingBoard); // restore
+                    gameBoard.loadGame(moveNode.endingBoard); // restore
                 }
             }
         }
@@ -66,19 +66,19 @@ std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & par
     return {};
 }
 
-std::experimental::optional<MoveNode> PuzzleSolver::addPossibleMoves(MoveNode &parentNode, const int levels) {
-    assert(parentNode.startPosition.x >= -1 && parentNode.startPosition.x <= GameBoard::boardSize);
-    assert(parentNode.startPosition.y >= -1 && parentNode.startPosition.y <= GameBoard::boardSize);
-    //std::cout << "\n\naddPossibleMoves levels: " << levels << " " << parentNode.toString();
+std::experimental::optional<MoveNode> PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int levels) {
+    assert(moveNode.startPosition.x >= -1 && moveNode.startPosition.x <= GameBoard::boardSize);
+    assert(moveNode.startPosition.y >= -1 && moveNode.startPosition.y <= GameBoard::boardSize);
+    //std::cout << "\n\naddPossibleMoves levels: " << levels << " " << moveNode.toString();
 
-    auto opt = possibleMoves(parentNode);
+    auto opt = possibleMoves(moveNode);
     if (opt) {
         return opt;
     }
     //std::cout << "Entering if with levels: " << levels << "\n";
-    for (MoveNode & mn : parentNode.possibleMoves) {
+    for (MoveNode & mn : moveNode.possibleMoves) {
         // note the & above to ensure we work with the members and not a copy
-        mn.depth = parentNode.depth + 1;
+        mn.depth = moveNode.depth + 1;
         if (levels > 0) {
             opt = addPossibleMoves(mn, levels - 1);
             if (opt) {
@@ -88,7 +88,7 @@ std::experimental::optional<MoveNode> PuzzleSolver::addPossibleMoves(MoveNode &p
     }
     return {};
     // note do the insert after the recursive call above because insert copies the object and it might copy without the content in the vector!
-    //parentNode.possibleMoves.insert(std::end(parentNode.possibleMoves), std::begin(possMoves), std::end(possMoves));
+    //moveNode.possibleMoves.insert(std::end(moveNode.possibleMoves), std::begin(possMoves), std::end(possMoves));
 }
 
 std::experimental::optional<MoveNode> PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) {
@@ -120,7 +120,6 @@ void PuzzleSolver::saveSolution(GameBoard & gameBoard) {
         }
     }
     gameBoard.solution.clear();
-    return;
 }
 
 GameBoard PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) {
@@ -137,20 +136,14 @@ GameBoard PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t m
             << ",\n"
             << solution.value().enumerateMoves() << "\n"
             << "},\n";
-
-            //if (gameBoard.solution.size() > 0) {
-                return gameBoard;
-            //}
-
+            return gameBoard;
         }
         std::cout << "Discarding game as it can't be solved in " << maxDepth << " moves\n";
-        
     }
 }
 
 void PuzzleSolver::generateGame(std::size_t emptyTiles, std::size_t maxDepth) {
     GameBoard gameBoard = generateRandomGame(emptyTiles, maxDepth);
-
 }
 
 void PuzzleSolver::generateGames(std::size_t games) {

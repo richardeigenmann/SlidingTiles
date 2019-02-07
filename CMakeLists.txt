@@ -24,8 +24,8 @@ find_package(ZeroMQ)
 MESSAGE(STATUS "ZeroMQ_INCLUDE_DIR: ${ZeroMQ_INCLUDE_DIR}")
 MESSAGE(STATUS "ZeroMQ_LIBRARIES: ${ZeroMQ_LIBRARIES}")
 
-SET(sliding-tiles_assets_dir "${PROJECT_SOURCE_DIR}/assets")
-SET(sliding-tiles-assets
+SET( sliding-tiles_assets_dir "${PROJECT_SOURCE_DIR}/assets")
+SET( sliding-tiles-assets
     ${sliding-tiles_assets_dir}/Raleway-Regular.ttf
 
     ${sliding-tiles_assets_dir}/bottomright.png

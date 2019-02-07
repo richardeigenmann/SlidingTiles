@@ -15,7 +15,7 @@ namespace SlidingTiles {
         /**
          * @brief returns all moves that are possible on the current gameboard
          */
-        std::experimental::optional<MoveNode> possibleMoves(MoveNode & parentNode);
+        std::experimental::optional<MoveNode> possibleMoves(MoveNode & moveNode);
 
         /**
          * @brief Adds the possibleMoves as MoveNodes to the supplied MoveNode

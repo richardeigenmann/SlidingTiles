@@ -22,9 +22,10 @@ sf::Vector2i RenderingSingleton::calculateCoordinates(int x, int y) {
 sf::Vector2i RenderingSingleton::findTile(sf::Vector2i mousePosition) {
     sf::Vector2i gridCoordinates = mousePosition - gridZeroZero;
     if (gridCoordinates.x < 0 || gridCoordinates.y < 0
-            || gridCoordinates.x > 4 * tileSize || gridCoordinates.y > 4 * tileSize)
+            || gridCoordinates.x > 4 * tileSize || gridCoordinates.y > 4 * tileSize) {
         return sf::Vector2i{-1, -1};
-    int xPos = gridCoordinates.x / tileSize;
-    int yPos = gridCoordinates.y / tileSize;
+    }
+    auto xPos = gridCoordinates.x / tileSize;
+    auto yPos = gridCoordinates.y / tileSize;
     return sf::Vector2i{xPos, yPos};
 }
