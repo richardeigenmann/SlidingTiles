@@ -160,8 +160,9 @@ void GameBoard::randomGameImpl(const int emptyTiles) {
             positions.push_back(sf::Vector2i{x, y});
         }
     }
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(std::begin(positions), std::end(positions), std::default_random_engine(seed));
+    //unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::random_device rd{};
+    std::shuffle(std::begin(positions), std::end(positions), std::default_random_engine(rd()));
 
     sf::Vector2i startPos = positions[0];
     tiles[startPos.x][startPos.y] = pickStartTile(startPos);

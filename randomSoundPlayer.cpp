@@ -1,12 +1,14 @@
 #include "randomSoundPlayer.h"
 #include <assert.h>
-#include <chrono> // std::chrono::system_clock
+//#include <chrono> // std::chrono::system_clock
+#include <random>
 
 using namespace SlidingTiles;
 
 RandomSoundPlayer::RandomSoundPlayer() {
-    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    randomNumberGenerator.seed(seed);
+    //auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::random_device rd{};
+    randomNumberGenerator.seed(rd());
 }
 
 
