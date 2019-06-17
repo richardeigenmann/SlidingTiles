@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.6)
 PROJECT(sliding-tiles)
 
 # To run with Clang:
@@ -23,6 +23,20 @@ MESSAGE(STATUS "SFML_LIBRARIES: ${SFML_LIBRARIES}")
 find_package(ZeroMQ)
 MESSAGE(STATUS "ZeroMQ_INCLUDE_DIR: ${ZeroMQ_INCLUDE_DIR}")
 MESSAGE(STATUS "ZeroMQ_LIBRARIES: ${ZeroMQ_LIBRARIES}")
+
+# See http://mariobadr.com/using-clang-tidy-with-cmake-36.html
+find_program(
+  CLANG_TIDY_EXE
+  NAMES "clang-tidy"
+  DOC "Path to clang-tidy executable"
+  )
+if(NOT CLANG_TIDY_EXE)
+  message(STATUS "clang-tidy not found.")
+else()
+  message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+  set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=*,-clang-analyzer-alpha.*")
+endif()
+
 
 SET( sliding-tiles_assets_dir "${PROJECT_SOURCE_DIR}/assets")
 SET( sliding-tiles-assets
@@ -131,6 +145,14 @@ TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
     ${SFML_LIBRARIES}
     ${ZeroMQ_LIBRARIES}
 )
+
+if(CLANG_TIDY_EXE)
+  set_target_properties(
+    sliding-tiles PROPERTIES
+    CXX_CLANG_TIDY "${DO_CLANG_TIDY}"
+  )
+endif()
+
 
 #INSTALL(TARGETS sliding-tiles "/usr/local/bin")
 
@@ -245,8 +267,10 @@ install(FILES "${PROJECT_SOURCE_DIR}/build/sliding-tiles" DESTINATION ".")
 include(CPack)
 
 
-# Additional target to perform clang-format/clang-tidy run
-# Requires clang-format and clang-tidy
+# Additional target to perform clang-format run
+# Requires clang-format 
+
+
 
 # Get all project files
 file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.hpp)
@@ -259,12 +283,13 @@ add_custom_target(
         ${ALL_SOURCE_FILES}
 )
 
-add_custom_target(
-        clang-tidy
-        COMMAND /usr/bin/clang-tidy
-        ${ALL_SOURCE_FILES}
-        -config=''
-        --
-        -std=c++17
-        ${INCLUDE_DIRECTORIES} ${SFML_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR}
-)
+#add_custom_target(
+#        clang-tidy
+#        COMMAND /usr/bin/clang-tidy
+#        ${ALL_SOURCE_FILES}
+#        -config=''
+#        --
+#        -std=c++17
+#        ${INCLUDE_DIRECTORIES} ${SFML_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} gtest gmock
+#    
+#)

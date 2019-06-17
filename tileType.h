@@ -81,4 +81,4 @@ bool isGameTileType(const TileType & t);
 /**
  * @brief Returns a random game TileType
  */
-TileType randomGameTileType();
+TileType randomGameTileType();// NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK

@@ -130,6 +130,14 @@ make sliding-tiles_coverage
 # open the file coverage/index.html with a browser
 ```
 
+## Linting with clang-tidy
+```bash
+mkdir -p build
+cd build
+cmake ..
+make clang-tidy
+```
+
 ## Notable Points
 
 ### Segfault on textures

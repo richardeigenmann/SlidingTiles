@@ -1,11 +1,16 @@
-#include "tileView.h"
-#include "renderable.h"
 #include "json.hpp"
+#include "renderable.h"
+#include "tileView.h"
 
 using json = nlohmann::json;
 
 namespace SlidingTiles {
     int TileView::count = 0;
+
+    const sf::Color WINNER_COLOR {sf::Color{0, 255, 0}};
+    const sf::Color START_COLOR {sf::Color{96, 206, 237}};
+    const sf::Color END_COLOR {sf::Color{255, 0, 0}};
+
 
     void TileView::render() {
         sf::Vector2i renderPosition = tileScreenCoordinates;
@@ -20,13 +25,14 @@ namespace SlidingTiles {
         sprite.setTexture(TexturesSingleton::getInstance().getTexture(tileType));
         sprite.setPosition(renderPosition.x, renderPosition.y);
         if (winner) {
-            sprite.setColor(sf::Color{0, 255, 0});
+            sprite.setColor(WINNER_COLOR);
         }
+
         if (isStartTileType(tileType)) {
-            sprite.setColor(sf::Color{96, 206, 237});
+            sprite.setColor(START_COLOR);
         } else {
             if (isEndTileType(tileType)) {
-                sprite.setColor(sf::Color{255, 0, 0});
+                sprite.setColor(END_COLOR);
             }
         }
 
@@ -69,8 +75,7 @@ namespace SlidingTiles {
         } else if (state == ZmqSingleton::SET_TILE) {
             int x = jsonMessage["position"]["x"];
             int y = jsonMessage["position"]["y"];
-            std::string tileTypeString = jsonMessage["tileType"].get<std::string>();
-            //TileType tileType = stringToTileType(tileTypeString);
+            auto tileTypeString = jsonMessage["tileType"].get<std::string>();
             if (tileGameCoordinates.x == x && tileGameCoordinates.y == y) {
                 setCoordinates(sf::Vector2i{x, y});
                 setTileType(stringToTileType(tileTypeString));

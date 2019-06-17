@@ -1,8 +1,6 @@
 #include "game.h"
 
-using namespace SlidingTiles;
-
 int main() {
-    Game game{};
+    SlidingTiles::Game game{};
     game.run();
 }
