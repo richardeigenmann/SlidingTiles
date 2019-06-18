@@ -7,9 +7,9 @@ using json = nlohmann::json;
 namespace SlidingTiles {
     int TileView::count = 0;
 
-    const sf::Color WINNER_COLOR {sf::Color{0, 255, 0}};
-    const sf::Color START_COLOR {sf::Color{96, 206, 237}};
-    const sf::Color END_COLOR {sf::Color{255, 0, 0}};
+    const sf::Color WINNER_COLOR {sf::Color{0, 255, 0, 255}};
+    const sf::Color START_COLOR {sf::Color{96, 206, 237, 255}};
+    const sf::Color END_COLOR {sf::Color{255, 0, 0, 255}};
 
 
     void TileView::render() {
@@ -36,7 +36,7 @@ namespace SlidingTiles {
             }
         }
 
-        RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
+        RenderingSingleton::getInstance().getRenderWindow()->draw(sprite); // NOLINT (fuchsia-default-arguments)
     }
 
     void TileView::update(const float dt) {
@@ -55,7 +55,7 @@ namespace SlidingTiles {
     }
 
     void TileView::handleMessage(const json & jsonMessage) {
-        std::string state = jsonMessage["state"].get<std::string>();
+        auto state = jsonMessage["state"].get<std::string>();
         if (state == ZmqSingleton::SLIDE_TILE) {
             int startPositionX = jsonMessage["startPosition"]["x"];
             int startPositionY = jsonMessage["startPosition"]["y"];

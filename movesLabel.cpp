@@ -1,31 +1,33 @@
 #include "movesLabel.h"
 #include <sstream>
 
-using namespace SlidingTiles;
 using json = nlohmann::json;
+
+const unsigned int X {400};
+const unsigned int Y {150};
 
 /**
  * @brief Constructor for the moves label
  */
-MovesLabel::MovesLabel() {
-    setPosition(400, 150);
+SlidingTiles::MovesLabel::MovesLabel() {
+    setPosition(X, Y);
 
     UpdatingSingleton::getInstance().add(*this);
 };
 
-MovesLabel::~MovesLabel() {
+SlidingTiles::MovesLabel::~MovesLabel() {
     UpdatingSingleton::getInstance().remove(*this);
 }
 
-void MovesLabel::update(const float dt) {
+void SlidingTiles::MovesLabel::update(const float dt) { // NOLINT (misc-unused-parameters)
     auto msg = getZmqMessage();
     if (msg) {
         handleMessage(msg.value());
     }
 }
 
-void MovesLabel::handleMessage(const json & jsonMessage) {
-    std::string state = jsonMessage["state"].get<std::string>();
+void SlidingTiles::MovesLabel::handleMessage(const json & jsonMessage) {
+    auto state = jsonMessage["state"].get<std::string>();
     if (state == ZmqSingleton::GAME_STARTED ) {
         moves = 0;
         updateLabel();
@@ -35,7 +37,7 @@ void MovesLabel::handleMessage(const json & jsonMessage) {
     }
 }
 
-void MovesLabel::updateLabel() {
+void SlidingTiles::MovesLabel::updateLabel() {
     std::ostringstream movesText;
     movesText << "Moves: " << moves;
     setText(movesText.str());

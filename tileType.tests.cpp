@@ -2,7 +2,7 @@
 #include <gmock/gmock.h>
 
 TEST(TileType, Empty) {
-    TileType t = TileType::Empty;
+    auto t = SlidingTiles::TileType::Empty;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -13,7 +13,7 @@ TEST(TileType, Empty) {
 }
 
 TEST(TileType, Horizontal) {
-    TileType t = TileType::Horizontal;
+    SlidingTiles::TileType t = SlidingTiles::TileType::Horizontal;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
@@ -24,7 +24,7 @@ TEST(TileType, Horizontal) {
 }
 
 TEST(TileType, Vertical) {
-    TileType t = TileType::Vertical;
+    SlidingTiles::TileType t = SlidingTiles::TileType::Vertical;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
@@ -35,7 +35,7 @@ TEST(TileType, Vertical) {
 }
 
 TEST(TileType, StartTop) {
-    TileType t = TileType::StartTop;
+    SlidingTiles::TileType t = SlidingTiles::TileType::StartTop;
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -46,7 +46,7 @@ TEST(TileType, StartTop) {
 }
 
 TEST(TileType, StartBottom) {
-    TileType t = TileType::StartBottom;
+    SlidingTiles::TileType t = SlidingTiles::TileType::StartBottom;
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -57,7 +57,7 @@ TEST(TileType, StartBottom) {
 }
 
 TEST(TileType, StartLeft) {
-    TileType t = TileType::StartLeft;
+    SlidingTiles::TileType t = SlidingTiles::TileType::StartLeft;
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -68,7 +68,7 @@ TEST(TileType, StartLeft) {
 }
 
 TEST(TileType, StartRight) {
-    TileType t = TileType::StartRight;
+    SlidingTiles::TileType t = SlidingTiles::TileType::StartRight;
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -79,7 +79,7 @@ TEST(TileType, StartRight) {
 }
 
 TEST(TileType, EndTop) {
-    TileType t = TileType::EndTop;
+    SlidingTiles::TileType t = SlidingTiles::TileType::EndTop;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -90,7 +90,7 @@ TEST(TileType, EndTop) {
 }
 
 TEST(TileType, EndBottom) {
-    TileType t = TileType::EndBottom;
+    SlidingTiles::TileType t = SlidingTiles::TileType::EndBottom;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -101,7 +101,7 @@ TEST(TileType, EndBottom) {
 }
 
 TEST(TileType, EndRight) {
-    TileType t = TileType::EndRight;
+    SlidingTiles::TileType t = SlidingTiles::TileType::EndRight;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -112,7 +112,7 @@ TEST(TileType, EndRight) {
 }
 
 TEST(TileType, EndLeft) {
-    TileType t = TileType::EndLeft;
+    SlidingTiles::TileType t = SlidingTiles::TileType::EndLeft;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
@@ -123,7 +123,7 @@ TEST(TileType, EndLeft) {
 }
 
 TEST(TileType, LeftTop) {
-    TileType t = TileType::LeftTop;
+    SlidingTiles::TileType t = SlidingTiles::TileType::LeftTop;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
@@ -134,7 +134,7 @@ TEST(TileType, LeftTop) {
 }
 
 TEST(TileType, LeftBottom) {
-    TileType t = TileType::LeftBottom;
+    SlidingTiles::TileType t = SlidingTiles::TileType::LeftBottom;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
@@ -145,7 +145,7 @@ TEST(TileType, LeftBottom) {
 }
 
 TEST(TileType, TopRight) {
-    TileType t = TileType::TopRight;
+    SlidingTiles::TileType t = SlidingTiles::TileType::TopRight;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
@@ -156,7 +156,7 @@ TEST(TileType, TopRight) {
 }
 
 TEST(TileType, BottomRight) {
-    TileType t = TileType::BottomRight;
+    SlidingTiles::TileType t = SlidingTiles::TileType::BottomRight;
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
@@ -167,7 +167,7 @@ TEST(TileType, BottomRight) {
 }
 
 TEST(TileType, Obstacle) {
-    TileType t = TileType::Obstacle;
+    SlidingTiles::TileType t = SlidingTiles::TileType::Obstacle;
     ASSERT_FALSE(isStartTileType( t ));
     ASSERT_FALSE(isEndTileType( t ));
     ASSERT_FALSE(isMoveableType( t ));
@@ -179,7 +179,7 @@ TEST(TileType, Obstacle) {
 
 
 TEST(TileType, Unknown) {
-    TileType t = static_cast<TileType> (65536);
+    SlidingTiles::TileType t = static_cast<SlidingTiles::TileType> (65536);
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t )); // Actually undefined behaviour
@@ -197,19 +197,19 @@ TEST(TileType, randomStartTileType) {
     int StartRight{0};
     int Unexpected{0};
     for (int i = 0; i < 100; ++i) {
-        TileType t = randomStartTileType();
+        SlidingTiles::TileType t = randomStartTileType();
         ASSERT_TRUE(isStartTileType(t));
         switch (t) {
-            case TileType::StartTop:
+            case SlidingTiles::TileType::StartTop:
                 ++StartTop;
                 break;
-            case TileType::StartBottom:
+            case SlidingTiles::TileType::StartBottom:
                 ++StartBottom;
                 break;
-            case TileType::StartLeft:
+            case SlidingTiles::TileType::StartLeft:
                 ++StartLeft;
                 break;
-            case TileType::StartRight:
+            case SlidingTiles::TileType::StartRight:
                 ++StartRight;
                 break;
             default:
@@ -231,19 +231,19 @@ TEST(TileType, randomEndTileType) {
     int EndRight{0};
     int Unexpected{0};
     for (int i = 0; i < 100; ++i) {
-        TileType t = randomEndTileType();
+        SlidingTiles::TileType t = randomEndTileType();
         ASSERT_TRUE(isEndTileType(t));
         switch (t) {
-            case TileType::EndTop:
+            case SlidingTiles::TileType::EndTop:
                 ++EndTop;
                 break;
-            case TileType::EndBottom:
+            case SlidingTiles::TileType::EndBottom:
                 ++EndBottom;
                 break;
-            case TileType::EndLeft:
+            case SlidingTiles::TileType::EndLeft:
                 ++EndLeft;
                 break;
-            case TileType::EndRight:
+            case SlidingTiles::TileType::EndRight:
                 ++EndRight;
                 break;
             default:
@@ -268,27 +268,27 @@ TEST(TileType, isGameTileType) {
     int Obstacle{0};
     int Unexpected{0};
     for (int i = 0; i < 100; ++i) {
-        TileType t = randomGameTileType();
+        SlidingTiles::TileType t = randomGameTileType();
         switch (t) {
-            case TileType::Horizontal:
+            case SlidingTiles::TileType::Horizontal:
                 ++Horizontal;
                 break;
-            case TileType::Vertical:
+            case SlidingTiles::TileType::Vertical:
                 ++Vertical;
                 break;
-            case TileType::LeftTop:
+            case SlidingTiles::TileType::LeftTop:
                 ++LeftTop;
                 break;
-            case TileType::LeftBottom:
+            case SlidingTiles::TileType::LeftBottom:
                 ++LeftBottom;
                 break;
-            case TileType::TopRight:
+            case SlidingTiles::TileType::TopRight:
                 ++TopRight;
                 break;
-            case TileType::BottomRight:
+            case SlidingTiles::TileType::BottomRight:
                 ++BottomRight;
                 break;
-            case TileType::Obstacle:
+            case SlidingTiles::TileType::Obstacle:
                 ++Obstacle;
                 break;
             default:

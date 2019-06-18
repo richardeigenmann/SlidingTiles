@@ -4,19 +4,18 @@
 #include <iostream>
 #include <string>
 
-using namespace SlidingTiles;
 using json = nlohmann::json;
 
 
-AttitudeSoundPlayer::AttitudeSoundPlayer() {
+SlidingTiles::AttitudeSoundPlayer::AttitudeSoundPlayer() {
     UpdatingSingleton::getInstance().add(*this);
 }
 
-AttitudeSoundPlayer::~AttitudeSoundPlayer() {
+SlidingTiles::AttitudeSoundPlayer::~AttitudeSoundPlayer() {
     UpdatingSingleton::getInstance().remove(*this);
 }
 
-void AttitudeSoundPlayer::update(const float dt) {
+void SlidingTiles::AttitudeSoundPlayer::update(const float dt) { // NOLINT (misc-unused-parameters)
     auto msg = getZmqMessage();
     if (msg) {
         handleMessage(msg.value());
@@ -24,11 +23,11 @@ void AttitudeSoundPlayer::update(const float dt) {
 }
 
 
-void AttitudeSoundPlayer::handleMessage(const nlohmann::json & jsonMessage) {
-        std::string state = jsonMessage["state"].get<std::string>();
-        if (state == ZmqSingleton::CONFIGURATION_LOADED) {
+void SlidingTiles::AttitudeSoundPlayer::handleMessage(const nlohmann::json & jsonMessage) {
+        auto state = jsonMessage["state"].get<std::string>();
+        if (state == SlidingTiles::ZmqSingleton::CONFIGURATION_LOADED) {
             loadSounds(jsonMessage["attitudeSoundBites"]);
-        } else if (state == ZmqSingleton::RESTART_LEVEL) {
+        } else if (state == SlidingTiles::ZmqSingleton::RESTART_LEVEL) {
             playRandomSound();
         }
 }

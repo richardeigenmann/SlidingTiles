@@ -70,8 +70,8 @@ namespace SlidingTiles {
         sf::Sprite sprite;
       
         /**
-         * @brief the command to send when the button is clicked
+         * @brief the command to send via ZMQ when the button is clicked
          */
-        const std::string command;
+        const std::string & command;
     };
 }

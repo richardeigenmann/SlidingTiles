@@ -2,12 +2,12 @@
 #include "json.hpp"
 #include "zmqSingleton.h"
 
-
 using json = nlohmann::json;
 
-SlidingTiles::Button::Button(const std::string & filename, const std::string & command) : command(command) {
-    if (texture.loadFromFile(filename)) {
-        sprite.setTexture(texture);
+SlidingTiles::Button::Button(const std::string & filename, const std::string & command) 
+    : command(command) {
+    if (texture.loadFromFile(filename)) { // NOLINT (fuchsia-default-arguments)
+        sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
     } else {
         throw std::runtime_error("Failed to load texture: " + filename);
     }
@@ -28,14 +28,14 @@ void SlidingTiles::Button::setPosition(float x, float y) {
 }
 
 void SlidingTiles::Button::render() {
-    RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
+    RenderingSingleton::getInstance().getRenderWindow()->draw(sprite); // NOLINT (fuchsia-default-arguments)
 }
 
 bool SlidingTiles::Button::mouseReleased(const sf::Vector2i & mousePosition) {
     return sprite.getGlobalBounds().contains(mousePosition.x, mousePosition.y);
 }
 
-void SlidingTiles::Button::update(const float dt) {
+void SlidingTiles::Button::update(const float dt) { // NOLINT (misc-unused-parameters)
     auto msg = getZmqMessage();
     if (msg) {
         handleMessage(msg.value());
@@ -48,7 +48,7 @@ void SlidingTiles::Button::handleMessage(const json & jsonMessage) {
         int x = jsonMessage["x"];
         int y = jsonMessage["y"];
         if (mouseReleased(sf::Vector2i{x, y})) {
-            json commandMessage{};
+            json commandMessage{}; // NOLINT(fuchsia-default-arguments)
             commandMessage["state"] = command;
             ZmqSingleton::getInstance().publish(commandMessage);
         }

@@ -39,7 +39,7 @@ namespace SlidingTiles {
          * @brief sets the text of the label
          * @param newText the new text
          */
-        void setText(std::string newText);
+        void setText(const std::string & newText);
 
 
     private:

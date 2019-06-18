@@ -1,9 +1,10 @@
 #pragma once
 
-#include "tile.h"
-#include <vector>
 #include "moveNode.h"
+#include "tile.h"
 #include "zmqSingleton.h"
+#include <stdexcept>      // std::out_of_range
+#include <vector>
 
 namespace SlidingTiles {
 
@@ -16,6 +17,14 @@ namespace SlidingTiles {
          * @brief The number of tiles in each direction
          */
         static const int boardSize{4};
+
+        Tile getTile(const unsigned int x, const unsigned int y) {
+            if ( x >= boardSize || y >= boardSize ) {
+                throw std::out_of_range{"Bad board coordinates requested"};
+            } else {
+                return tiles[x][y];
+            }
+        }
 
         /**
          * @brief The 2d array of tiles that makes up the game board

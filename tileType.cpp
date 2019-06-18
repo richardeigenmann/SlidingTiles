@@ -1,54 +1,54 @@
 #include "tileType.h"
 #include <array>
 
-std::string tileTypeToString(const TileType & t) {
+std::string tileTypeToString(const SlidingTiles::TileType & t) {
     switch (t) {
-        case TileType::Empty:
+        case SlidingTiles::TileType::Empty:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Empty";
-        case TileType::Horizontal:
+        case SlidingTiles::TileType::Horizontal:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Horizontal";
-        case TileType::Vertical:
+        case SlidingTiles::TileType::Vertical:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Vertical";
-        case TileType::StartTop:
+        case SlidingTiles::TileType::StartTop:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "StartTop";
-        case TileType::StartBottom:
+        case SlidingTiles::TileType::StartBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "StartBottom";
-        case TileType::StartLeft:
+        case SlidingTiles::TileType::StartLeft:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "StartLeft";
-        case TileType::StartRight:
+        case SlidingTiles::TileType::StartRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "StartRight";
-        case TileType::EndTop:
+        case SlidingTiles::TileType::EndTop:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "EndTop";
-        case TileType::EndBottom:
+        case SlidingTiles::TileType::EndBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "EndBottom";
-        case TileType::EndRight:
+        case SlidingTiles::TileType::EndRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "EndRight";
-        case TileType::EndLeft:
+        case SlidingTiles::TileType::EndLeft:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "EndLeft";
-        case TileType::LeftTop:
+        case SlidingTiles::TileType::LeftTop:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "LeftTop";
-        case TileType::LeftBottom:
+        case SlidingTiles::TileType::LeftBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "LeftBottom";
-        case TileType::TopRight:
+        case SlidingTiles::TileType::TopRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "TopRight";
-        case TileType::BottomRight:
+        case SlidingTiles::TileType::BottomRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "BottomRight";
-        case TileType::Obstacle:
+        case SlidingTiles::TileType::Obstacle:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Obstacle";
         default:
@@ -57,104 +57,104 @@ std::string tileTypeToString(const TileType & t) {
     }
 }
 
-TileType stringToTileType(const std::string & s) {
+SlidingTiles::TileType stringToTileType(const std::string & s) {
     if (s == "Horizontal") {
-        return TileType::Horizontal;
+        return SlidingTiles::TileType::Horizontal;
     } 
     if (s == "Vertical") {
-        return TileType::Vertical;
+        return SlidingTiles::TileType::Vertical;
     } 
     if (s == "StartTop") {
-        return TileType::StartTop;
+        return SlidingTiles::TileType::StartTop;
     } 
     if (s == "StartBottom") {
-        return TileType::StartBottom;
+        return SlidingTiles::TileType::StartBottom;
     } 
     if (s == "StartLeft") {
-        return TileType::StartLeft;
+        return SlidingTiles::TileType::StartLeft;
     } 
     if (s == "StartRight") {
-        return TileType::StartRight;
+        return SlidingTiles::TileType::StartRight;
     } 
     if (s == "EndTop") {
-        return TileType::EndTop;
+        return SlidingTiles::TileType::EndTop;
     } 
     if (s == "EndBottom") {
-        return TileType::EndBottom;
+        return SlidingTiles::TileType::EndBottom;
     } 
     if (s == "EndRight") {
-        return TileType::EndRight;
+        return SlidingTiles::TileType::EndRight;
     } 
     if (s == "EndLeft") {
-        return TileType::EndLeft;
+        return SlidingTiles::TileType::EndLeft;
     } 
     if (s == "LeftTop") {
-        return TileType::LeftTop;
+        return SlidingTiles::TileType::LeftTop;
     } 
     if (s == "LeftBottom") {
-        return TileType::LeftBottom;
+        return SlidingTiles::TileType::LeftBottom;
     } 
     if (s == "TopRight") {
-        return TileType::TopRight;
+        return SlidingTiles::TileType::TopRight;
     } 
     if (s == "BottomRight") {
-        return TileType::BottomRight;
+        return SlidingTiles::TileType::BottomRight;
     } 
     if (s == "Obstacle") {
-        return TileType::Obstacle;
+        return SlidingTiles::TileType::Obstacle;
     } 
-    return TileType::Empty;  
+    return SlidingTiles::TileType::Empty;  
 }
 
 // TODO: Why to Char and return a String??
-std::string tileTypeToChar(const TileType & t) {
+std::string tileTypeToChar(const SlidingTiles::TileType & t) {
     switch (t) {
-        case TileType::Empty:
+        case SlidingTiles::TileType::Empty:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return " ";
-        case TileType::Horizontal:
+        case SlidingTiles::TileType::Horizontal:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "-";
-        case TileType::Vertical:
+        case SlidingTiles::TileType::Vertical:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "|";
-        case TileType::StartTop:
+        case SlidingTiles::TileType::StartTop:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┴";
-        case TileType::StartBottom:
+        case SlidingTiles::TileType::StartBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┬";
-        case TileType::StartLeft:
+        case SlidingTiles::TileType::StartLeft:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┤";
-        case TileType::StartRight:
+        case SlidingTiles::TileType::StartRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "├";
-        case TileType::EndTop:
+        case SlidingTiles::TileType::EndTop:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┻";
-        case TileType::EndBottom:
+        case SlidingTiles::TileType::EndBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┳";
-        case TileType::EndRight:
+        case SlidingTiles::TileType::EndRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┣";
-        case TileType::EndLeft:
+        case SlidingTiles::TileType::EndLeft:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┫";
-        case TileType::LeftTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
+        case SlidingTiles::TileType::LeftTop:
+            // SlidingTiles::NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┘";
-        case TileType::LeftBottom:
+        case SlidingTiles::TileType::LeftBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┐";
-        case TileType::TopRight:
+        case SlidingTiles::TileType::TopRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "└";
-        case TileType::BottomRight:
+        case SlidingTiles::TileType::BottomRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┌";
-        case TileType::Obstacle:
+        case SlidingTiles::TileType::Obstacle:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "o";
         default:
@@ -163,54 +163,54 @@ std::string tileTypeToChar(const TileType & t) {
     }
 }
 
-std::wstring tileTypeToWstringChar(const TileType & t) {
+std::wstring tileTypeToWstringChar(const SlidingTiles::TileType & t) {
     switch (t) {
-        case TileType::Empty:
+        case SlidingTiles::TileType::Empty:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L" ";
-        case TileType::Horizontal:
+        case SlidingTiles::TileType::Horizontal:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"-";
-        case TileType::Vertical:
+        case SlidingTiles::TileType::Vertical:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"|";
-        case TileType::StartTop:
+        case SlidingTiles::TileType::StartTop:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┴";
-        case TileType::StartBottom:
+        case SlidingTiles::TileType::StartBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┬";
-        case TileType::StartLeft:
+        case SlidingTiles::TileType::StartLeft:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┤";
-        case TileType::StartRight:
+        case SlidingTiles::TileType::StartRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"├";
-        case TileType::EndTop:
+        case SlidingTiles::TileType::EndTop:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┻";
-        case TileType::EndBottom:
+        case SlidingTiles::TileType::EndBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┳";
-        case TileType::EndRight:
+        case SlidingTiles::TileType::EndRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┣";
-        case TileType::EndLeft:
+        case SlidingTiles::TileType::EndLeft:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┫";
-        case TileType::LeftTop:
+        case SlidingTiles::TileType::LeftTop:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┘";
-        case TileType::LeftBottom:
+        case SlidingTiles::TileType::LeftBottom:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┐";
-        case TileType::TopRight:
+        case SlidingTiles::TileType::TopRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"└";
-        case TileType::BottomRight:
+        case SlidingTiles::TileType::BottomRight:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┌";
-        case TileType::Obstacle:
+        case SlidingTiles::TileType::Obstacle:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"o";
         default:
@@ -222,15 +222,15 @@ std::wstring tileTypeToWstringChar(const TileType & t) {
 /**
  * @brief Returns if a TileType is a start tile 
  */
-bool isStartTileType(const TileType & t) {
+bool isStartTileType(const SlidingTiles::TileType & t) {
     switch (t) {
-        case TileType::StartTop:
+        case SlidingTiles::TileType::StartTop:
             return true;
-        case TileType::StartBottom:
+        case SlidingTiles::TileType::StartBottom:
             return true;
-        case TileType::StartLeft:
+        case SlidingTiles::TileType::StartLeft:
             return true;
-        case TileType::StartRight:
+        case SlidingTiles::TileType::StartRight:
             return true;
         default:
             return false;
@@ -238,12 +238,14 @@ bool isStartTileType(const TileType & t) {
 }
 
 
-const std::array<TileType,4> START_TILES {TileType::StartTop, TileType::StartBottom, TileType::StartLeft, TileType::StartRight};
+const std::array<SlidingTiles::TileType,4> START_TILES {
+    SlidingTiles::TileType::StartTop, SlidingTiles::TileType::StartBottom, 
+    SlidingTiles::TileType::StartLeft, SlidingTiles::TileType::StartRight};
 
 /**
  * @brief Returns if a random start TileType
  */
-TileType randomStartTileType() {
+SlidingTiles::TileType randomStartTileType() {
     return START_TILES.at(random() % START_TILES.size());
 }
 
@@ -251,15 +253,15 @@ TileType randomStartTileType() {
 /**
  * @brief Returns if a TileType is an end tile 
  */
-bool isEndTileType(const TileType & t) {
+bool isEndTileType(const SlidingTiles::TileType & t) {
     switch (t) {
-        case TileType::EndTop:
+        case SlidingTiles::TileType::EndTop:
             return true;
-        case TileType::EndBottom:
+        case SlidingTiles::TileType::EndBottom:
             return true;
-        case TileType::EndLeft:
+        case SlidingTiles::TileType::EndLeft:
             return true;
-        case TileType::EndRight:
+        case SlidingTiles::TileType::EndRight:
             return true;
         default:
             return false;
@@ -269,33 +271,35 @@ bool isEndTileType(const TileType & t) {
 /**
  * @brief Returns if a TileType is moveable
  */
-bool isMoveableType(const TileType & t) {
-    return !  (t == TileType::Empty || t == TileType::Obstacle || isStartTileType( t ) ||  isEndTileType( t ));
+bool isMoveableType(const SlidingTiles::TileType & t) {
+    return !  (t == SlidingTiles::TileType::Empty || t == SlidingTiles::TileType::Obstacle || isStartTileType( t ) ||  isEndTileType( t ));
 }
 
 
-const std::array<TileType,4> END_TILES {TileType::EndTop, TileType::EndBottom, TileType::EndLeft, TileType::EndRight};
+const std::array<SlidingTiles::TileType,4> END_TILES {SlidingTiles::TileType::EndTop, 
+    SlidingTiles::TileType::EndBottom, SlidingTiles::TileType::EndLeft, 
+    SlidingTiles::TileType::EndRight};
 
 /**
  * @brief Returns if a random end TileType
  */
-TileType randomEndTileType() {
+SlidingTiles::TileType randomEndTileType() {
     return END_TILES.at(random() % END_TILES.size());
 }
 
-bool isGameTileType(const TileType & t) {
+bool isGameTileType(const SlidingTiles::TileType & t) {
     switch (t) {
-        case TileType::Horizontal:
+        case SlidingTiles::TileType::Horizontal:
             return true;
-        case TileType::Vertical:
+        case SlidingTiles::TileType::Vertical:
             return true;
-        case TileType::LeftTop:
+        case SlidingTiles::TileType::LeftTop:
             return true;
-        case TileType::LeftBottom:
+        case SlidingTiles::TileType::LeftBottom:
             return true;
-        case TileType::TopRight:
+        case SlidingTiles::TileType::TopRight:
             return true;
-        case TileType::BottomRight:
+        case SlidingTiles::TileType::BottomRight:
             return true;
         default:
             return false;
@@ -303,10 +307,10 @@ bool isGameTileType(const TileType & t) {
     }
 }
 
-const std::array<TileType,7> GAME_TILES {TileType::Horizontal, TileType::Vertical, 
-    TileType::LeftTop, TileType::LeftBottom, TileType::TopRight, 
-    TileType::BottomRight, TileType::Obstacle};
+const std::array<SlidingTiles::TileType,7> GAME_TILES {SlidingTiles::TileType::Horizontal, SlidingTiles::TileType::Vertical, 
+    SlidingTiles::TileType::LeftTop, SlidingTiles::TileType::LeftBottom, SlidingTiles::TileType::TopRight, 
+    SlidingTiles::TileType::BottomRight, SlidingTiles::TileType::Obstacle};
 
-TileType randomGameTileType() {
+SlidingTiles::TileType randomGameTileType() {
     return GAME_TILES.at(random() % GAME_TILES.size());
 }

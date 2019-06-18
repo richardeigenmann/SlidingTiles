@@ -1,34 +1,35 @@
 #include "winnerBlingBling.h"
 
-using namespace SlidingTiles;
-
-WinnerBlingBling::WinnerBlingBling() {
-    const std::string filename{"assets/trophy.png"};
-    if (texture.loadFromFile(filename)) {
-        sprite.setTexture(texture);
+SlidingTiles::WinnerBlingBling::WinnerBlingBling() {
+    const sf::String filename{"assets/trophy.png"}; // NOLINT (fuchsia-default-arguments)
+    if (texture.loadFromFile(filename)) { // NOLINT (fuchsia-default-arguments)
+        sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
     } else {
-        throw std::runtime_error("Failed to load texture: " + filename);
+        throw std::runtime_error("Failed to load texture: " + filename.toAnsiString()); // NOLINT (fuchsia-default-arguments)
     }
-    setPosition(400, 5);
-    sprite.setScale(0.2f, 0.2f);
+    const unsigned int X {400};
+    const unsigned int Y {5};
+    const float SCALE {0.2F};
+    setPosition(X, Y);
+    sprite.setScale(SCALE, SCALE);
     RenderingSingleton::getInstance().add(*this);
     UpdatingSingleton::getInstance().add(*this);
 }
 
-WinnerBlingBling::~WinnerBlingBling() {
+SlidingTiles::WinnerBlingBling::~WinnerBlingBling() {
     RenderingSingleton::getInstance().remove(*this);
     UpdatingSingleton::getInstance().remove(*this);
 }
 
-void WinnerBlingBling::loadSounds(const json & jsonArray) {
+void SlidingTiles::WinnerBlingBling::loadSounds(const json & jsonArray) {
     winnerSounds.loadSounds(jsonArray);
 }
 
-void WinnerBlingBling::setPosition(float x, float y) {
+void SlidingTiles::WinnerBlingBling::setPosition(float x, float y) {
     sprite.setPosition(x, y);
 }
 
-void WinnerBlingBling::startBlingBling(const float & time, std::size_t moves, std::size_t par) {
+void SlidingTiles::WinnerBlingBling::startBlingBling(std::size_t moves, std::size_t par) {
     if (moves == par) {
         winnerSounds.playRandomSound();
     } else {
@@ -37,31 +38,31 @@ void WinnerBlingBling::startBlingBling(const float & time, std::size_t moves, st
     gameState = GameState::VictoryRolling;
 }
 
-void WinnerBlingBling::endBlingBling() {
+void SlidingTiles::WinnerBlingBling::endBlingBling() {
     gameState = GameState::Playing;
 }
 
-void WinnerBlingBling::update(const float dt) {
+void SlidingTiles::WinnerBlingBling::update(const float dt) { // NOLINT (misc-unused-parameters)
     auto msg = getZmqMessage();
     if (msg) {
         handleMessage(msg.value());
     }
 }
 
-void WinnerBlingBling::handleMessage(const json & jsonMessage) {
-    std::string state = jsonMessage["state"].get<std::string>();
+void SlidingTiles::WinnerBlingBling::handleMessage(const json & jsonMessage) {
+    auto state = jsonMessage["state"].get<std::string>();
     if (state == ZmqSingleton::CONFIGURATION_LOADED) {
         loadSounds(jsonMessage["winnerSoundBites"]);
-    } else if (state == ZmqSingleton::GAME_WON) {
-        startBlingBling(jsonMessage["victoryRollTime"], jsonMessage["moves"], jsonMessage["par"]);
-    } else if (state == ZmqSingleton::GAME_STARTED) {
+    } else if (state == SlidingTiles::ZmqSingleton::GAME_WON) {
+        startBlingBling(jsonMessage["moves"], jsonMessage["par"]);
+    } else if (state == SlidingTiles::ZmqSingleton::GAME_STARTED) {
         endBlingBling();
     }
 }
 
-void WinnerBlingBling::render() {
+void SlidingTiles::WinnerBlingBling::render() {
     if (gameState == GameState::VictoryRolling) {
-        RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
+        SlidingTiles::RenderingSingleton::getInstance().getRenderWindow()->draw(sprite); // NOLINT (fuchsia-default-arguments)
     }
 }
 

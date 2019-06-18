@@ -36,7 +36,7 @@ namespace SlidingTiles {
         /**
          * @brief pointer to the gameBoard
          */
-        GameBoard* gameBoard;
+        GameBoard* gameBoard {nullptr};
 
         /**
          * @brief set the Game Board

@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+namespace SlidingTiles {
+
 enum class TileType {
     Empty,
     Horizontal,
@@ -19,12 +21,13 @@ enum class TileType {
     BottomRight,
     Obstacle
 };
+} // namespace Sliding Tiles
 
 /**
  * @brief Returns a string of the tile type.
  * @param t the tile type to convert
  */
-std::string tileTypeToString(const TileType & t);
+std::string tileTypeToString(const SlidingTiles::TileType & t);
 
 /**
  * @brief Returns the tile type from the supplied string. If it doesn't match
@@ -32,53 +35,53 @@ std::string tileTypeToString(const TileType & t);
  * @param s the string to parse
  * @return the tileType or TileType::Empty if no match
  */
-TileType stringToTileType(const std::string & s);
+SlidingTiles::TileType stringToTileType(const std::string & s);
 
 /**
  * @brief Returns a char for the tile type. Used for Serialisation
  */
-std::string tileTypeToChar(const TileType & t);
+std::string tileTypeToChar(const SlidingTiles::TileType & t);
 
 /**
  * @brief Returns a char for the tile type. Used for Serialisation
  */
-std::wstring tileTypeToWstringChar(const TileType & t);
+std::wstring tileTypeToWstringChar(const SlidingTiles::TileType & t);
 
 
 /**
  * @brief Returns if a TileType is a start tile 
  */
-bool isStartTileType(const TileType & t);
+bool isStartTileType(const SlidingTiles::TileType & t);
 
 /**
  * @brief Returns if a random start TileType
  */
-TileType randomStartTileType();
+SlidingTiles::TileType randomStartTileType();
 
 
 /**
  * @brief Returns if a TileType is an end tile 
  */
-bool isEndTileType(const TileType & t);
+bool isEndTileType(const SlidingTiles::TileType & t);
 
 
 /**
  * @brief Returns if a TileType is an end tile 
  */
-bool isMoveableType(const TileType & t);
+bool isMoveableType(const SlidingTiles::TileType & t);
 
 /**
  * @brief Returns if a random end TileType
  */
-TileType randomEndTileType();
+SlidingTiles::TileType randomEndTileType();
 
 /**
  * @brief Returns if a tile is a game TileType
  */
-bool isGameTileType(const TileType & t);
+bool isGameTileType(const SlidingTiles::TileType & t);
 
 
 /**
  * @brief Returns a random game TileType
  */
-TileType randomGameTileType();// NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
+SlidingTiles::TileType randomGameTileType();// NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
