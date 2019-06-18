@@ -51,8 +51,18 @@ This game places tiles in a grid. The blue one is a start tile and the red one i
 * Code Coverage
 
 ## Build and run
+### Prerequisites
+Experimenting with the Windows Subsystem for Linux it transpires that the following steps need to be done (for an OpenSUSE installation)
+``` bash
+git clone https://github.com/richardeigenmann/SlidingTiles.git
+sudo zypper in cmake
+sudo zypper in sfml2-devel
+sudo zypper in zeromq-devel
+sudo zypper in lcov
+```
 
 ```bash
+cd SlidingTiles
 mkdir -p build
 cd build
 cmake ..
