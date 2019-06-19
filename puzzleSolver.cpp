@@ -1,21 +1,19 @@
 #include "puzzleSolver.h"
+#include <cassert>
 #include <queue>
-#include <assert.h> // assert
 
-using namespace SlidingTiles;
+const int SlidingTiles::PuzzleSolver::DEFAULT_DEPTH;
 
-const int PuzzleSolver::DEFAULT_DEPTH;
-
-std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & moveNode) {
-    assert(moveNode.startPosition.x >= -1 && moveNode.startPosition.x <= GameBoard::boardSize);
-    assert(moveNode.startPosition.y >= -1 && moveNode.startPosition.y <= GameBoard::boardSize);
+std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) {
+    assert((moveNode.startPosition.x >= -1) && (moveNode.startPosition.x <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
+    assert((moveNode.startPosition.y >= -1) && (moveNode.startPosition.y <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
 
     GameBoard gameBoard{};
     gameBoard.loadGame(moveNode.endingBoard);
     for (int x = 0; x < GameBoard::boardSize; ++x) {
         for (int y = 0; y < GameBoard::boardSize; ++y) {
             sf::Vector2i position{x, y};
-            if (gameBoard.tiles[x][y].isMoveable) {
+            if (gameBoard.getTile(x,y).isMoveable) {
                 if (moveNode.direction != Direction::GoDown && gameBoard.canSlideTile(Move{position, Direction::GoUp})) {
                     MoveNode childNode{position, Direction::GoUp};
                     childNode.setParent(moveNode);
@@ -66,9 +64,9 @@ std::experimental::optional<MoveNode> PuzzleSolver::possibleMoves(MoveNode & mov
     return {};
 }
 
-std::experimental::optional<MoveNode> PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int levels) {
-    assert(moveNode.startPosition.x >= -1 && moveNode.startPosition.x <= GameBoard::boardSize);
-    assert(moveNode.startPosition.y >= -1 && moveNode.startPosition.y <= GameBoard::boardSize);
+std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int levels) {
+    assert(moveNode.startPosition.x >= -1 && moveNode.startPosition.x <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
+    assert(moveNode.startPosition.y >= -1 && moveNode.startPosition.y <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
     //std::cout << "\n\naddPossibleMoves levels: " << levels << " " << moveNode.toString();
 
     auto opt = possibleMoves(moveNode);
@@ -91,15 +89,15 @@ std::experimental::optional<MoveNode> PuzzleSolver::addPossibleMoves(MoveNode &m
     //moveNode.possibleMoves.insert(std::end(moveNode.possibleMoves), std::begin(possMoves), std::end(possMoves));
 }
 
-std::experimental::optional<MoveNode> PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) {
+std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) {
     gameBoard.rootNode.possibleMoves.clear();
     gameBoard.rootNode.endingBoard = gameBoard.serialiseGame();
     return addPossibleMoves(gameBoard.rootNode, depth);
 }
 
-void PuzzleSolver::saveSolution(GameBoard & gameBoard) {
-    assert(gameBoard.rootNode.startPosition.x >= -1 && gameBoard.rootNode.startPosition.x <= GameBoard::boardSize);
-    assert(gameBoard.rootNode.startPosition.y >= -1 && gameBoard.rootNode.startPosition.y <= GameBoard::boardSize);
+void SlidingTiles::PuzzleSolver::saveSolution(GameBoard & gameBoard) {
+    assert(gameBoard.rootNode.startPosition.x >= -1 && gameBoard.rootNode.startPosition.x <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
+    assert(gameBoard.rootNode.startPosition.y >= -1 && gameBoard.rootNode.startPosition.y <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
     // inspired by https://gist.github.com/douglas-vaz/5072998
     std::queue<MoveNode> Q;
     Q.push(gameBoard.rootNode);
@@ -115,15 +113,15 @@ void PuzzleSolver::saveSolution(GameBoard & gameBoard) {
             }
             return;
         };
-        for (std::size_t i = 0; i < t.possibleMoves.size(); ++i) {
-            Q.push(t.possibleMoves[i]);
+        for (const auto & possibleMove : t.possibleMoves) {
+            Q.push(possibleMove);
         }
     }
     gameBoard.solution.clear();
 }
 
-GameBoard PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) {
-    PuzzleSolver puzzleSolver;
+SlidingTiles::GameBoard SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) {
+    SlidingTiles::PuzzleSolver puzzleSolver;
     while (true) {
         GameBoard gameBoard{};
         gameBoard.randomGame(emptyTiles);
@@ -142,13 +140,14 @@ GameBoard PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t m
     }
 }
 
-void PuzzleSolver::generateGame(std::size_t emptyTiles, std::size_t maxDepth) {
+void SlidingTiles::PuzzleSolver::generateGame(std::size_t emptyTiles, std::size_t maxDepth) {
     GameBoard gameBoard = generateRandomGame(emptyTiles, maxDepth);
 }
 
-void PuzzleSolver::generateGames(std::size_t games) {
+void SlidingTiles::PuzzleSolver::generateGames(std::size_t games) {
     while (games > 0) {
-        std::size_t emptyTiles = (rand() % 13) + 1;
+        //std::size_t emptyTiles = (rand() % MAXIMUM_EMPTY_TILES) + 1;
+        std::size_t emptyTiles = ud(randomNumberGenerator);
         generateGame(emptyTiles, DEFAULT_DEPTH);
         --games;
     }

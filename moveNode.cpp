@@ -1,5 +1,3 @@
 #include "moveNode.h"
 
-using namespace SlidingTiles;
-
-int MoveNode::count = 0;
+int SlidingTiles::MoveNode::count {0};

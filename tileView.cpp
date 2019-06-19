@@ -7,22 +7,22 @@ using json = nlohmann::json;
 namespace SlidingTiles {
     int TileView::count = 0;
 
-    const sf::Color WINNER_COLOR {sf::Color{0, 255, 0, 255}};
-    const sf::Color START_COLOR {sf::Color{96, 206, 237, 255}};
-    const sf::Color END_COLOR {sf::Color{255, 0, 0, 255}};
+    const sf::Color WINNER_COLOR {sf::Color{0, 255, 0, 255}}; // NOLINT (fuchsia-statically-constructed-objects, cert-err58-cpp)
+    const sf::Color START_COLOR {sf::Color{96, 206, 237, 255}}; // NOLINT (fuchsia-statically-constructed-objects, cert-err58-cpp)
+    const sf::Color END_COLOR {sf::Color{255, 0, 0, 255}}; // NOLINT (fuchsia-statically-constructed-objects, cert-err58-cpp)
 
 
     void TileView::render() {
         sf::Vector2i renderPosition = tileScreenCoordinates;
         if (transitioning) {
-            int deltaX = (transitionTileCoordiantes.x - tileScreenCoordinates.x) * timeSpentTransitioning / TRANSITION_TIME;
-            int deltaY = (transitionTileCoordiantes.y - tileScreenCoordinates.y) * timeSpentTransitioning / TRANSITION_TIME;
+            int deltaX = static_cast<int>((transitionTileCoordiantes.x - tileScreenCoordinates.x) * timeSpentTransitioning / TRANSITION_TIME);
+            int deltaY = static_cast<int>((transitionTileCoordiantes.y - tileScreenCoordinates.y) * timeSpentTransitioning / TRANSITION_TIME);
             renderPosition.x += deltaX;
             renderPosition.y += deltaY;
         }
 
         sf::Sprite sprite;
-        sprite.setTexture(TexturesSingleton::getInstance().getTexture(tileType));
+        sprite.setTexture(TexturesSingleton::getInstance().getTexture(tileType)); // NOLINT (fuchsia-default-arguments)
         sprite.setPosition(renderPosition.x, renderPosition.y);
         if (winner) {
             sprite.setColor(WINNER_COLOR);
@@ -111,4 +111,4 @@ namespace SlidingTiles {
         return Renderable::RenderPriority::Normal;
     }
 
-}
+} // namespace SlidingTiles
