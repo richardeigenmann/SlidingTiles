@@ -150,7 +150,7 @@ namespace SlidingTiles {
             if (abs(deltaX) > 2 || abs(deltaY) > 2) {
                 if (abs(deltaX) > abs(deltaY)) {
                     // horizontal movement
-                    sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x + copysign(1, deltaX), movingTilePosition.y);
+                    sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x + copysign(1, deltaX), movingTilePosition.y); // NOLINT (bugprone-narrowing-conversions)
                     if (deltaX > 0) {
                         doMove(Move{movingTilePosition, Direction::GoRight});
                     } else {
