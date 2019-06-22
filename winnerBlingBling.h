@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include "json.hpp"
 #include "randomSoundPlayer.h"
 #include "renderable.h"
