@@ -16,22 +16,22 @@ addons:
     - lcov
     - doxygen
     - xvfb
-    - g++-7
+    - g++-8
 
 before_install:
   - wget -nv -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
-  #- sudo apt-get update -qq
-  #- sudo apt-get install -qq -y  
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7 
-  - sudo update-alternatives --config gcc
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq -y  
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+  - sudo update-alternatives --config g++
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
     - if [ "$CXX" = "clang++" ]; then export CXX="clang++"; fi
     # Checking versions
-    - lcov --version
     - g++ --version
     - gcc --version
+    - lcov --version
 
 script:
     - mkdir -p build
