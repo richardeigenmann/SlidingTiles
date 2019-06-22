@@ -13,7 +13,7 @@ std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::
     for (int x = 0; x < GameBoard::boardSize; ++x) {
         for (int y = 0; y < GameBoard::boardSize; ++y) {
             sf::Vector2i position{x, y};
-            if (gameBoard.getTile(x,y).isMoveable) {
+            if (gameBoard.getTile(x,y)->isMoveable) {
                 if (moveNode.direction != Direction::GoDown && gameBoard.canSlideTile(Move{position, Direction::GoUp})) {
                     MoveNode childNode{position, Direction::GoUp};
                     childNode.setParent(moveNode);

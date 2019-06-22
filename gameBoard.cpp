@@ -56,7 +56,7 @@ void SlidingTiles::GameBoard::loadGame(const std::wstring & game) {
     assert(game.size() == boardSize * boardSize);  // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     for (int y = 0; y < boardSize; ++y) {
         for (int x = 0; x < boardSize; ++x) {
-            Tile* tile = &tiles[x][y];
+            auto tile = getTile(x,y);
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(std::wstring{game[y * 4 + x]}); // NOLINT (fuchsia-default-arguments)
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
@@ -265,7 +265,7 @@ bool SlidingTiles::GameBoard::canSlideTile(const Move & move) {
     auto movingTile = getTile(move.startPosition.x, move.startPosition.y);
     /*std::cout << "canSlideTile: [" << move.startPosition.x << "][" << move.startPosition.y
              << "] Direction: " << directionToString(move.direction) << "\n";*/
-    if (!movingTile.isMoveable) {
+    if (!movingTile->isMoveable) {
         return false;
     }
 
@@ -279,7 +279,7 @@ bool SlidingTiles::GameBoard::canSlideTile(const Move & move) {
     }
 
     // check if newPosition already taken
-    if (getTile(newPosition.x, newPosition.y).getTileType() != TileType::Empty) {
+    if (getTile(newPosition.x, newPosition.y)->getTileType() != TileType::Empty) {
         return false;
     }
 
@@ -291,12 +291,12 @@ void SlidingTiles::GameBoard::slideTile(const Move & move) {
     assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     if (canSlideTile(move)) {
         sf::Vector2i newPosition = getAdjacentTilePosition(move);
-        Tile slidingTile = getTile(move.startPosition.x,move.startPosition.y);
-        Tile obscuredTile = getTile(newPosition.x, newPosition.y);
+        // TODO: Fix all this tile copying...
+        auto slidingTile = tiles[move.startPosition.x][move.startPosition.y];
+        auto obscuredTile = tiles[newPosition.x][newPosition.y];
 
         slidingTile.transition(newPosition);
         obscuredTile.setTilePosition(move.startPosition);
-
 
         json jsonMessage{};
         jsonMessage["state"] = ZmqSingleton::SLIDE_TILE;
@@ -312,7 +312,7 @@ void SlidingTiles::GameBoard::slideTile(const Move & move) {
     solution.clear();
 }
 
-const SlidingTiles::Tile SlidingTiles::GameBoard::findStartTile() {
+const SlidingTiles::Tile* SlidingTiles::GameBoard::findStartTile() {
     for (int x = 0; (x < boardSize); ++x) {
         for (int y = 0; (y < boardSize); ++y) {
             if (isStartTileType(tiles[x][y].getTileType())) {
@@ -320,16 +320,13 @@ const SlidingTiles::Tile SlidingTiles::GameBoard::findStartTile() {
             }
         }
     }
-
-    Tile errorTile{};
-    errorTile.setTilePosition(sf::Vector2i{-1, -1});
-    return errorTile;
+    return nullptr;
 }
 
 sf::Vector2i SlidingTiles::GameBoard::getOutputPosition(const Move & move) {
     assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    TileType type = getTile(move.startPosition.x, move.startPosition.y).getTileType();
+    auto type = getTile(move.startPosition.x, move.startPosition.y)->getTileType();
     sf::Vector2i nextTile{move.startPosition.x, move.startPosition.y};
 
     if (type == TileType::StartRight && move.startPosition.x < boardSize - 1) {
@@ -398,14 +395,14 @@ SlidingTiles::Move SlidingTiles::GameBoard::getOutputMove(const Move & move) {
     return outputMove;
 }
 
-std::vector<sf::Vector2i> SlidingTiles::GameBoard::isSolved() {
+const std::vector<sf::Vector2i> SlidingTiles::GameBoard::isSolved() {
     std::vector<sf::Vector2i> solutionPath{};
 
-    Tile startTile = findStartTile();
-    if (startTile.getTilePosition().x == -1) { return solutionPath; } // no start tile
-    solutionPath.push_back(startTile.getTilePosition());
+    auto startTile = findStartTile();
+    if (startTile == nullptr) { return solutionPath; } // no start tile
+    solutionPath.push_back(startTile->getTilePosition());
 
-    Move move{startTile.getTilePosition(), startTile.outputDirection(Direction::Unknown)};
+    Move move{startTile->getTilePosition(), startTile->outputDirection(Direction::Unknown)};
     int count{0};
     while (move.startPosition.x >= 0 && ++count < boardSize * boardSize) {
         move = getOutputMove(move);

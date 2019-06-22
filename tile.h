@@ -23,7 +23,7 @@ namespace SlidingTiles {
          * @brief returns the tile position
          * @return The position in the gameboard
          */
-        sf::Vector2i getTilePosition() {
+        sf::Vector2i getTilePosition() const{
             return myPosition;
         }
 
@@ -64,7 +64,7 @@ namespace SlidingTiles {
          * we enter it in the incomingDirection
          * @param incomingDirection the incoming direction
          */
-        Direction outputDirection(const Direction & incomingDirection);
+        Direction outputDirection(const Direction & incomingDirection) const;
 
         /**
          * @brief settor for the winner flag

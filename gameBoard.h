@@ -18,11 +18,14 @@ namespace SlidingTiles {
          */
         static const int boardSize{4};
 
-        Tile getTile(const unsigned int x, const unsigned int y) {
+        /**
+         * @brief returns a pointer to the tile at the indicated coordinates
+         */
+        Tile* getTile(const unsigned int x, const unsigned int y) {
             if ( x >= boardSize || y >= boardSize ) {
                 throw std::out_of_range{"Bad board coordinates requested"};
             } else {
-                return tiles[x][y];
+                return &tiles[x][y];
             }
         }
 
@@ -100,9 +103,9 @@ namespace SlidingTiles {
         void slideTile(const Move & move);
 
         /**
-         *  @brief returns the start tile on the gameboard. If none is found it returns -1,-1
+         *  @brief returns the start tile on the gameboard. If none is found it returns nullptr
          */
-        const Tile findStartTile();
+        const Tile* findStartTile();
 
         /**
          *  @brief returns the start tile on the gameboard. If none is found it returns -1,-1
@@ -132,7 +135,7 @@ namespace SlidingTiles {
          * @return a vector with the tile positions of the solution if solved otherwise 
          * returns an empty vector
          */
-        std::vector<sf::Vector2i> isSolved();
+        const std::vector<sf::Vector2i> isSolved();
 
         /**
          * @brief The puzzleSolver can use this to store the tree

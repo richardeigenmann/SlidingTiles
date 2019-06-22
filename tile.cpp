@@ -115,7 +115,7 @@ namespace SlidingTiles {
     /**
      * Returns the direction coming out of the supplied tile and incoming direction.
      */
-    Direction Tile::outputDirection(const Direction & incomingDirection) {
+    Direction Tile::outputDirection(const Direction & incomingDirection) const {
         if (tileType == TileType::StartRight) {
             return Direction::GoRight;
         }

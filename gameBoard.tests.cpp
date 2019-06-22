@@ -592,8 +592,8 @@ TEST(GameBoard, isNotSolved4) {
 TEST(GameBoard, findStartTile) {
     GameBoard gameBoard{};
     gameBoard.loadGame("|┘ -|├-┳┘- | |-|");
-    Tile startTile = gameBoard.findStartTile();
-    sf::Vector2i startTilePos = startTile.getTilePosition();
+    auto startTile = gameBoard.findStartTile();
+    auto startTilePos = startTile->getTilePosition();
     ASSERT_THAT(1, startTilePos.x);
     ASSERT_THAT(1, startTilePos.y);
 }
@@ -601,10 +601,8 @@ TEST(GameBoard, findStartTile) {
 TEST(GameBoard, findStartTileMissing) {
     GameBoard gameBoard{};
     gameBoard.loadGame("                ");
-    Tile startTile = gameBoard.findStartTile();
-    sf::Vector2i startTilePos = startTile.getTilePosition();
-    ASSERT_THAT(-1, startTilePos.x);
-    ASSERT_THAT(-1, startTilePos.y);
+    auto startTile = gameBoard.findStartTile();
+    ASSERT_EQ(startTile, nullptr);
 }
 
 TEST(GameBoard, serialiseGameToString) {
