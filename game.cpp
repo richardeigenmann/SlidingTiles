@@ -158,7 +158,7 @@ namespace SlidingTiles {
                     }
                 } else {
                     // vertical movement
-                    sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x, movingTilePosition.y + copysign(1, deltaY));
+                    sf::Vector2i newPosition = sf::Vector2i(movingTilePosition.x, movingTilePosition.y + copysign(1, deltaY)); // NOLINT (bugprone-narrowing-conversions)
                     if (deltaY > 0) {
                         doMove(Move{movingTilePosition, Direction::GoDown});
                     } else {

@@ -1,11 +1,11 @@
 #include "winnerBlingBling.h"
 
 SlidingTiles::WinnerBlingBling::WinnerBlingBling() {
-    const sf::String filename{"assets/trophy.png"}; // NOLINT (fuchsia-default-arguments)
+    const std::string filename{"assets/trophy.png"}; // NOLINT (fuchsia-default-arguments)
     if (texture.loadFromFile(filename)) { // NOLINT (fuchsia-default-arguments)
         sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
     } else {
-        throw std::runtime_error("Failed to load texture: " + filename.toAnsiString()); // NOLINT (fuchsia-default-arguments)
+        throw std::runtime_error("Failed to load texture: " + filename); // NOLINT (fuchsia-default-arguments)
     }
     const unsigned int X {400};
     const unsigned int Y {5};
