@@ -135,7 +135,7 @@ namespace SlidingTiles {
          * @return a vector with the tile positions of the solution if solved otherwise 
          * returns an empty vector
          */
-        const std::vector<sf::Vector2i> isSolved();
+        std::vector<sf::Vector2i> isSolved();
 
         /**
          * @brief The puzzleSolver can use this to store the tree

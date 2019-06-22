@@ -106,7 +106,7 @@ SlidingTiles::TileType stringToTileType(const std::string & s) {
     return SlidingTiles::TileType::Empty;  
 }
 
-// TODO: Why to Char and return a String??
+// TODO(richi): Why to Char and return a String??
 std::string tileTypeToChar(const SlidingTiles::TileType & t) {
     switch (t) {
         case SlidingTiles::TileType::Empty:
@@ -307,9 +307,14 @@ bool isGameTileType(const SlidingTiles::TileType & t) {
     }
 }
 
-const std::array<SlidingTiles::TileType,7> GAME_TILES {SlidingTiles::TileType::Horizontal, SlidingTiles::TileType::Vertical, 
-    SlidingTiles::TileType::LeftTop, SlidingTiles::TileType::LeftBottom, SlidingTiles::TileType::TopRight, 
-    SlidingTiles::TileType::BottomRight, SlidingTiles::TileType::Obstacle};
+const std::array<SlidingTiles::TileType,7> GAME_TILES {
+    SlidingTiles::TileType::Horizontal,
+    SlidingTiles::TileType::Vertical, 
+    SlidingTiles::TileType::LeftTop, 
+    SlidingTiles::TileType::LeftBottom, 
+    SlidingTiles::TileType::TopRight, 
+    SlidingTiles::TileType::BottomRight, 
+    SlidingTiles::TileType::Obstacle};
 
 SlidingTiles::TileType randomGameTileType() {
     return GAME_TILES.at(random() % GAME_TILES.size());

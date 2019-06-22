@@ -3,7 +3,7 @@
 SlidingTiles::TexturesSingleton::TexturesSingleton() {
     sf::Texture texture;
 
-    // TODO: Better to load the textures in one big blob
+    // TODO(richi): Better to load the textures in one big blob
     texture.loadFromFile("assets/horizontal.png"); //NOLINT (fuchsia-default-arguments)
     texturesMap[SlidingTiles::TileType::Horizontal] = texture;
     texture.loadFromFile("assets/vertical.png"); //NOLINT (fuchsia-default-arguments)

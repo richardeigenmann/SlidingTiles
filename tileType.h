@@ -80,7 +80,6 @@ SlidingTiles::TileType randomEndTileType();
  */
 bool isGameTileType(const SlidingTiles::TileType & t);
 
-
 /**
  * @brief Returns a random game TileType
  */

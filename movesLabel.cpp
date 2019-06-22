@@ -38,7 +38,7 @@ void SlidingTiles::MovesLabel::handleMessage(const json & jsonMessage) {
 }
 
 void SlidingTiles::MovesLabel::updateLabel() {
-    std::ostringstream movesText;
+    std::ostringstream movesText {};  // NOLINT (fuchsia-default-arguments)
     movesText << "Moves: " << moves;
     setText(movesText.str());
 }
