@@ -17,7 +17,7 @@ namespace SlidingTiles {
 
     Game::Game() { // NOLINT (fuchsia-default-arguments)
         // read a JSON file and parse it
-        const std::string CONFIG_FILENAME = "assets/sliding-tiles.json"; // NOLINT (fuchsia-default-arguments)
+        const std::string CONFIG_FILENAME = "sliding-tiles-assets/sliding-tiles.json"; // NOLINT (fuchsia-default-arguments)
         std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
         std::ifstream configIfstream(CONFIG_FILENAME); // NOLINT (fuchsia-default-arguments)
         if (!configIfstream) {

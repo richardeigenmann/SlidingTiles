@@ -13,7 +13,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for the button with Random on it
          */
-        explicit RestartButton() : Button("assets/button_restart.png", ZmqSingleton::RESTART_LEVEL) {
+        explicit RestartButton() : Button("button_restart.png", ZmqSingleton::RESTART_LEVEL) {
             setPosition(400, 310);
         };
 

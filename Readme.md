@@ -581,6 +581,18 @@ for (const auto & solutionStep : solutionPath) {
 ZmqSingleton::getInstance().publish(jsonMessage);
 ```
 
+## CPACK packaging to create rpm etc.
+
+```bash
+cd build
+make package
+make package_source
+```
+
+These commands create the spec file in `build/_CPack_Packages/Linux/RPM/SPECS/sliding-tiles.spec` and then creates the rpm in `build/sliding-tiles--1.x86_64.rpm`
+
+
+
 ## Copyright information
 
 This project is copyrighted by Richard Eigenmann, Zürich, 2016,2017. I have not yet

@@ -1,12 +1,14 @@
 #include "button.h"
 #include "json.hpp"
 #include "zmqSingleton.h"
+#include <iostream>
 
 using json = nlohmann::json;
 
 SlidingTiles::Button::Button(const std::string & filename, const std::string & command) 
     : command(command) {
-    if (texture.loadFromFile(filename)) { // NOLINT (fuchsia-default-arguments)
+
+    if (texture.loadFromFile(RenderingSingleton::getInstance().getAssetDir() + filename)) { // NOLINT (fuchsia-default-arguments)
         sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
     } else {
         throw std::runtime_error("Failed to load texture: " + filename);

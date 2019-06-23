@@ -1,7 +1,7 @@
 #include "winnerBlingBling.h"
 
 SlidingTiles::WinnerBlingBling::WinnerBlingBling() {
-    const std::string filename{"assets/trophy.png"}; // NOLINT (fuchsia-default-arguments)
+    const std::string filename{"sliding-tiles-assets/trophy.png"}; // NOLINT (fuchsia-default-arguments)
     if (texture.loadFromFile(filename)) { // NOLINT (fuchsia-default-arguments)
         sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
     } else {

@@ -12,11 +12,19 @@ IF (WIN32)
   message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
 ENDIF (WIN32)
 IF (UNIX)
-    SET(CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules/" "${PROJECT_SOURCE_DIR}" "${CMAKE_MODULE_PATH}")
+    # Since SFML 2.5 everything is now easier: see https://en.sfml-dev.org/forums/index.php?topic=24070.0
+    #SET(CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules/" "${PROJECT_SOURCE_DIR}" "${CMAKE_MODULE_PATH}")
+
+    SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR} ${CMAKE_MODULE_PATH})
+    ## If you want to link SFML statically
+    # set(SFML_STATIC_LIBRARIES TRUE)
+
+    ## In most cases better set in the CMake cache
+    # set(SFML_DIR "<sfml root prefix>/lib/cmake/SFML")
 ENDIF (UNIX)
 
 
-FIND_PACKAGE(SFML REQUIRED COMPONENTS graphics window system audio)
+FIND_PACKAGE(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
 MESSAGE(STATUS "SFML_INCLUDE_DIR: ${SFML_INCLUDE_DIR}")
 MESSAGE(STATUS "SFML_LIBRARIES: ${SFML_LIBRARIES}")
 
@@ -38,7 +46,7 @@ else()
 endif()
 
 
-SET( sliding-tiles_assets_dir "${PROJECT_SOURCE_DIR}/assets")
+SET( sliding-tiles_assets_dir "${PROJECT_SOURCE_DIR}/sliding-tiles-assets")
 SET( sliding-tiles-assets
     ${sliding-tiles_assets_dir}/Raleway-Regular.ttf
 
@@ -129,9 +137,9 @@ ADD_EXECUTABLE(sliding-tiles main.cpp ${SOURCE_FILES})
 
 ADD_CUSTOM_COMMAND( TARGET sliding-tiles POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E echo About to make target asset directory
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:sliding-tiles>/assets
-  COMMAND ${CMAKE_COMMAND} -E echo About to copy assets to target with copy_if_different
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${sliding-tiles_assets_dir} $<TARGET_FILE_DIR:sliding-tiles>/assets/
+  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:sliding-tiles>/sliding-tiles-assets
+  COMMAND ${CMAKE_COMMAND} -E echo About to copy sliding-tiles-assets to target with copy_if_different
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${sliding-tiles_assets_dir} $<TARGET_FILE_DIR:sliding-tiles>/sliding-tiles-assets/
 )
 
 TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
@@ -142,8 +150,10 @@ TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
 )
 
 TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
-    ${SFML_LIBRARIES}
+    #${SFML_LIBRARIES}
+    sfml-graphics  sfml-window sfml-system sfml-audio
     ${ZeroMQ_LIBRARIES}
+    stdc++fs
 )
 
 if(CLANG_TIDY_EXE)
@@ -202,8 +212,10 @@ TARGET_INCLUDE_DIRECTORIES( unit-tests PUBLIC
 target_link_libraries( unit-tests LINK_PUBLIC
     gtest
     gmock
-    ${SFML_LIBRARIES}
+    #${SFML_LIBRARIES}
+    sfml-graphics sfml-window sfml-system sfml-audio
     ${ZeroMQ_LIBRARIES}
+    stdc++fs
 )
 
 
@@ -229,7 +241,7 @@ SET(LEVEL_GENERATOR_SOURCE_FILES
     tileType.cpp
     puzzleSolver.cpp
     zmqSingleton.cpp
-    debugMessageListener.cpp
+    debugMessageListener.cppcmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_CC_COMPILER=/usr/bin/gcc ..
 )
 
 
@@ -258,12 +270,15 @@ set(CPACK_PACKAGE_VENDOR "Richard Eigenmann")
 set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "CMake ${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
-SET(CPACK_RPM_PACKAGE_REQUIRES "libzmq5 libsfml2")
 SET(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/richardeigenmann/SlidingTiles")
-SET(CPACK_PACKAGE_EXECUTABLES "sliding-tiles;Slding Tiles Game")
-#SET(CPACK_SET_DESTDIR "/usr/local/bin/")
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/assets/" DESTINATION "assets")
-install(FILES "${PROJECT_SOURCE_DIR}/build/sliding-tiles" DESTINATION ".")
+set(CPACK_PACKAGE_CHECKSUM "MD5")
+#SET(CPACK_PACKAGE_EXECUTABLES "sliding-tiles;Slding Tiles Game")
+SET(CPACK_RPM_PACKAGE_REQUIRES "libzmq5 libsfml2-2_5")
+SET(CPACK_RPM_INSTALL_WITH_EXEC ON)
+install(TARGETS sliding-tiles
+  RUNTIME
+  DESTINATION "bin")
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/sliding-tiles-assets/" DESTINATION "bin/sliding-tiles-assets")
 include(CPack)
 
 

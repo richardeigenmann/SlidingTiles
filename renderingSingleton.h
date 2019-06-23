@@ -81,7 +81,10 @@ namespace SlidingTiles {
 
         /**
          * Tell all renderables to render
-         */
+         */        void setAssetDir(std::string dir) {
+            assetDir = dir;
+        }
+
         void renderAll() {
             for (auto& pair : renderables) {
                 if (pair.second->getRenderPriority() == Renderable::RenderPriority::Background) {
@@ -101,6 +104,14 @@ namespace SlidingTiles {
             getRenderWindow()->display();
         }
 
+        void setAssetDir(const std::string & dir) {
+            assetDir = dir;
+        }
+
+        std::string getAssetDir() const {
+            return assetDir;
+        }
+
     private:
         /**
          * @brief Private constructor for singleton
@@ -117,6 +128,10 @@ namespace SlidingTiles {
          */
         std::map<Renderable * const, Renderable * const> renderables;
 
+        /** 
+         * @brief The path of the assets
+         */
+        std::string assetDir {};
     };
 
 } //namespace
