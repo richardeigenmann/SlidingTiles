@@ -1,9 +1,10 @@
 #include "randomSoundPlayer.h"
+#include "renderingSingleton.h"
 #include <cassert>
 
 void SlidingTiles::RandomSoundPlayer::loadSounds(const json & jsonArray) {
     for (auto& element : jsonArray) {
-        const std::string filename = "sliding-tiles-assets/" + element["File"].get<std::string>();
+        const std::string filename = RenderingSingleton::getInstance().getAssetDir() + element["File"].get<std::string>();
         sf::SoundBuffer sb{};
         sb.loadFromFile(filename);
         addSound(sb);

@@ -1,6 +1,7 @@
 #include "label.h"
+#include "renderingSingleton.h"
 
-const sf::String FONT_FILE {"sliding-tiles-assets/Raleway-Regular.ttf"}; //NOLINT (fuchsia-statically-constructed-objects, fuchsia-default-arguments, cert-err58-cpp)
+const sf::String FONT_FILE {SlidingTiles::RenderingSingleton::getInstance().getAssetDir() + "Raleway-Regular.ttf"}; //NOLINT (fuchsia-statically-constructed-objects, fuchsia-default-arguments, cert-err58-cpp)
 const unsigned int FONT_SIZE {16};
 
 SlidingTiles::Label::Label() {

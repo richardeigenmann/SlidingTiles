@@ -11,7 +11,7 @@ SlidingTiles::Button::Button(const std::string & filename, const std::string & c
     if (texture.loadFromFile(RenderingSingleton::getInstance().getAssetDir() + filename)) { // NOLINT (fuchsia-default-arguments)
         sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
     } else {
-        throw std::runtime_error("Failed to load texture: " + filename);
+        throw std::runtime_error("Failed to load texture: " + RenderingSingleton::getInstance().getAssetDir() + filename);
     }
     RenderingSingleton::getInstance().add(*this);
 

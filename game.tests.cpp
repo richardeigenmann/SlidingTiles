@@ -1,16 +1,19 @@
 #include "game.h"
 #include <gmock/gmock.h>
+#include "renderingSingleton.h"
 #include <future>
 
 using namespace ::testing;
 using namespace SlidingTiles;
 
 TEST(Game, Constructor) {
+    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     Game game{};
     ASSERT_THAT(1, Eq(1));
 }
 
 TEST(Game, ConstructorBadFilename) {
+    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     Game game{};
     ASSERT_THAT(1, Eq(1));
 

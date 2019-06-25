@@ -1,9 +1,11 @@
+#include "renderingSingleton.h"
 #include "texturesSingleton.h"
 #include <gmock/gmock.h>
 
 using namespace SlidingTiles;
 
 TEST(TexturesSingleton, ObjectCreation) {
+    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     TexturesSingleton::getInstance();
 }
 
@@ -14,6 +16,7 @@ TEST(TexturesSingleton, LoadTextures) {
 }
 
 TEST(TexturesSingleton, RetrieveTextureFromMap) {
+    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     std::map<TileType, sf::Texture> textureMap = TexturesSingleton::getInstance().getTexturesMap();
     sf::Texture emptyTexture{};
     sf::Vector2u textureSize = emptyTexture.getSize();
@@ -26,6 +29,7 @@ TEST(TexturesSingleton, RetrieveTextureFromMap) {
 }
 
 TEST(TexturesSingleton, TestAllTextureSizes) {
+    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     std::map<TileType, sf::Texture> textureMap = TexturesSingleton::getInstance().getTexturesMap();
 
     for ( const auto &myPair : textureMap ) {
