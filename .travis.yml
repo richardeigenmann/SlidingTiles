@@ -38,6 +38,7 @@ before_install:
   - cd SFML
   - cmake .
   - make -j4 && sudo make install
+  - cd ..
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
