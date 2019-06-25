@@ -241,7 +241,7 @@ SET(LEVEL_GENERATOR_SOURCE_FILES
     tileType.cpp
     puzzleSolver.cpp
     zmqSingleton.cpp
-    debugMessageListener.cppcmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_CC_COMPILER=/usr/bin/gcc ..
+    debugMessageListener.cpp
 )
 
 
