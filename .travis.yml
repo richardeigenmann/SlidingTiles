@@ -11,12 +11,22 @@ addons:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    - libsfml-dev
+    #- libsfml-dev
     - libzmq3-dev
     - lcov
     - doxygen
     - xvfb
     - g++-8
+    # install sfml
+    - ibx11-dev
+    - freeglut3-dev
+    - libjpeg-dev
+    - libfreetype6-dev
+    - libxrandr-dev
+    - libglew-dev
+    - libsndfile1-dev
+    - libopenal-dev
+    - libudev-dev
 
 before_install:
   - wget -nv -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -24,6 +34,10 @@ before_install:
   - sudo apt-get install -qq -y  
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
   - sudo update-alternatives --config gcc
+  - git clone https://github.com/SFML/SFML.git
+  - cd SFML
+  - cmake .
+  - make -j4 && sudo make install
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
