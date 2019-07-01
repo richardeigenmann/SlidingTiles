@@ -599,6 +599,7 @@ make package_source
 
 These commands create the spec file in `build/_CPack_Packages/Linux/RPM/SPECS/sliding-tiles.spec` and then creates the rpm in `build/sliding-tiles--1.x86_64.rpm`
 
+See this link for information about exporting your gpg key and usign it to sign the rpm. It doesn't work so well I find. (https://gist.github.com/fernandoaleman/1376720/aaff3a7a7ede636b6913f17d97e6fe39b5a79dc0)
 
 
 ## Copyright information
