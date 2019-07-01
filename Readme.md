@@ -20,7 +20,11 @@ This game places tiles in a grid. The blue one is a start tile and the red one i
 * p - Prints the Game board
 * d - Debug mode. Instructs all components to output debug information
 
-### Patterns
+## Objective for the author
+
+Learn C++ game programming by building a nice little game. Along the way I have picked up and used a number of patterns, algorithms, frameworks and tools
+
+### Patterns used in this app
 
 * Singleton
 * Observer
@@ -36,6 +40,7 @@ This game places tiles in a grid. The blue one is a start tile and the red one i
 
 ### Frameworks
 
+* CMake
 * SFML
 * ZeroMQ
 * Google Test
@@ -47,18 +52,21 @@ This game places tiles in a grid. The blue one is a start tile and the red one i
 * cross platform (sort of)
 * Graphics & Sound
 * Animation
-* C++ 11
+* C++ 11 --> 17
 * Code Coverage
+* Linting with clang-tidy
+* Packaging with CPACK
 
 ## Build and run
 ### Prerequisites
 Experimenting with the Windows Subsystem for Linux it transpires that the following steps need to be done (for an OpenSUSE installation)
 ``` bash
 git clone https://github.com/richardeigenmann/SlidingTiles.git
-sudo zypper in cmake
-sudo zypper in sfml2-devel
-sudo zypper in zeromq-devel
-sudo zypper in lcov
+sudo zypper in cmake # for the build system
+sudo zypper in sfml2-devel # to include and link SFML
+sudo zypper in zeromq-devel # to include and link ZeroMQ
+sudo zypper in lcov # for code coverage
+sudo zypper in rpm-build # for the make package target
 ```
 
 ```bash
@@ -195,7 +203,7 @@ in the map. This is also on the stack but the texturesMap is a long living objec
 in the singleton so it does not go away and any delayed draw can happily access
 it.
 
-### Searching for a solution - A breadth first search!
+## Searching for a solution - A breadth first search!
 
 For a human it is easy to see how to solve this puzzle:
 
@@ -477,7 +485,7 @@ of the UpdatingSingleton in the
 [updatingSingleton.cpp](updatingSingleton.cpp) and [updatable.h](updatable.h) 
 files.
 
-## Messaging
+## Messaging with ZeroMQ
 
 The early versions of the game were built on the premise that the Game class
 directed the flow of events. The Game class would order a puzzle to be loaded

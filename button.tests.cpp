@@ -6,7 +6,6 @@ using namespace ::testing;
 using namespace SlidingTiles;
 
 TEST(ButtonTest, Constructor) {
-    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     Button button{"button_next.png", ZmqSingleton::LOAD_NEXT_LEVEL};
     ASSERT_THAT(1, Eq(1));
 }
@@ -16,7 +15,6 @@ TEST(ButtonTest, ConstructorBadFilename) {
 }
 
 TEST(ButtonTest, setPosition) {
-    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     Button button{"button_next.png", ZmqSingleton::LOAD_NEXT_LEVEL};
     button.setPosition(10.1, 20.2);
     ASSERT_EQ(10.1f, button.getSprite().getPosition().x);
@@ -24,13 +22,11 @@ TEST(ButtonTest, setPosition) {
 }
 
 TEST(ButtonTest, render) {
-    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     Button button{"button_next.png", ZmqSingleton::LOAD_NEXT_LEVEL};
     button.render();
 }
 
 TEST(ButtonTest, mouseReleased) {
-    SlidingTiles::RenderingSingleton::getInstance().setAssetDir("sliding-tiles-assets/");
     Button button{"button_next.png", ZmqSingleton::LOAD_NEXT_LEVEL};
     button.setPosition(10.1, 20.2);
     bool inside = button.mouseReleased(sf::Vector2i{11, 22});
