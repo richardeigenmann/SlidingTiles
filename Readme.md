@@ -601,6 +601,45 @@ These commands create the spec file in `build/_CPack_Packages/Linux/RPM/SPECS/sl
 
 See this link for information about exporting your gpg key and usign it to sign the rpm. It doesn't work so well I find. (https://gist.github.com/fernandoaleman/1376720/aaff3a7a7ede636b6913f17d97e6fe39b5a79dc0)
 
+```bash
+# export your public key and import it into rpm
+gpg --list-keys
+gpg --export -a 'richard.eigenmann@gmail.com' > RPM-GPG-KEY-richi
+sudo rpm --import RPM-GPG-KEY-richi # can generate error; doesn't seem to matter
+# create a /root/.rpmmacros file
+vi /root/.rpmmacros
+#####
+%_signature gpg
+%_gpg_path /home/richi/.gnupg
+%_gpg_name richard.eigenmann@gmail.com
+%_gpgbin /usr/bin/gpg
+#####
+sudo rpm --addsign sliding-tiles--1.x86_64.rpm
+# prompt for the password to the gpg store
+sudo rpm -q --qf '%{SIGPGP:pgpsig} %{SIGGPG:pgpsig}\n' -p sliding-tiles--1.x86_64.rpm 
+# warning: sliding-tiles--1.x86_64.rpm: Header V4 RSA/SHA256 Signature, key ID bb12f800: NOKEY
+# RSA/SHA256, Tue Jul  2 23:35:59 2019, Key ID 8b118378bb12f800 (none)
+```
+
+## Testing the package on a openSUSE leap Docker container
+
+see: (https://medium.com/@SaravSun/running-gui-applications-inside-docker-containers-83d65c0db110)
+and (http://somatorio.org/en/post/running-gui-apps-with-docker/)
+
+```bash
+pull docker pull opensuse/leap
+docker run -it --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap 
+docker run -it --net=host --env="DISPLAY" -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap
+
+# on a different terminal find the container it
+docker ps
+# copy the package to the docker container
+docker cp ..whereever/SlidingTiles/build/sliding-tiles--1.x86_64.rpm 8592395cb1de:/
+# in the docker container:
+zypper in sliding-tiles--1.x86_64.rpm
+```
+
+
 
 ## Copyright information
 
