@@ -627,7 +627,7 @@ see: (https://medium.com/@SaravSun/running-gui-applications-inside-docker-contai
 and (http://somatorio.org/en/post/running-gui-apps-with-docker/)
 
 ```bash
-pull docker pull opensuse/leap
+docker pull opensuse/leap
 docker run -it --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap 
 docker run -it --net=host --env="DISPLAY" -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap
 
