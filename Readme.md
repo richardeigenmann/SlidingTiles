@@ -655,3 +655,6 @@ The buttons were created by https://dabuttonfactory.com/
 The Raleway font is a Google Font with Open Font License: https://fonts.google.com/specimen/Raleway
 
 The tiles were drawn by Richard Eigenmann using Blender.
+
+The Over Par Clipart is from https://pixabay.com/vectors/smiley-emoticon-smilies-emotion-150837/ 
+The license is https://pixabay.com/service/license/ 

@@ -24,6 +24,7 @@ const std::string SlidingTiles::ZmqSingleton::PUBLISHER_SOCKET = "inproc://#1"; 
 const std::string SlidingTiles::ZmqSingleton::RECEIVER_SOCKET = "inproc://#1"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::CONFIGURATION_LOADED = "Configuration Loaded"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::GAME_STARTED = "Game Started"; // NOLINT (fuchsia-default-arguments)
+const std::string SlidingTiles::ZmqSingleton::OVER_PAR = "Over Par"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::GAME_WON = "Game Won"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::SET_TILE = "Set Tile"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::SLIDE_TILE = "Slide Tile"; // NOLINT (fuchsia-default-arguments)

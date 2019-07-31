@@ -68,6 +68,11 @@ namespace SlidingTiles {
         static const std::string GAME_STARTED;
 
         /**
+         * @brief signifies that the game has gone over par
+         */
+        static const std::string OVER_PAR;
+
+        /**
          * @brief set a specific tile
          */
         static const std::string SET_TILE;

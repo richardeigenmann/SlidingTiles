@@ -66,6 +66,7 @@ SET( sliding-tiles-assets
     ${sliding-tiles_assets_dir}/vertical.png
     ${sliding-tiles_assets_dir}/empty.png
     ${sliding-tiles_assets_dir}/trophy.png
+    ${sliding-tiles_assets_dir}/over_par.png
 
     ${sliding-tiles_assets_dir}/sliding-tiles.json
 
@@ -114,6 +115,7 @@ SET( SOURCE_FILES
     levelLabel.cpp
     parLabel.cpp
     movesLabel.cpp
+    overPar.cpp
 )
 
 set( UNIT_TESTS
@@ -125,12 +127,12 @@ set( UNIT_TESTS
     renderingSingleton.tests.cpp
     direction.tests.cpp
     tileType.tests.cpp
-    g07/02/19ameBoard.tests.cpp
-    p07/02/19uzzleSolver.tests.cpp
-    b07/02/19utton.tests.cpp
-    m07/02/19ove.tests.cpp
-    d07/02/19ebugMessageListener.cpp
-    a07/02/19ttitudeSoundPlayer.cpp
+    gameBoard.tests.cpp
+    puzzleSolver.tests.cpp
+    button.tests.cpp
+    move.tests.cpp
+    debugMessageListener.cpp
+    attitudeSoundPlayer.cpp
 )
 
 ADD_EXECUTABLE(sliding-tiles main.cpp ${SOURCE_FILES})

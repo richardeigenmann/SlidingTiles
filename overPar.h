@@ -13,19 +13,19 @@
 namespace SlidingTiles {
 
     /**
-     * @brief The class that will gratify the winner of the game
+     * @brief The class that will show the user she is over par
      */
-    class WinnerBlingBling : public Renderable, public Updateable, public ZmqSubscriber {
+    class OverPar : public Renderable, public Updateable, public ZmqSubscriber {
     public:
         /**
-         * @brief Constructor for winner bling bling
+         * @brief Constructor for over par notice
          */
-        explicit WinnerBlingBling();
+        explicit OverPar();
 
         /**
-         * @brief Destructor for winner bling bling
+         * @brief Destructor for over par notice
          */
-        ~WinnerBlingBling();
+        ~OverPar();
 
         /**
          * @brief Load method that takes the filenames in the JSON array and loads
@@ -41,7 +41,7 @@ namespace SlidingTiles {
 
 
         /**
-         * @brief update callback
+         * @brief update callback for the update loop
          */
         void update(const float dt) override;
 
@@ -51,7 +51,7 @@ namespace SlidingTiles {
         void handleMessage(const json & jsonMessage);
 
         /**
-         * Call this method to have the class rendered
+         * Call this method to have the object rendered
          */
         void render() override;
 
@@ -64,16 +64,21 @@ namespace SlidingTiles {
 
     private:
         /**
-         * @brief call this to start the bling bling
+         * @brief call this to show the over par class
          * @param moves the number of moves it took to solve
          * @param par the par number of moves to solve
          */
-        void startBlingBling(std::size_t moves, std::size_t par);
+        void startOverPar();
 
         /**
-         * @brief call this to end the bling bling
+         * @brief call this to start the new game
          */
-        void endBlingBling();
+        void newGame(const int par);
+
+        /**
+         * @brief call this to end the over par 
+         */
+        void endOverPar();
 
         /**
          * @brief The texture of the renderable
@@ -88,11 +93,21 @@ namespace SlidingTiles {
         /**
          * an object with winner sounds to be played randomly when a game is won 
          */
-        RandomSoundPlayer winnerSounds;
+        RandomSoundPlayer overParSounds;
 
         /**
          * local variable to remember the state of the game
          */
         GameState gameState{GameState::Initializing};
+
+        /**
+         * local variable to keep track of the moves played
+         */
+        int moves {0};
+
+        /**
+         * local variable to keep track of the par level of the game
+         */
+        int par {0};
     };
 }

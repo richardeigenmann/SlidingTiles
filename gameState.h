@@ -8,6 +8,7 @@ namespace SlidingTiles {
     enum class GameState {
         Initializing,
         Playing,
+        OverPar,
         VictoryRolling
     };
 }

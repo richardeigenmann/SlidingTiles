@@ -81,7 +81,7 @@ namespace SlidingTiles {
     }
 
     void Game::update(const float dt) {
-        if (gameState == GameState::Playing) {
+        if (gameState == GameState::Playing || gameState == GameState::OverPar) {
             std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
             if ( ! solutionPath.empty() ) {
                 gameState = GameState::VictoryRolling;
@@ -97,6 +97,13 @@ namespace SlidingTiles {
                 ZmqSingleton::getInstance().publish(jsonMessage);
 
                 victoryRollingTime = Game::VICTORY_ROLL_TIME;
+            } else {
+                if ( gameState == GameState::Playing && moves == levelsArray[level]["Par"].get<int>() ){
+                    gameState = GameState::OverPar;
+                    json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+                    jsonMessage["state"] = ZmqSingleton::OVER_PAR;
+                    ZmqSingleton::getInstance().publish(jsonMessage);
+                }
             }
         }
 
@@ -179,7 +186,7 @@ namespace SlidingTiles {
 
     void Game::doMove(const Move & move) {
         incrementMoves();
-        if (gameState == GameState::Playing) {
+        if (gameState == GameState::Playing || gameState == GameState::OverPar) {
             gameBoard.slideTile(move);
         }
     }

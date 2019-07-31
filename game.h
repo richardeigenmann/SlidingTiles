@@ -2,6 +2,7 @@
 #include "gameView.h"
 #include "gameBoard.h"
 #include "winnerBlingBling.h"
+#include "overPar.h"
 #include "gameState.h"
 #include "updatingSingleton.h"
 #include "debugMessageListener.h"
@@ -68,7 +69,7 @@ namespace SlidingTiles {
         void doMouseReleased(const sf::Vector2i & mousePosition);
 
         /**
-         * Moves a tile (if the GameState is GameState::Playing)
+         * Moves a tile (if the GameState is GameState::Playing or GameState::OverPar)
          * @param move the move to make
          */
         void doMove(const Move & move);
@@ -98,6 +99,11 @@ namespace SlidingTiles {
          * @brief the winner bling bling
          */
         WinnerBlingBling winnerBlingBling{};
+
+        /**
+         * @brief the Over Par display
+         */
+        OverPar overPar{};
 
     private:
         /**
