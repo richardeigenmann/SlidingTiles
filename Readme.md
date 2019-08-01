@@ -627,8 +627,8 @@ see: (https://medium.com/@SaravSun/running-gui-applications-inside-docker-contai
 and (http://somatorio.org/en/post/running-gui-apps-with-docker/)
 
 ```bash
-docker pull opensuse/leap
-docker run -it --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap 
+xhost + # allow other computers to use your DISPLAY
+docker run -it --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --volume /tmp/.X11-unix:/tmp/.X11-unix --volume /etc/localtime:/etc/localtime --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap 
 docker run -it --net=host --env="DISPLAY" -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap
 
 # on a different terminal find the container it
@@ -637,12 +637,20 @@ docker ps
 docker cp ..whereever/SlidingTiles/build/sliding-tiles--1.x86_64.rpm 8592395cb1de:/
 # in the docker container:
 zypper in sliding-tiles--1.x86_64.rpm
+sliding-tiles
+
+#TODO: No sound - in Debian Container there is!!
+
+# On my Desktop -- doesn't work yet
+zypper addrepo --refresh https://download.nvidia.com/opensuse/tumbleweed NVIDIA
+zypper in x11-video-nvidiaG05
 ```
 
 
 ## Testing the package on a Debian Docker container
 
 ```bash
+xhost + # allow other computers to use your DISPLAY
 docker run -it --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --device /dev/dri --device /dev/snd --device /dev/input --rm debian:latest
 docker run -it --net=host --env="DISPLAY" -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/dri --device /dev/snd --device /dev/input --rm debian:latest
 
@@ -653,14 +661,12 @@ apt-get install x11-apps
 # on a different terminal find the container it
 docker ps
 # copy the package to the docker container
-docker cp ..whereever/SlidingTiles/build/LearnSfml-1.x86_64.deb c4844955c251:/
+docker cp ..whereever/SlidingTiles/build/sliding-tiles--1.x86_64.deb c4844955c251:/
 # in the docker container:
-apt-get install ./LearnSfml-1.x86_64.deb
+apt-get update
+apt-get install ./sliding-tiles--1.x86_64.deb
 
-# Why is it ignoring my dependencies in the the CPACK config?
-apt-get install libsfml-audio2.5 libsfml-graphics2.5 libsfml-network2.5 libsfml-system2.5 libsfml-window2.5
-
-/usr/local/bin/LearnSfml
+sliding-tiles
 ```
 
 
