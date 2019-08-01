@@ -277,6 +277,9 @@ set(CPACK_PACKAGE_CHECKSUM "MD5")
 #SET(CPACK_PACKAGE_EXECUTABLES "sliding-tiles;Slding Tiles Game")
 SET(CPACK_RPM_PACKAGE_REQUIRES "libzmq5 libsfml2-2_5")
 SET(CPACK_RPM_INSTALL_WITH_EXEC ON)
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libsfml-audio2.5,libsfml-graphics2.5,libsfml-network2.5,libsfml-system2.5,libsfml-window2.5")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
 install(TARGETS sliding-tiles
   RUNTIME
   DESTINATION "bin")

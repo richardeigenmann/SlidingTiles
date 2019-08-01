@@ -640,6 +640,29 @@ zypper in sliding-tiles--1.x86_64.rpm
 ```
 
 
+## Testing the package on a Debian Docker container
+
+```bash
+docker run -it --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --device /dev/dri --device /dev/snd --device /dev/input --rm debian:latest
+docker run -it --net=host --env="DISPLAY" -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/dri --device /dev/snd --device /dev/input --rm debian:latest
+
+apt-get update
+apt-cache search x11-apps
+apt-get install x11-apps
+
+# on a different terminal find the container it
+docker ps
+# copy the package to the docker container
+docker cp ..whereever/SlidingTiles/build/LearnSfml-1.x86_64.deb c4844955c251:/
+# in the docker container:
+apt-get install ./LearnSfml-1.x86_64.deb
+
+# Why is it ignoring my dependencies in the the CPACK config?
+apt-get install libsfml-audio2.5 libsfml-graphics2.5 libsfml-network2.5 libsfml-system2.5 libsfml-window2.5
+
+/usr/local/bin/LearnSfml
+```
+
 
 ## Copyright information
 
