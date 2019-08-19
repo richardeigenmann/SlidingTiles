@@ -679,6 +679,8 @@ The source includes a copy of JSON for Modern C++ from Niels Lohmann [GitHub](ht
 
 Trophy Clipart from http://www.clipartbest.com/clipart-aieonzEzT
 
+Undo Button from http://www.clipartbest.com/clipart-nTX8LaxKc
+
 The buttons were created by https://dabuttonfactory.com/
 
 The Raleway font is a Google Font with Open Font License: https://fonts.google.com/specimen/Raleway

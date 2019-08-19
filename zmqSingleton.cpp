@@ -31,5 +31,6 @@ const std::string SlidingTiles::ZmqSingleton::SLIDE_TILE = "Slide Tile"; // NOLI
 const std::string SlidingTiles::ZmqSingleton::MOUSE_CLICKED = "Mouse Clicked"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::LOAD_NEXT_LEVEL = "Load Next Level"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::LOAD_RANDOM_LEVEL = "Load Random Level"; // NOLINT (fuchsia-default-arguments)
+const std::string SlidingTiles::ZmqSingleton::UNDO_MOVE = "Undo Move"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::RESTART_LEVEL = "Restart Level"; // NOLINT (fuchsia-default-arguments)
 const std::string SlidingTiles::ZmqSingleton::DEBUG = "Debug"; // NOLINT (fuchsia-default-arguments)

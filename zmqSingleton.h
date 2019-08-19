@@ -98,6 +98,11 @@ namespace SlidingTiles {
         static const std::string LOAD_RANDOM_LEVEL;
 
         /**
+         * @brief undo the last move
+         */
+        static const std::string UNDO_MOVE;
+
+        /**
          * @brief restart the same level
          */
         static const std::string RESTART_LEVEL;

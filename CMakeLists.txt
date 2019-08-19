@@ -66,6 +66,7 @@ SET( sliding-tiles-assets
     ${sliding-tiles_assets_dir}/vertical.png
     ${sliding-tiles_assets_dir}/empty.png
     ${sliding-tiles_assets_dir}/trophy.png
+    ${sliding-tiles_assets_dir}/undo.png
     ${sliding-tiles_assets_dir}/over_par.png
 
     ${sliding-tiles_assets_dir}/sliding-tiles.json

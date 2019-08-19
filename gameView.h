@@ -9,6 +9,7 @@
 #include "levelLabel.h"
 #include "parLabel.h"
 #include "movesLabel.h"
+#include "undoButton.h"
 
 namespace SlidingTiles {
 
@@ -84,6 +85,11 @@ namespace SlidingTiles {
          * Add the MovesLabel
          */
         MovesLabel movesLabel{};
+
+        /**
+         * Add the Undo Button
+         */
+        UndoButton undoButton{};
         
     };
 
