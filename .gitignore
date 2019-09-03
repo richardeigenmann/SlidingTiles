@@ -3,3 +3,5 @@ build
 nbproject
 .vscode/c_cpp_properties.json
 .vscode/
+.kdev4
+SlidingTiles.kdev4
