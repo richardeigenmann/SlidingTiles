@@ -32,8 +32,6 @@ void SlidingTiles::WinnerBlingBling::setPosition(float x, float y) {
 void SlidingTiles::WinnerBlingBling::startBlingBling(std::size_t moves, std::size_t par) {
     if (moves == par) {
         winnerSounds.playRandomSound();
-    } else {
-        winnerSounds.playRandomSound();
     }
     gameState = GameState::VictoryRolling;
 }
