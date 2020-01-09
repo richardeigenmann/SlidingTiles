@@ -80,6 +80,27 @@ make
 ./sliding-tiles
 ```
 
+## Explore the code with SourceTrail
+
+See https://sourcetrail.com
+
+```bash
+export LANG=en_US.UTF-8
+sourcetrail
+
+# Project > New Project
+# give it a name: SlidingTiles
+# tell it where you want it to create it's working files
+# Add Source Groups
+# Pick C/C++ from Compilation Database
+# select /dir/dir/SlidingTiles/build/compile_commands.json
+# select the headers directory by clicking "Select from Compilation Database"
+# Next > Next > Create > All files > Start > OK
+# Files > main.cpp > explore!
+```
+
+
+
 ## Build and run on Visual Studio 2017
 
 Currently broken because of broken UTF-8 support
@@ -669,10 +690,9 @@ apt-get install ./sliding-tiles--1.x86_64.deb
 sliding-tiles
 ```
 
-
 ## Copyright information
 
-This project is copyrighted by Richard Eigenmann, Zürich, 2016,2017. I have not yet
+This project is copyrighted by Richard Eigenmann, Zürich, 2016,2020. I have not yet
 decided on a license. Please contact me with any questions.
 
 The source includes a copy of JSON for Modern C++ from Niels Lohmann [GitHub](https://github.com/nlohmann/json) This is MIT licenced.

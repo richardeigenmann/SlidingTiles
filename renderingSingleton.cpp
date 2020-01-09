@@ -12,18 +12,18 @@ SlidingTiles::RenderingSingleton::RenderingSingleton() : window(sf::VideoMode(WI
 
 const int SlidingTiles::RenderingSingleton::tileSize;
 
-sf::Vector2i SlidingTiles::RenderingSingleton::calculateCoordinates(sf::Vector2i xy) {
+auto SlidingTiles::RenderingSingleton::calculateCoordinates(sf::Vector2i xy) -> sf::Vector2i {
     return calculateCoordinates(xy.x, xy.y);
 }
 
-sf::Vector2i SlidingTiles::RenderingSingleton::calculateCoordinates(int x, int y) {
+auto SlidingTiles::RenderingSingleton::calculateCoordinates(int x, int y) -> sf::Vector2i {
     sf::Vector2i coordinates = gridZeroZero;
     coordinates.x += x * tileSize;
     coordinates.y += y * tileSize;
     return coordinates;
 }
 
-sf::Vector2i SlidingTiles::RenderingSingleton::findTile(sf::Vector2i mousePosition) {
+auto SlidingTiles::RenderingSingleton::findTile(sf::Vector2i mousePosition) -> sf::Vector2i {
     sf::Vector2i gridCoordinates = mousePosition - gridZeroZero;
     if (gridCoordinates.x < 0 || gridCoordinates.y < 0
             || gridCoordinates.x > 4 * tileSize || gridCoordinates.y > 4 * tileSize) {

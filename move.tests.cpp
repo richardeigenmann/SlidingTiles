@@ -16,3 +16,11 @@ TEST(Move, toString) {
     auto string = move.toString();
     ASSERT_EQ(string, "Move startPosition: [0][1] direction: GoRight\n");
 }
+
+TEST(Move, toOstream) {
+    Move move{sf::Vector2i{0, 1}, Direction::GoRight};
+    std::stringstream ss;
+    ss << move;
+    auto string = ss.str();
+    ASSERT_EQ(string, "Move startPosition: [0][1] direction: GoRight\n");
+}

@@ -43,6 +43,15 @@ namespace SlidingTiles {
             return ss.str();
         }
 
+        /**
+         * @brief explains the move
+         */
+        friend std::ostream& operator<< (std::ostream& os, const SlidingTiles::Move& move) {
+            os << "Move startPosition: [" << move.startPosition.x << "][" << move.startPosition.y << "]";
+            os << " direction: " << directionToString(move.direction) << "\n";
+            return os;
+        }
+
     };
 
 } // namespace SlidingTiles

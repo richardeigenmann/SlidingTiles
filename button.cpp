@@ -30,10 +30,12 @@ void SlidingTiles::Button::setPosition(float x, float y) {
 }
 
 void SlidingTiles::Button::render() {
-    RenderingSingleton::getInstance().getRenderWindow()->draw(sprite); // NOLINT (fuchsia-default-arguments)
+    if ( isVisible ) {
+        RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
+    }
 }
 
-bool SlidingTiles::Button::mouseReleased(const sf::Vector2i & mousePosition) {
+auto SlidingTiles::Button::mouseReleased(const sf::Vector2i & mousePosition) -> bool {
     return sprite.getGlobalBounds().contains(mousePosition.x, mousePosition.y);
 }
 

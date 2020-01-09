@@ -56,7 +56,12 @@ namespace SlidingTiles {
         /**
          * @brief handle a new ZMQ message
          */
-        void handleMessage(const json & jsonMessage);
+        virtual void handleMessage(const json & jsonMessage);
+
+        /**
+         * @brief helps the render function decide if it should render the button
+         */
+        bool isVisible {true};
 
     private:
         /**

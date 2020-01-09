@@ -10,6 +10,6 @@ namespace SlidingTiles {
         Unknown, GoLeft, GoRight, GoUp, GoDown
     };
 
-    std::string directionToString(const Direction & direction);
+    auto directionToString(const Direction & direction) -> std::string;
 
 }

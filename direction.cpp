@@ -1,6 +1,6 @@
 #include "direction.h"
 
-std::string SlidingTiles::directionToString(const Direction & direction) {
+auto SlidingTiles::directionToString(const Direction & direction) -> std::string {
     switch (direction) {
         // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
         case Direction::GoDown: return "GoDown"; break;

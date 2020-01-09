@@ -89,7 +89,7 @@ namespace SlidingTiles {
                 json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
                 jsonMessage["state"] = ZmqSingleton::GAME_WON;
                 jsonMessage["victoryRollTime"] = Game::VICTORY_ROLL_TIME;
-                jsonMessage["moves"] = moves;
+                jsonMessage["moves"] = gameBoard.moves.size();
                 jsonMessage["par"] = levelsArray[level]["Par"].get<int>();
                 for (const auto & solutionStep : solutionPath) {
                     jsonMessage["solutionTiles"].push_back({solutionStep.x, solutionStep.y});
@@ -98,7 +98,7 @@ namespace SlidingTiles {
 
                 victoryRollingTime = Game::VICTORY_ROLL_TIME;
             } else {
-                if ( gameState == GameState::Playing && moves == levelsArray[level]["Par"].get<int>() ){
+                if ( gameState == GameState::Playing && gameBoard.moves.size() == levelsArray[level]["Par"].get<int>() ){
                     gameState = GameState::OverPar;
                     json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
                     jsonMessage["state"] = ZmqSingleton::OVER_PAR;
@@ -185,22 +185,13 @@ namespace SlidingTiles {
     }
 
     void Game::doMove(const Move & move) {
-        incrementMoves();
         if (gameState == GameState::Playing || gameState == GameState::OverPar) {
             gameBoard.slideTile(move);
         }
     }
 
-    void Game::incrementMoves() {
-        setMoves(moves + 1);
-    }
-
-    void Game::setMoves(std::size_t newMoves) {
-        moves = newMoves;
-    }
-
     void Game::loadLevel() {
-        setMoves(0);
+        gameBoard.moves.clear();
 
         json jsonLevel = levelsArray[level];
         auto serializedGame = jsonLevel["SerializedGame"].get<std::string>();

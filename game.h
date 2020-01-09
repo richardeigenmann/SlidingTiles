@@ -75,11 +75,6 @@ namespace SlidingTiles {
         void doMove(const Move & move);
 
         /**
-         * @brief increment the move count and update the label
-         */
-        void incrementMoves();
-
-        /**
          * Sets the move counter and updates the moves label
          * @param newMoves the new number of moves
          */
@@ -145,11 +140,6 @@ namespace SlidingTiles {
          *@brief The amount of time left for the victory roll in seconds.  
          */
         float victoryRollingTime{0.0f};
-
-        /**
-         * @brief the number of moves in the game
-         */
-        std::size_t moves{0};
 
         /**
          * Creates a DebugMessageListener which listens to the messages published on the ZMQ bus

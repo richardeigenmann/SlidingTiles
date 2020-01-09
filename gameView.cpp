@@ -1,26 +1,21 @@
 #include "gameView.h"
 #include "renderingSingleton.h"
 
-SlidingTiles::GameView::GameView()
-{
+SlidingTiles::GameView::GameView() {
     RenderingSingleton::getInstance().add(*this);
 
-    for (int y = 0; y < GameBoard::boardSize; ++y)
-    {
-        for (int x = 0; x < GameBoard::boardSize; ++x)
-        {
+    for (int y = 0; y < GameBoard::boardSize; ++y) {
+        for (int x = 0; x < GameBoard::boardSize; ++x) {
             std::unique_ptr<TileView> tileView(new TileView(sf::Vector2i{x, y}));
             tileViews.push_back(std::move(tileView));
         }
     }
 }
 
-void SlidingTiles::GameView::render()
-{
+void SlidingTiles::GameView::render() {
     RenderingSingleton::getInstance().getRenderWindow()->clear(sf::Color::White);
 }
 
-SlidingTiles::Renderable::RenderPriority SlidingTiles::GameView::getRenderPriority() const
-{
+auto SlidingTiles::GameView::getRenderPriority() const -> SlidingTiles::Renderable::RenderPriority {
     return SlidingTiles::Renderable::RenderPriority::Background;
 }

@@ -280,7 +280,7 @@ void SlidingTiles::GameBoard::slideTile(const Move & move) {
         slidingTile.transition(newPosition);
         obscuredTile.setTilePosition(move.startPosition);
 
-        json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+        json jsonMessage{};
         jsonMessage["state"] = ZmqSingleton::SLIDE_TILE;
         jsonMessage["startPosition"]["x"] = move.startPosition.x;
         jsonMessage["startPosition"]["y"] = move.startPosition.y;
@@ -290,6 +290,10 @@ void SlidingTiles::GameBoard::slideTile(const Move & move) {
 
         tiles[newPosition.x][newPosition.y] = slidingTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
         tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;  // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+        moves.push_back(move);
+        for ( auto m : moves ) {
+            std::cout << m;
+        }
     }
     solution.clear();
 }

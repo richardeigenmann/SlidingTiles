@@ -1,7 +1,7 @@
 #include "tileType.h"
 #include <array>
 
-std::string tileTypeToString(const SlidingTiles::TileType & t) {
+auto tileTypeToString(const SlidingTiles::TileType & t) -> std::string {
     switch (t) {
         case SlidingTiles::TileType::Empty:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
@@ -57,7 +57,7 @@ std::string tileTypeToString(const SlidingTiles::TileType & t) {
     }
 }
 
-SlidingTiles::TileType stringToTileType(const std::string & s) {
+auto stringToTileType(const std::string & s) -> SlidingTiles::TileType {
     if (s == "Horizontal") {
         return SlidingTiles::TileType::Horizontal;
     } 
@@ -107,7 +107,7 @@ SlidingTiles::TileType stringToTileType(const std::string & s) {
 }
 
 // TODO(richi): Why to Char and return a String??
-std::string tileTypeToChar(const SlidingTiles::TileType & t) {
+auto tileTypeToChar(const SlidingTiles::TileType & t) -> std::string {
     switch (t) {
         case SlidingTiles::TileType::Empty:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
@@ -163,7 +163,7 @@ std::string tileTypeToChar(const SlidingTiles::TileType & t) {
     }
 }
 
-std::wstring tileTypeToWstringChar(const SlidingTiles::TileType & t) {
+auto tileTypeToWstringChar(const SlidingTiles::TileType & t) -> std::wstring {
     switch (t) {
         case SlidingTiles::TileType::Empty:
             // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
@@ -222,7 +222,7 @@ std::wstring tileTypeToWstringChar(const SlidingTiles::TileType & t) {
 /**
  * @brief Returns if a TileType is a start tile 
  */
-bool isStartTileType(const SlidingTiles::TileType & t) {
+auto isStartTileType(const SlidingTiles::TileType & t) -> bool {
     switch (t) {
         case SlidingTiles::TileType::StartTop:
             return true;
@@ -245,7 +245,7 @@ const std::array<SlidingTiles::TileType,4> START_TILES {
 /**
  * @brief Returns if a random start TileType
  */
-SlidingTiles::TileType randomStartTileType() {
+auto randomStartTileType() -> SlidingTiles::TileType {
     return START_TILES.at(random() % START_TILES.size());
 }
 
@@ -253,7 +253,7 @@ SlidingTiles::TileType randomStartTileType() {
 /**
  * @brief Returns if a TileType is an end tile 
  */
-bool isEndTileType(const SlidingTiles::TileType & t) {
+auto isEndTileType(const SlidingTiles::TileType & t) -> bool {
     switch (t) {
         case SlidingTiles::TileType::EndTop:
             return true;
@@ -271,7 +271,7 @@ bool isEndTileType(const SlidingTiles::TileType & t) {
 /**
  * @brief Returns if a TileType is moveable
  */
-bool isMoveableType(const SlidingTiles::TileType & t) {
+auto isMoveableType(const SlidingTiles::TileType & t) -> bool {
     return !  (t == SlidingTiles::TileType::Empty || t == SlidingTiles::TileType::Obstacle || isStartTileType( t ) ||  isEndTileType( t ));
 }
 
@@ -283,11 +283,11 @@ const std::array<SlidingTiles::TileType,4> END_TILES {SlidingTiles::TileType::En
 /**
  * @brief Returns if a random end TileType
  */
-SlidingTiles::TileType randomEndTileType() {
+auto randomEndTileType() -> SlidingTiles::TileType {
     return END_TILES.at(random() % END_TILES.size());
 }
 
-bool isGameTileType(const SlidingTiles::TileType & t) {
+auto isGameTileType(const SlidingTiles::TileType & t) -> bool {
     switch (t) {
         case SlidingTiles::TileType::Horizontal:
             return true;
@@ -316,6 +316,6 @@ const std::array<SlidingTiles::TileType,7> GAME_TILES {
     SlidingTiles::TileType::BottomRight, 
     SlidingTiles::TileType::Obstacle};
 
-SlidingTiles::TileType randomGameTileType() {
+auto randomGameTileType() -> SlidingTiles::TileType {
     return GAME_TILES.at(random() % GAME_TILES.size());
 }

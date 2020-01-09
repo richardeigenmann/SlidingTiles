@@ -74,9 +74,3 @@ TEST(Game, DISABLED_DoLevelUp) {
     game.doLevelUp();
     //ASSERT_THAT(1, Eq(1));
 }
-
-TEST(Game, IncrementMoves) {
-    Game game{};
-    game.incrementMoves();
-    //ASSERT_THAT(1, Eq(1));
-}

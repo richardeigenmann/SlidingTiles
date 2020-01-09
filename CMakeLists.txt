@@ -42,7 +42,7 @@ if(NOT CLANG_TIDY_EXE)
   message(STATUS "clang-tidy not found.")
 else()
   message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
-  set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=*,-clang-analyzer-alpha.*")
+  set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "-checks=*,-clang-analyzer-alpha.*,-fuchsia-*")
 endif()
 
 
@@ -314,3 +314,6 @@ add_custom_target(
 #        ${INCLUDE_DIRECTORIES} ${SFML_INCLUDE_DIR} ${ZeroMQ_INCLUDE_DIR} gtest gmock
 #    
 #)
+
+# This creates a compile_commands.json file for SourceTrail
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

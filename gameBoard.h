@@ -147,6 +147,11 @@ namespace SlidingTiles {
          */
         std::vector<Move> solution{};
 
+        /**
+         * @brief the executed moves
+         */
+        std::vector<Move> moves {};
+
     private:
         /** 
          * @brief picks start tile that works on the board.
