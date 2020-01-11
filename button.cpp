@@ -8,8 +8,8 @@ using json = nlohmann::json;
 SlidingTiles::Button::Button(const std::string & filename, const std::string & command) 
     : command(command) {
 
-    if (texture.loadFromFile(RenderingSingleton::getInstance().getAssetDir() + filename)) { // NOLINT (fuchsia-default-arguments)
-        sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
+    if (texture.loadFromFile(RenderingSingleton::getInstance().getAssetDir() + filename)) {
+        sprite.setTexture(texture);
     } else {
         throw std::runtime_error("Failed to load texture: " + RenderingSingleton::getInstance().getAssetDir() + filename);
     }
@@ -52,7 +52,7 @@ void SlidingTiles::Button::handleMessage(const json & jsonMessage) {
         int x = jsonMessage["x"];
         int y = jsonMessage["y"];
         if (mouseReleased(sf::Vector2i{x, y})) {
-            json commandMessage{}; // NOLINT(fuchsia-default-arguments)
+            json commandMessage{};
             commandMessage["state"] = command;
             ZmqSingleton::getInstance().publish(commandMessage);
         }

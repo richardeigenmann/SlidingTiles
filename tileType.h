@@ -83,4 +83,4 @@ bool isGameTileType(const SlidingTiles::TileType & t);
 /**
  * @brief Returns a random game TileType
  */
-SlidingTiles::TileType randomGameTileType();// NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
+SlidingTiles::TileType randomGameTileType();

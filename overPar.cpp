@@ -1,11 +1,11 @@
 #include "overPar.h"
 
 SlidingTiles::OverPar::OverPar() {
-    const std::string filename{RenderingSingleton::getInstance().getAssetDir() + "over_par.png"}; // NOLINT (fuchsia-default-arguments)
-    if (texture.loadFromFile(filename)) { // NOLINT (fuchsia-default-arguments)
-        sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
+    const std::string filename{RenderingSingleton::getInstance().getAssetDir() + "over_par.png"};
+    if (texture.loadFromFile(filename)) {
+        sprite.setTexture(texture);
     } else {
-        throw std::runtime_error("Failed to load texture: " + filename); // NOLINT (fuchsia-default-arguments)
+        throw std::runtime_error("Failed to load texture: " + filename);
     }
     const unsigned int X {410};
     const unsigned int Y {20};
@@ -58,7 +58,7 @@ void SlidingTiles::OverPar::handleMessage(const json & jsonMessage) {
 
 void SlidingTiles::OverPar::render() {
     if (gameState == GameState::OverPar) {
-        SlidingTiles::RenderingSingleton::getInstance().getRenderWindow()->draw(sprite); // NOLINT (fuchsia-default-arguments)
+        SlidingTiles::RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
     }
 }
 

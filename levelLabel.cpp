@@ -41,7 +41,7 @@ void SlidingTiles::LevelLabel::handleMessage(const json & jsonMessage) {
  * sets the label to the text Level: n 
  */
 void SlidingTiles::LevelLabel::setLevel( int level ) {
-    std::ostringstream levelText {}; // NOLINT (fuchsia-default-arguments)
+    std::ostringstream levelText {};
     levelText << "Level: " << level;
     setText(levelText.str());
 

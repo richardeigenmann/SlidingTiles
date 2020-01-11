@@ -30,7 +30,7 @@ void SlidingTiles::ParLabel::handleMessage(const json & jsonMessage) {
     auto state = jsonMessage["state"].get<std::string>();
     if (state == ZmqSingleton::GAME_STARTED) {
         int par = jsonMessage["par"];
-        std::ostringstream parText {};  // NOLINT (fuchsia-default-arguments)
+        std::ostringstream parText {};
         parText << "Par: " << par;
         setText(parText.str());
     }

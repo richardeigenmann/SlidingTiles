@@ -4,55 +4,38 @@
 auto tileTypeToString(const SlidingTiles::TileType & t) -> std::string {
     switch (t) {
         case SlidingTiles::TileType::Empty:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Empty";
         case SlidingTiles::TileType::Horizontal:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Horizontal";
         case SlidingTiles::TileType::Vertical:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Vertical";
         case SlidingTiles::TileType::StartTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "StartTop";
         case SlidingTiles::TileType::StartBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "StartBottom";
         case SlidingTiles::TileType::StartLeft:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "StartLeft";
         case SlidingTiles::TileType::StartRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "StartRight";
         case SlidingTiles::TileType::EndTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "EndTop";
         case SlidingTiles::TileType::EndBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "EndBottom";
         case SlidingTiles::TileType::EndRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "EndRight";
         case SlidingTiles::TileType::EndLeft:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "EndLeft";
         case SlidingTiles::TileType::LeftTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "LeftTop";
         case SlidingTiles::TileType::LeftBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "LeftBottom";
         case SlidingTiles::TileType::TopRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "TopRight";
         case SlidingTiles::TileType::BottomRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "BottomRight";
         case SlidingTiles::TileType::Obstacle:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Obstacle";
         default:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "Unknown Type";
     }
 }
@@ -110,55 +93,38 @@ auto stringToTileType(const std::string & s) -> SlidingTiles::TileType {
 auto tileTypeToChar(const SlidingTiles::TileType & t) -> std::string {
     switch (t) {
         case SlidingTiles::TileType::Empty:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return " ";
         case SlidingTiles::TileType::Horizontal:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "-";
         case SlidingTiles::TileType::Vertical:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "|";
         case SlidingTiles::TileType::StartTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┴";
         case SlidingTiles::TileType::StartBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┬";
         case SlidingTiles::TileType::StartLeft:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┤";
         case SlidingTiles::TileType::StartRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "├";
         case SlidingTiles::TileType::EndTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┻";
         case SlidingTiles::TileType::EndBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┳";
         case SlidingTiles::TileType::EndRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┣";
         case SlidingTiles::TileType::EndLeft:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┫";
         case SlidingTiles::TileType::LeftTop:
-            // SlidingTiles::NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┘";
         case SlidingTiles::TileType::LeftBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┐";
         case SlidingTiles::TileType::TopRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "└";
         case SlidingTiles::TileType::BottomRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "┌";
         case SlidingTiles::TileType::Obstacle:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "o";
         default:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return "?";
     }
 }
@@ -166,55 +132,38 @@ auto tileTypeToChar(const SlidingTiles::TileType & t) -> std::string {
 auto tileTypeToWstringChar(const SlidingTiles::TileType & t) -> std::wstring {
     switch (t) {
         case SlidingTiles::TileType::Empty:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L" ";
         case SlidingTiles::TileType::Horizontal:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"-";
         case SlidingTiles::TileType::Vertical:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"|";
         case SlidingTiles::TileType::StartTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┴";
         case SlidingTiles::TileType::StartBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┬";
         case SlidingTiles::TileType::StartLeft:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┤";
         case SlidingTiles::TileType::StartRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"├";
         case SlidingTiles::TileType::EndTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┻";
         case SlidingTiles::TileType::EndBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┳";
         case SlidingTiles::TileType::EndRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┣";
         case SlidingTiles::TileType::EndLeft:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┫";
         case SlidingTiles::TileType::LeftTop:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┘";
         case SlidingTiles::TileType::LeftBottom:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┐";
         case SlidingTiles::TileType::TopRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"└";
         case SlidingTiles::TileType::BottomRight:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"┌";
         case SlidingTiles::TileType::Obstacle:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"o";
         default:
-            // NOLINTNEXTLINE (fuchsia-default-arguments) Default allocator for String is OK
             return L"?";
     }
 }
@@ -223,18 +172,10 @@ auto tileTypeToWstringChar(const SlidingTiles::TileType & t) -> std::wstring {
  * @brief Returns if a TileType is a start tile 
  */
 auto isStartTileType(const SlidingTiles::TileType & t) -> bool {
-    switch (t) {
-        case SlidingTiles::TileType::StartTop:
-            return true;
-        case SlidingTiles::TileType::StartBottom:
-            return true;
-        case SlidingTiles::TileType::StartLeft:
-            return true;
-        case SlidingTiles::TileType::StartRight:
-            return true;
-        default:
-            return false;
-    }
+    return t == SlidingTiles::TileType::StartTop
+        || t == SlidingTiles::TileType::StartBottom
+        || t == SlidingTiles::TileType::StartLeft
+        || t == SlidingTiles::TileType::StartRight;
 }
 
 
@@ -254,18 +195,10 @@ auto randomStartTileType() -> SlidingTiles::TileType {
  * @brief Returns if a TileType is an end tile 
  */
 auto isEndTileType(const SlidingTiles::TileType & t) -> bool {
-    switch (t) {
-        case SlidingTiles::TileType::EndTop:
-            return true;
-        case SlidingTiles::TileType::EndBottom:
-            return true;
-        case SlidingTiles::TileType::EndLeft:
-            return true;
-        case SlidingTiles::TileType::EndRight:
-            return true;
-        default:
-            return false;
-    }
+    return t == SlidingTiles::TileType::EndTop
+        || t == SlidingTiles::TileType::EndBottom
+        || t == SlidingTiles::TileType::EndLeft
+        || t == SlidingTiles::TileType::EndRight;
 }
 
 /**
@@ -288,23 +221,12 @@ auto randomEndTileType() -> SlidingTiles::TileType {
 }
 
 auto isGameTileType(const SlidingTiles::TileType & t) -> bool {
-    switch (t) {
-        case SlidingTiles::TileType::Horizontal:
-            return true;
-        case SlidingTiles::TileType::Vertical:
-            return true;
-        case SlidingTiles::TileType::LeftTop:
-            return true;
-        case SlidingTiles::TileType::LeftBottom:
-            return true;
-        case SlidingTiles::TileType::TopRight:
-            return true;
-        case SlidingTiles::TileType::BottomRight:
-            return true;
-        default:
-            return false;
-
-    }
+    return t == SlidingTiles::TileType::Horizontal
+        || t == SlidingTiles::TileType::Vertical
+        || t == SlidingTiles::TileType::LeftTop
+        || t == SlidingTiles::TileType::LeftBottom
+        || t == SlidingTiles::TileType::TopRight
+        || t == SlidingTiles::TileType::BottomRight;
 }
 
 const std::array<SlidingTiles::TileType,7> GAME_TILES {

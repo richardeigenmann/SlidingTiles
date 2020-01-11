@@ -1,12 +1,12 @@
 #include "label.h"
 #include "renderingSingleton.h"
 
-const sf::String FONT_FILE {SlidingTiles::RenderingSingleton::getInstance().getAssetDir() + "Raleway-Regular.ttf"}; //NOLINT (fuchsia-statically-constructed-objects, fuchsia-default-arguments, cert-err58-cpp)
+const sf::String FONT_FILE {SlidingTiles::RenderingSingleton::getInstance().getAssetDir() + "Raleway-Regular.ttf"}; //NOLINT (cert-err58-cpp)
 const unsigned int FONT_SIZE {16};
 
 SlidingTiles::Label::Label() {
     if (!font.loadFromFile(FONT_FILE)) {
-        std::cout << "Can't load font " << FONT_FILE.toAnsiString() << std::endl; //NOLINT (fuchsia-default-arguments)
+        std::cout << "Can't load font " << FONT_FILE.toAnsiString() << std::endl;
     }
 
     text.setFont(font);
@@ -28,9 +28,9 @@ void SlidingTiles::Label::setPosition(float x, float y) {
 }
 
 void SlidingTiles::Label::setText(const std::string & newText) {
-    text.setString(newText); // NOLINT (fuchsia-default-arguments)
+    text.setString(newText);
 }
 
 void SlidingTiles::Label::render() {
-    RenderingSingleton::getInstance().getRenderWindow()->draw(text); // NOLINT (fuchsia-default-arguments)
+    RenderingSingleton::getInstance().getRenderWindow()->draw(text);
 }

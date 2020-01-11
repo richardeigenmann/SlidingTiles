@@ -12,4 +12,6 @@ namespace SlidingTiles {
 
     auto directionToString(const Direction & direction) -> std::string;
 
+    auto returnOppositeDirection(const Direction & direction) -> Direction;
+
 }

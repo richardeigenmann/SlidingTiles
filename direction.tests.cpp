@@ -27,3 +27,28 @@ TEST(Direction, GoRight) {
     Direction d = Direction::GoRight;
     ASSERT_EQ("GoRight", directionToString(d));
 }
+
+TEST(Direction, undoGoRight) {
+    Direction d = Direction::GoRight;
+    Direction undoDirection = returnOppositeDirection(d);
+    ASSERT_EQ(Direction::GoLeft, undoDirection);
+}
+
+TEST(Direction, undoGoLeft) {
+    Direction d = Direction::GoLeft;
+    Direction undoDirection = returnOppositeDirection(d);
+    ASSERT_EQ(Direction::GoRight, undoDirection);
+}
+
+TEST(Direction, undoGoUp) {
+    Direction d = Direction::GoUp;
+    Direction undoDirection = returnOppositeDirection(d);
+    ASSERT_EQ(Direction::GoDown, undoDirection);
+}
+
+
+TEST(Direction, undoGoDown) {
+    Direction d = Direction::GoDown;
+    Direction undoDirection = returnOppositeDirection(d);
+    ASSERT_EQ(Direction::GoUp, undoDirection);
+}

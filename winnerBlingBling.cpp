@@ -1,11 +1,11 @@
 #include "winnerBlingBling.h"
 
 SlidingTiles::WinnerBlingBling::WinnerBlingBling() {
-    const std::string filename{RenderingSingleton::getInstance().getAssetDir() + "trophy.png"}; // NOLINT (fuchsia-default-arguments)
-    if (texture.loadFromFile(filename)) { // NOLINT (fuchsia-default-arguments)
-        sprite.setTexture(texture); // NOLINT (fuchsia-default-arguments)
+    const std::string filename{RenderingSingleton::getInstance().getAssetDir() + "trophy.png"};
+    if (texture.loadFromFile(filename)) {
+        sprite.setTexture(texture);
     } else {
-        throw std::runtime_error("Failed to load texture: " + filename); // NOLINT (fuchsia-default-arguments)
+        throw std::runtime_error("Failed to load texture: " + filename);
     }
     const unsigned int X {400};
     const unsigned int Y {5};
@@ -60,7 +60,7 @@ void SlidingTiles::WinnerBlingBling::handleMessage(const json & jsonMessage) {
 
 void SlidingTiles::WinnerBlingBling::render() {
     if (gameState == GameState::VictoryRolling) {
-        SlidingTiles::RenderingSingleton::getInstance().getRenderWindow()->draw(sprite); // NOLINT (fuchsia-default-arguments)
+        SlidingTiles::RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
     }
 }
 

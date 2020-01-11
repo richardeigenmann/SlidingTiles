@@ -38,7 +38,7 @@ namespace SlidingTiles {
         /**
          * Tracks the number of moves the user made
          */
-        int moves{-1};
+        int moves{0};
         
         /**
          * @brief updates the label

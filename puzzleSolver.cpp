@@ -4,7 +4,7 @@
 
 const int SlidingTiles::PuzzleSolver::DEFAULT_DEPTH;
 
-std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) {
+auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::experimental::optional<SlidingTiles::MoveNode> {
     assert((moveNode.startPosition.x >= -1) && (moveNode.startPosition.x <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
     assert((moveNode.startPosition.y >= -1) && (moveNode.startPosition.y <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
 
@@ -64,7 +64,7 @@ std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::
     return {};
 }
 
-std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int levels) {
+auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int levels) -> std::experimental::optional<SlidingTiles::MoveNode> {
     assert(moveNode.startPosition.x >= -1 && moveNode.startPosition.x <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
     assert(moveNode.startPosition.y >= -1 && moveNode.startPosition.y <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
     //std::cout << "\n\naddPossibleMoves levels: " << levels << " " << moveNode.toString();
@@ -89,7 +89,7 @@ std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::
     //moveNode.possibleMoves.insert(std::end(moveNode.possibleMoves), std::begin(possMoves), std::end(possMoves));
 }
 
-std::experimental::optional<SlidingTiles::MoveNode> SlidingTiles::PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) {
+auto SlidingTiles::PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) -> std::experimental::optional<SlidingTiles::MoveNode> {
     gameBoard.rootNode.possibleMoves.clear();
     gameBoard.rootNode.endingBoard = gameBoard.serialiseGame();
     return addPossibleMoves(gameBoard.rootNode, depth);
@@ -120,7 +120,7 @@ void SlidingTiles::PuzzleSolver::saveSolution(GameBoard & gameBoard) {
     gameBoard.solution.clear();
 }
 
-SlidingTiles::GameBoard SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) {
+auto SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) -> SlidingTiles::GameBoard {
     SlidingTiles::PuzzleSolver puzzleSolver;
     while (true) {
         GameBoard gameBoard{};

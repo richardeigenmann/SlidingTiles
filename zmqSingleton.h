@@ -108,6 +108,11 @@ namespace SlidingTiles {
         static const std::string RESTART_LEVEL;
 
         /**
+         * @brief broadcast moves count
+         */
+        static const std::string BROADCAST_MOVES_COUNT;
+
+        /**
          * @brief when sent instructs the listening objects to output debug information
          */
         static const std::string DEBUG;

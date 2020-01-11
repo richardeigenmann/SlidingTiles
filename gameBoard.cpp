@@ -23,7 +23,7 @@ void SlidingTiles::GameBoard::loadGame(const std::string game[boardSize][boardSi
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(game[y][x]); // note the inversion here!  // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index, cppcoreguidelines-pro-bounds-pointer-arithmetic)
             //std::cout << "[" << x << "][" << y << "] char: " << game[x][y] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
-            json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+            json jsonMessage{};
             jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
@@ -41,7 +41,7 @@ void SlidingTiles::GameBoard::loadGame(const std::vector<std::string> & game) {
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(game[y * 4 + x]);
             //std::cout << "[" << x << "][" << y << "] game[y*4+x]: " << game[y*4+x] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
-            json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+            json jsonMessage{};
             jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
@@ -58,9 +58,9 @@ void SlidingTiles::GameBoard::loadGame(const std::wstring & game) {
         for (int x = 0; x < boardSize; ++x) {
             auto tile = getTile(x,y);
             tile->setTilePosition(sf::Vector2i{x, y});
-            tile->setTileType(std::wstring{game[y * 4 + x]}); // NOLINT (fuchsia-default-arguments)
+            tile->setTileType(std::wstring{game[y * 4 + x]});
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
-            json jsonMessage{};  // NOLINT (fuchsia-default-arguments)
+            json jsonMessage{}; 
             jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
@@ -72,16 +72,16 @@ void SlidingTiles::GameBoard::loadGame(const std::wstring & game) {
 }
 
 void SlidingTiles::GameBoard::loadGame(const std::string & game) {
-    std::u16string utf16 = std::wstring_convert < std::codecvt_utf8_utf16<char16_t>, char16_t>{}.from_bytes(game.data()); // NOLINT (fuchsia-default-arguments)
+    std::u16string utf16 = std::wstring_convert < std::codecvt_utf8_utf16<char16_t>, char16_t>{}.from_bytes(game.data());
     assert(utf16.size() >= boardSize * boardSize);  // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 
     for (int y = 0; y < boardSize; ++y) {
         for (int x = 0; x < boardSize; ++x) {
             auto tile = getTile(x,y);
             tile->setTilePosition(sf::Vector2i{x, y});
-            tile->setTileType(std::wstring{utf16[y * 4 + x]}); // NOLINT (fuchsia-default-arguments)
+            tile->setTileType(std::wstring{utf16[y * 4 + x]});
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
-            json jsonMessage{};  // NOLINT (fuchsia-default-arguments)
+            json jsonMessage{}; 
             jsonMessage["state"] = ZmqSingleton::SET_TILE;
             jsonMessage["position"]["x"] = x;
             jsonMessage["position"]["y"] = y;
@@ -105,7 +105,7 @@ void SlidingTiles::GameBoard::randomGame(const int emptyTiles) {
     throw std::runtime_error("Something is terribly wrong. We rendered 200 game boards and got a solved board 200 times? What a conincidence...");
 }
 
-SlidingTiles::Tile SlidingTiles::GameBoard::pickStartTile(const sf::Vector2i & startPos) {
+auto SlidingTiles::GameBoard::pickStartTile(const sf::Vector2i & startPos) -> SlidingTiles::Tile {
     Tile startTile{};
     startTile.setTilePosition(startPos);
     TileType type = randomStartTileType();
@@ -128,7 +128,7 @@ SlidingTiles::Tile SlidingTiles::GameBoard::pickStartTile(const sf::Vector2i & s
 }
 
 
-SlidingTiles::Tile SlidingTiles::GameBoard::pickEndTile(const sf::Vector2i & endPos) {
+auto SlidingTiles::GameBoard::pickEndTile(const sf::Vector2i & endPos) -> SlidingTiles::Tile {
     Tile endTile{};
     endTile.setTilePosition(endPos);
     TileType type = randomEndTileType();
@@ -160,7 +160,7 @@ void SlidingTiles::GameBoard::randomGameImpl(const int emptyTiles) {
             positions.emplace_back(sf::Vector2i{x, y});
         }
     }
-    std::random_device rd{};  // NOLINT (fuchsia-default-arguments)
+    std::random_device rd{}; 
     std::shuffle(std::begin(positions), std::end(positions), std::default_random_engine(rd()));
 
     sf::Vector2i startPos = positions[0];
@@ -187,7 +187,7 @@ void SlidingTiles::GameBoard::randomGameImpl(const int emptyTiles) {
     }
 }
 
-std::vector<std::string> SlidingTiles::GameBoard::serialiseGame() {
+auto SlidingTiles::GameBoard::serialiseGame() -> std::vector<std::string>{
     std::vector<std::string> serialisedGame;
     for (int y = 0; y < boardSize; ++y) {
         for (int x = 0; x < boardSize; ++x) {
@@ -197,8 +197,8 @@ std::vector<std::string> SlidingTiles::GameBoard::serialiseGame() {
     return serialisedGame;
 }
 
-std::string SlidingTiles::GameBoard::serialiseGameToString() {
-    std::stringstream ss; // NOLINT (fuchsia-default-arguments)
+auto SlidingTiles::GameBoard::serialiseGameToString() -> std::string {
+    std::stringstream ss;
     for (int y = 0; y < boardSize; ++y) {
         for (int x = 0; x < boardSize; ++x) {
             ss << tileTypeToChar(getTile(x,y)->getTileType());
@@ -211,7 +211,7 @@ void SlidingTiles::GameBoard::printGame() {
     std::cout << serialiseGameToString() << std::endl;
 }
 
-sf::Vector2i SlidingTiles::GameBoard::getAdjacentTilePosition(const Move & move) {
+auto SlidingTiles::GameBoard::getAdjacentTilePosition(const Move & move) -> sf::Vector2i {
     // TODO(richi): should this not be a function of the move?
     assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
@@ -241,7 +241,7 @@ sf::Vector2i SlidingTiles::GameBoard::getAdjacentTilePosition(const Move & move)
     return adjacentPosition;
 }
 
-bool SlidingTiles::GameBoard::canSlideTile(const Move & move) {
+auto SlidingTiles::GameBoard::canSlideTile(const Move & move) -> bool {
     assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     auto movingTile = getTile(move.startPosition.x, move.startPosition.y);
@@ -268,10 +268,37 @@ bool SlidingTiles::GameBoard::canSlideTile(const Move & move) {
     return true;
 }
 
-void SlidingTiles::GameBoard::slideTile(const Move & move) {
+void SlidingTiles::GameBoard::moveTile(const Move & move) {
+    if ( slideTile(move) ) {
+        moves.push_back(move);
+        broadcastMovesCount();
+    }
+}
+
+void SlidingTiles::GameBoard::broadcastMovesCount() {
+    json jsonMessage{};
+    jsonMessage["state"] = ZmqSingleton::BROADCAST_MOVES_COUNT;
+    jsonMessage["count"] = moves.size();
+    ZmqSingleton::getInstance().publish(jsonMessage);
+}
+
+
+void SlidingTiles::GameBoard::undoLatestMove() {
+    if ( ! moves.empty() ) {
+        auto lastMove = moves.back();
+        moves.pop_back();
+        Move undoMove {getAdjacentTilePosition(lastMove), returnOppositeDirection(lastMove.direction)};
+        slideTile(undoMove);
+        broadcastMovesCount();
+    }
+}
+
+
+auto SlidingTiles::GameBoard::slideTile(const Move & move) -> bool {
     assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    if (canSlideTile(move)) {
+    bool canSlide = canSlideTile(move);
+    if (canSlide) {
         sf::Vector2i newPosition = getAdjacentTilePosition(move);
         // TODO(richi): Fix all this tile copying...
         auto slidingTile = tiles[move.startPosition.x][move.startPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
@@ -290,15 +317,12 @@ void SlidingTiles::GameBoard::slideTile(const Move & move) {
 
         tiles[newPosition.x][newPosition.y] = slidingTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
         tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;  // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
-        moves.push_back(move);
-        for ( auto m : moves ) {
-            std::cout << m;
-        }
     }
     solution.clear();
+    return canSlide;
 }
 
-const SlidingTiles::Tile* SlidingTiles::GameBoard::findStartTile() {
+auto SlidingTiles::GameBoard::findStartTile() -> const SlidingTiles::Tile* {
     for (int x = 0; (x < boardSize); ++x) {
         for (int y = 0; (y < boardSize); ++y) {
             if (isStartTileType(getTile(x,y)->getTileType())) {
@@ -309,7 +333,7 @@ const SlidingTiles::Tile* SlidingTiles::GameBoard::findStartTile() {
     return nullptr;
 }
 
-sf::Vector2i SlidingTiles::GameBoard::getOutputPosition(const Move & move) {
+auto SlidingTiles::GameBoard::getOutputPosition(const Move & move) -> sf::Vector2i {
     assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     auto type = getTile(move.startPosition.x, move.startPosition.y)->getTileType();
@@ -371,7 +395,7 @@ sf::Vector2i SlidingTiles::GameBoard::getOutputPosition(const Move & move) {
     return nextTile;
 }
 
-SlidingTiles::Move SlidingTiles::GameBoard::getOutputMove(const Move & move) {
+auto SlidingTiles::GameBoard::getOutputMove(const Move & move) -> SlidingTiles::Move {
     assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     auto startTile = getTile(move.startPosition.x, move.startPosition.y);
@@ -381,7 +405,7 @@ SlidingTiles::Move SlidingTiles::GameBoard::getOutputMove(const Move & move) {
     return outputMove;
 }
 
-std::vector<sf::Vector2i> SlidingTiles::GameBoard::isSolved() {
+auto SlidingTiles::GameBoard::isSolved() -> std::vector<sf::Vector2i> {
     std::vector<sf::Vector2i> solutionPath{};
 
     auto startTile = findStartTile();

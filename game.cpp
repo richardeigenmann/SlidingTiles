@@ -16,15 +16,15 @@ using json = nlohmann::json;
 
 namespace SlidingTiles {
 
-    Game::Game() { // NOLINT (fuchsia-default-arguments)
+    Game::Game() {
         // read a JSON file and parse it
-        const std::string CONFIG_FILENAME = RenderingSingleton::getInstance().getAssetDir() + "sliding-tiles.json"; // NOLINT (fuchsia-default-arguments)
+        const std::string CONFIG_FILENAME = RenderingSingleton::getInstance().getAssetDir() + "sliding-tiles.json";
         std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
-        std::ifstream configIfstream(CONFIG_FILENAME); // NOLINT (fuchsia-default-arguments)
+        std::ifstream configIfstream(CONFIG_FILENAME);
         if (!configIfstream) {
             throw std::runtime_error("Could not read configuration file: " + CONFIG_FILENAME);
         }
-        json configJson; // NOLINT (fuchsia-default-arguments)
+        json configJson;
         configIfstream >> configJson;
         configIfstream.close();
 
@@ -64,7 +64,7 @@ namespace SlidingTiles {
                         doLevelUp();
                     } else { 
                         if (event.text.unicode == LOWERCASE_D) { //d // NOLINT(cppcoreguidelines-pro-type-union-access)
-                            json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+                            json jsonMessage{};
                             jsonMessage["state"] = ZmqSingleton::DEBUG;
                             ZmqSingleton::getInstance().publish(jsonMessage);
                         } else {
@@ -86,7 +86,7 @@ namespace SlidingTiles {
             if ( ! solutionPath.empty() ) {
                 gameState = GameState::VictoryRolling;
 
-                json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+                json jsonMessage{};
                 jsonMessage["state"] = ZmqSingleton::GAME_WON;
                 jsonMessage["victoryRollTime"] = Game::VICTORY_ROLL_TIME;
                 jsonMessage["moves"] = gameBoard.moves.size();
@@ -100,7 +100,7 @@ namespace SlidingTiles {
             } else {
                 if ( gameState == GameState::Playing && gameBoard.moves.size() == levelsArray[level]["Par"].get<int>() ){
                     gameState = GameState::OverPar;
-                    json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+                    json jsonMessage{};
                     jsonMessage["state"] = ZmqSingleton::OVER_PAR;
                     ZmqSingleton::getInstance().publish(jsonMessage);
                 }
@@ -132,6 +132,8 @@ namespace SlidingTiles {
             doRandomGame();
         } else if (state == ZmqSingleton::RESTART_LEVEL) {
             onRestartButtonClick();
+        } else if (state == ZmqSingleton::UNDO_MOVE) {
+            gameBoard.undoLatestMove();
         }
     }
     void Game::onRestartButtonClick() {
@@ -176,7 +178,7 @@ namespace SlidingTiles {
                 }
             }
         } else {
-            json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+            json jsonMessage{};
             jsonMessage["state"] = ZmqSingleton::MOUSE_CLICKED;
             jsonMessage["x"] = mousePosition.x;
             jsonMessage["y"] = mousePosition.y;
@@ -186,7 +188,7 @@ namespace SlidingTiles {
 
     void Game::doMove(const Move & move) {
         if (gameState == GameState::Playing || gameState == GameState::OverPar) {
-            gameBoard.slideTile(move);
+            gameBoard.moveTile(move);
         }
     }
 
@@ -198,7 +200,7 @@ namespace SlidingTiles {
         gameBoard.loadGame(serializedGame);
         gameState = GameState::Playing;
 
-        json jsonMessage{}; // NOLINT (fuchsia-default-arguments)
+        json jsonMessage{};
         jsonMessage["state"] = ZmqSingleton::GAME_STARTED;
         jsonMessage["level"] = level;
         jsonMessage["par"] = jsonLevel["Par"].get<int>();

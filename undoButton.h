@@ -22,19 +22,9 @@ namespace SlidingTiles {
         void handleMessage(const nlohmann::json & jsonMessage) override {
             Button::handleMessage(jsonMessage);
             auto state = jsonMessage["state"].get<std::string>();
-            if (state == SlidingTiles::ZmqSingleton::GAME_STARTED) {
-                isVisible = false;
-                countMoves = 0;
-            } else if (state == SlidingTiles::ZmqSingleton::SLIDE_TILE) {
-                isVisible = true;
-                ++countMoves;
-            } else if (state == SlidingTiles::ZmqSingleton::UNDO_MOVE) {
-                if ( countMoves > 0 ) {
-                    --countMoves;
-                } 
-                if ( countMoves == 0 ) {
-                    isVisible = false;
-                }
+            if (state == SlidingTiles::ZmqSingleton::BROADCAST_MOVES_COUNT) {
+                countMoves = jsonMessage["count"].get<size_t>();
+                isVisible = countMoves > 0;
             }
         }
 

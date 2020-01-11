@@ -12,25 +12,26 @@ SlidingTiles::ZmqSingleton::ZmqSingleton() {
 }
 
 void SlidingTiles::ZmqSingleton::publish(const json & jsonMessage) {
-    auto message = jsonMessage.dump(); // NOLINT (fuchsia-default-arguments)
+    auto message = jsonMessage.dump(); 
     zmq::message_t zmqMessage(message.size());
     memcpy(zmqMessage.data(), message.data(), message.size());
-    socket.send(zmqMessage); // NOLINT (fuchsia-default-arguments)
+    socket.send(zmqMessage); 
 }
 
 //const std::string ZmqSingleton::PUBLISHER_SOCKET = "tcp://*:64123";
-const std::string SlidingTiles::ZmqSingleton::PUBLISHER_SOCKET = "inproc://#1"; // NOLINT (fuchsia-default-arguments)
+const std::string SlidingTiles::ZmqSingleton::PUBLISHER_SOCKET = "inproc://#1"; 
 //const std::string ZmqSingleton::RECEIVER_SOCKET = "tcp://localhost:64123";
-const std::string SlidingTiles::ZmqSingleton::RECEIVER_SOCKET = "inproc://#1"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::CONFIGURATION_LOADED = "Configuration Loaded"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::GAME_STARTED = "Game Started"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::OVER_PAR = "Over Par"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::GAME_WON = "Game Won"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::SET_TILE = "Set Tile"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::SLIDE_TILE = "Slide Tile"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::MOUSE_CLICKED = "Mouse Clicked"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::LOAD_NEXT_LEVEL = "Load Next Level"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::LOAD_RANDOM_LEVEL = "Load Random Level"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::UNDO_MOVE = "Undo Move"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::RESTART_LEVEL = "Restart Level"; // NOLINT (fuchsia-default-arguments)
-const std::string SlidingTiles::ZmqSingleton::DEBUG = "Debug"; // NOLINT (fuchsia-default-arguments)
+const std::string SlidingTiles::ZmqSingleton::RECEIVER_SOCKET = "inproc://#1"; 
+const std::string SlidingTiles::ZmqSingleton::CONFIGURATION_LOADED = "Configuration Loaded"; 
+const std::string SlidingTiles::ZmqSingleton::GAME_STARTED = "Game Started"; 
+const std::string SlidingTiles::ZmqSingleton::OVER_PAR = "Over Par"; 
+const std::string SlidingTiles::ZmqSingleton::GAME_WON = "Game Won"; 
+const std::string SlidingTiles::ZmqSingleton::SET_TILE = "Set Tile"; 
+const std::string SlidingTiles::ZmqSingleton::SLIDE_TILE = "Slide Tile"; 
+const std::string SlidingTiles::ZmqSingleton::MOUSE_CLICKED = "Mouse Clicked"; 
+const std::string SlidingTiles::ZmqSingleton::LOAD_NEXT_LEVEL = "Load Next Level"; 
+const std::string SlidingTiles::ZmqSingleton::LOAD_RANDOM_LEVEL = "Load Random Level"; 
+const std::string SlidingTiles::ZmqSingleton::UNDO_MOVE = "Undo Move"; 
+const std::string SlidingTiles::ZmqSingleton::RESTART_LEVEL = "Restart Level"; 
+const std::string SlidingTiles::ZmqSingleton::BROADCAST_MOVES_COUNT = "Broadcast Moves Count";
+const std::string SlidingTiles::ZmqSingleton::DEBUG = "Debug"; 

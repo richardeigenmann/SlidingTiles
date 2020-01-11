@@ -75,12 +75,6 @@ namespace SlidingTiles {
         void doMove(const Move & move);
 
         /**
-         * Sets the move counter and updates the moves label
-         * @param newMoves the new number of moves
-         */
-        void setMoves(std::size_t newMoves);
-
-        /**
          * @brief advance to the next level
          */
         void doLevelUp();

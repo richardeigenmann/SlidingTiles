@@ -3,10 +3,10 @@
 const unsigned int WINDOW_WIDTH = 550;
 const unsigned int WINDOW_HEIGHT = 400;
 const unsigned int COLOR_DEPTH = 32;
-const sf::String TITLE {"Sliding tiles"}; // NOLINT (fuchsia-statically-constructed-objects)
+const sf::String TITLE {"Sliding tiles"}; // NOLINT(cert-err58-cpp)
 const unsigned int FRAME_RATE_LIMIT = 60;
 
-SlidingTiles::RenderingSingleton::RenderingSingleton() : window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, COLOR_DEPTH), TITLE) { //NOLINT (fuchsia-default-arguments)
+SlidingTiles::RenderingSingleton::RenderingSingleton() : window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, COLOR_DEPTH), TITLE) {
     window.setFramerateLimit(FRAME_RATE_LIMIT);
 }
 

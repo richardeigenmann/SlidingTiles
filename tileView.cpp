@@ -7,9 +7,9 @@ using json = nlohmann::json;
 namespace SlidingTiles {
     int TileView::count = 0;
 
-    const sf::Color WINNER_COLOR {sf::Color{0, 255, 0, 255}}; // NOLINT (fuchsia-statically-constructed-objects, cert-err58-cpp)
-    const sf::Color START_COLOR {sf::Color{96, 206, 237, 255}}; // NOLINT (fuchsia-statically-constructed-objects, cert-err58-cpp)
-    const sf::Color END_COLOR {sf::Color{255, 0, 0, 255}}; // NOLINT (fuchsia-statically-constructed-objects, cert-err58-cpp)
+    const sf::Color WINNER_COLOR {sf::Color{0, 255, 0, 255}}; // NOLINT (cert-err58-cpp)
+    const sf::Color START_COLOR {sf::Color{96, 206, 237, 255}}; // NOLINT (cert-err58-cpp)
+    const sf::Color END_COLOR {sf::Color{255, 0, 0, 255}}; // NOLINT (cert-err58-cpp)
 
 
     void TileView::render() {
@@ -22,7 +22,7 @@ namespace SlidingTiles {
         }
 
         sf::Sprite sprite;
-        sprite.setTexture(TexturesSingleton::getInstance().getTexture(tileType)); // NOLINT (fuchsia-default-arguments)
+        sprite.setTexture(TexturesSingleton::getInstance().getTexture(tileType));
         sprite.setPosition(renderPosition.x, renderPosition.y);
         if (winner) {
             sprite.setColor(WINNER_COLOR);
@@ -36,7 +36,7 @@ namespace SlidingTiles {
             }
         }
 
-        RenderingSingleton::getInstance().getRenderWindow()->draw(sprite); // NOLINT (fuchsia-default-arguments)
+        RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
     }
 
     void TileView::update(const float dt) {
@@ -104,7 +104,7 @@ namespace SlidingTiles {
         transitioning = true;
     }
 
-    Renderable::RenderPriority TileView::getRenderPriority() const {
+    auto TileView::getRenderPriority() const -> Renderable::RenderPriority {
         if (transitioning) {
             return Renderable::RenderPriority::OnTop;
         }
