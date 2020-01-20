@@ -63,7 +63,7 @@ before_install:
   - cmake .
   - make -j4
   - sudo cp lib/libgtest* /usr/lib/
-  - cd ,,
+  - cd ..
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
