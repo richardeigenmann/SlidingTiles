@@ -54,9 +54,10 @@ before_install:
   - make -j4 && sudo make install
   - cd ..
   #- echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-  - cd /usr/src/gtest
+  - cd /usr/src/googletest/googletest
   - cmake .
   - make 
+  - sudo cp libgtest* /usr/lib/
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
