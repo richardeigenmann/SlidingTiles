@@ -2,6 +2,12 @@ language: cpp
 dist: xenial
 sudo: true
 
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "ZsbAtYTVVfbqoz77SdP69vZ7437JTHxhO0GJZlWzfsDvBNerjm3UkMdtwwemJeCvF1TkckT7ydvPqQbNSXPKF2jBHUQ/oSYXQ0enyIcrBLlWj+w1NPMDnMif9ESVy1vlKeoGZqtAkB9rLRGNFms7Ha3+/fDd/uuc83BBktQeBzfw1yz3eHBko6mbdQsZYAbwJTFTHMUpN/cT+2RKFGHjkDmhJOHyuMfIUvU+/4G18X2UpbhPGt6lxdlvRjL6yO7ccndPMG2A2dKnNyZv3qW00DVQ9pIDzf/PxUCSVt/3eXNAvVE6FHycy+KrXS9jXHQpnpN6qerplXGU/mnYfgspoPiJjoGhR/XO8OxqsJVlrU91tX6a0fcmsX5ie39z9HErnCLZL33U+cyI2VvHTcCiE0g0Zg85QPj9pJi3L8E4ef74xKzfmq6E2uKZ6rcRZjoq/8CamqKFFYhX6xAm8HcSaGqb9y3POSjWnr8rh9QFDhUjSHJ9MmunI/azUs4lkpaViOa/BpgHmtkiYSmsVSeJ0AUf26SeYe6pYMznr/TCOzPQGoEttTn6N9gNblzz/U6aNI9rMWfiL58q2UyUH1a7WB72Yo8Zo5Ls76gKd8aaoVHCJcYVSCC1klZpuMY9Fc+qs3Id2ZmgmZAhsrFUs3E7tabyCuL4uqFn71rAuGgCpSk="
+
 compiler:
   - gcc
   - clang
@@ -27,6 +33,14 @@ addons:
     - libsndfile1-dev
     - libopenal-dev
     - libudev-dev
+  coverity_scan:
+    project:
+      name: "richardeigenmann/SlidingTiles"
+      description: "Sliding Tiles Game"
+    notification_email: richard.eigenmann@gmail.com
+    build_command_prepend: "cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_CC_COMPILER=/usr/bin/gcc .."
+    build_command: "make"
+    branch_pattern: coverity_scan
 
 before_install:
   - wget -nv -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -39,6 +53,8 @@ before_install:
   - cmake .
   - make -j4 && sudo make install
   - cd ..
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
