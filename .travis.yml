@@ -31,7 +31,7 @@ addons:
     - libsndfile1-dev
     - libopenal-dev
     - libudev-dev
-    - gtest
+    - libgtest-dev
     - google-mock
   coverity_scan:
     project:
