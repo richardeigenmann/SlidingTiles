@@ -38,7 +38,7 @@ addons:
       name: "richardeigenmann/SlidingTiles"
       description: "Sliding Tiles Game"
     notification_email: richard.eigenmann@gmail.com
-    build_command_prepend: "cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_CC_COMPILER=/usr/bin/gcc .."
+    build_command_prepend: "cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ .."
     build_command: "make"
     branch_pattern: coverity_scan
 
@@ -53,8 +53,10 @@ before_install:
   - cmake .
   - make -j4 && sudo make install
   - cd ..
-  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-  - cd /usr/src/gtest; cmake CMakeLists.txt; make 
+  #- echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+  - cd /usr/src/gtest
+  - cmake .
+  - make 
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
