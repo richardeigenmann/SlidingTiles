@@ -58,13 +58,17 @@ Learn C++ game programming by building a nice little game. Along the way I have 
 * Packaging with CPACK
 
 ## Build and run
+
 ### Prerequisites
+
 Experimenting with the Windows Subsystem for Linux it transpires that the following steps need to be done (for an OpenSUSE installation)
-``` bash
+
+```bash
 git clone https://github.com/richardeigenmann/SlidingTiles.git
 sudo zypper in cmake # for the build system
 sudo zypper in sfml2-devel # to include and link SFML
 sudo zypper in zeromq-devel # to include and link ZeroMQ
+sudo zypper in gtest gmock gtest-devel # for the unit tests
 sudo zypper in lcov # for code coverage
 sudo zypper in rpm-build # for the make package target
 ```
@@ -74,8 +78,8 @@ cd SlidingTiles
 mkdir -p build
 cd build
 cmake ..
-# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang ..
-# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_CC_COMPILER=/usr/bin/gcc ..
+# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ ..
+# or cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ ..
 make
 ./sliding-tiles
 ```
@@ -98,8 +102,6 @@ sourcetrail
 # Next > Next > Create > All files > Start > OK
 # Files > main.cpp > explore!
 ```
-
-
 
 ## Build and run on Visual Studio 2017
 
@@ -170,6 +172,7 @@ make sliding-tiles_coverage
 ```
 
 ## Linting with clang-tidy
+
 ```bash
 mkdir -p build
 cd build
@@ -291,7 +294,6 @@ places the root node on the queue and then reads nodes off the front of the queu
 If the endboard of the move isn't a solved puzzle the method looks for the
 child moves and adds them at the end of the queue. This way first all the level 1
 nodes are visited before the level 2 nodes are checked and so on.
-
 
 ## Rendering with a Rendering Singleton where Renderables register themselves
 
@@ -666,7 +668,6 @@ sliding-tiles
 zypper addrepo --refresh https://download.nvidia.com/opensuse/tumbleweed NVIDIA
 zypper in x11-video-nvidiaG05
 ```
-
 
 ## Testing the package on a Debian Docker container
 

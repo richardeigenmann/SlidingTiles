@@ -12,21 +12,13 @@ IF (WIN32)
   message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
 ENDIF (WIN32)
 IF (UNIX)
-    # Since SFML 2.5 everything is now easier: see https://en.sfml-dev.org/forums/index.php?topic=24070.0
-    #SET(CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules/" "${PROJECT_SOURCE_DIR}" "${CMAKE_MODULE_PATH}")
-
     SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR} ${CMAKE_MODULE_PATH})
     ## If you want to link SFML statically
     # set(SFML_STATIC_LIBRARIES TRUE)
-
-    ## In most cases better set in the CMake cache
-    # set(SFML_DIR "<sfml root prefix>/lib/cmake/SFML")
 ENDIF (UNIX)
 
-
+# Since SFML 2.5 everything is now easier: see https://en.sfml-dev.org/forums/index.php?topic=24070.0
 FIND_PACKAGE(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
-MESSAGE(STATUS "SFML_INCLUDE_DIR: ${SFML_INCLUDE_DIR}")
-MESSAGE(STATUS "SFML_LIBRARIES: ${SFML_LIBRARIES}")
 
 find_package(ZeroMQ)
 MESSAGE(STATUS "ZeroMQ_INCLUDE_DIR: ${ZeroMQ_INCLUDE_DIR}")
@@ -153,7 +145,6 @@ TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
 )
 
 TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
-    #${SFML_LIBRARIES}
     sfml-graphics  sfml-window sfml-system sfml-audio
     ${ZeroMQ_LIBRARIES}
     stdc++fs
@@ -182,28 +173,29 @@ ENDIF (WIN32)
 # Download and unpack googletest at configure time
 # see https://crascit.com/2015/07/25/cmake-gtest/
 # copy the CMakeLists.txt.in to build area as CMakeLists.txt
-configure_file( CMakeLists.txt.in googletest-download/CMakeLists.txt )
+#configure_file( CMakeLists.txt.in googletest-download/CMakeLists.txt )
 # we need to execute the build steps at config time so that
 # the tests can find the gtest libraries when they configure
-execute_process( COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
-execute_process( COMMAND ${CMAKE_COMMAND} --build .
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+#execute_process( COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+#  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+#execute_process( COMMAND ${CMAKE_COMMAND} --build .
+#  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
 
 # Prevent GoogleTest from overriding our compiler/linker options
 # when building with Visual Studio
-set( gtest_force_shared_crt ON CACHE BOOL "" FORCE )
+#set( gtest_force_shared_crt ON CACHE BOOL "" FORCE )
 
 # Add googletest directly to our build. This adds
 # the following targets: gtest, gtest_main, gmock
 # and gmock_main
-option(INSTALL_GMOCK "Install Googletest's GMock?" OFF)
-option(INSTALL_GTEST "Install Googletest's GTest?" OFF)
-add_subdirectory( ${CMAKE_BINARY_DIR}/googletest-src
-                 ${CMAKE_BINARY_DIR}/googletest-build )
+#option(INSTALL_GMOCK "Install Googletest's GMock?" OFF)
+#option(INSTALL_GTEST "Install Googletest's GTest?" OFF)
+#add_subdirectory( ${CMAKE_BINARY_DIR}/googletest-src
+#                 ${CMAKE_BINARY_DIR}/googletest-build )
 
 # these steps compile and link the unit-tests executable
 enable_testing()  # gives us a make test target
+find_package (GTest REQUIRED)
 add_test( all unit-tests ) # gives us a make test all target
 add_executable( unit-tests test-main.cpp ${SOURCE_FILES} ${UNIT_TESTS} )
 TARGET_INCLUDE_DIRECTORIES( unit-tests PUBLIC
@@ -213,9 +205,9 @@ TARGET_INCLUDE_DIRECTORIES( unit-tests PUBLIC
     ${ZeroMQ_INCLUDE_DIR}
 )
 target_link_libraries( unit-tests LINK_PUBLIC
-    gtest
-    gmock
-    #${SFML_LIBRARIES}
+    #gtest
+    #gmock
+    GTest::GTest GTest::Main
     sfml-graphics sfml-window sfml-system sfml-audio
     ${ZeroMQ_LIBRARIES}
     stdc++fs
