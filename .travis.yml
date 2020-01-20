@@ -54,7 +54,7 @@ before_install:
   - make -j4 && sudo make install
   - cd ..
   - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-
+  - cd /usr/src/gtest; cmake CMakeLists.txt; make 
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
@@ -70,7 +70,6 @@ script:
     - cmake ..
     - make -j4
     - xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests
-  # - catchsegv ./unit-tests -o hai
 
 after_success:
     # Creating report
