@@ -17,13 +17,11 @@ addons:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    #- libsfml-dev
     - libzmq3-dev
     - lcov
     - doxygen
     - xvfb
     - g++-8
-    # install sfml
     - libx11-dev
     - freeglut3-dev
     - libjpeg-dev
@@ -33,6 +31,8 @@ addons:
     - libsndfile1-dev
     - libopenal-dev
     - libudev-dev
+    - gtest
+    - google-mock
   coverity_scan:
     project:
       name: "richardeigenmann/SlidingTiles"
