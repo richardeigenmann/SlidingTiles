@@ -56,14 +56,16 @@ namespace SlidingTiles {
                     const unsigned int LOWERCASE_P { 112 };
                     const unsigned int LOWERCASE_N { 110 };
                     const unsigned int LOWERCASE_D { 100 };
-                    if (event.text.unicode == LOWERCASE_R) { // NOLINT(cppcoreguidelines-pro-type-union-access)
+                    // sf::Event is a union and not a C++17 std::variant which would be better
+                    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
+                    if (event.text.unicode == LOWERCASE_R) {
                         doRandomGame();
                     } else if (event.text.unicode == LOWERCASE_P) { // NOLINT(cppcoreguidelines-pro-type-union-access)
                         gameBoard.printGame();
                     } else if (event.text.unicode == LOWERCASE_N) {  // NOLINT(cppcoreguidelines-pro-type-union-access)
                         doLevelUp();
                     } else { 
-                        if (event.text.unicode == LOWERCASE_D) { //d // NOLINT(cppcoreguidelines-pro-type-union-access)
+                        if (event.text.unicode == LOWERCASE_D) { // NOLINT(cppcoreguidelines-pro-type-union-access)
                             json jsonMessage{};
                             jsonMessage["state"] = ZmqSingleton::DEBUG;
                             ZmqSingleton::getInstance().publish(jsonMessage);
