@@ -36,7 +36,7 @@ addons:
       name: "richardeigenmann/SlidingTiles"
       description: "Sliding Tiles Game"
     notification_email: richard.eigenmann@gmail.com
-    build_command_prepend: "cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ .."
+    build_command_prepend: "cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ ."
     build_command: "make"
     branch_pattern: coverity_scan
 
