@@ -56,7 +56,7 @@ before_install:
   - cmake .
   - make -j4 && sudo make install
   - cd ..
-  #- echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++"; fi
