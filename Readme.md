@@ -86,7 +86,7 @@ make
 
 ## Explore the code with SourceTrail
 
-See https://sourcetrail.com
+See <https://sourcetrail.com>
 
 ```bash
 export LANG=en_US.UTF-8
@@ -142,7 +142,7 @@ doxygen ../Doxyfile
 ```
 
 Then open the file in html/index.html in the browser
-A manually compiled Doxygen build is available here: https://richardeigenmann.github.io/SlidingTiles/doxygen/annotated.html
+A manually compiled Doxygen build is available here: <https://richardeigenmann.github.io/SlidingTiles/doxygen/annotated.html>
 
 ## Testing
 
@@ -227,7 +227,7 @@ in the map. This is also on the stack but the texturesMap is a long living objec
 in the singleton so it does not go away and any delayed draw can happily access
 it.
 
-## Searching for a solution - A breadth first search!
+## Searching for a solution - A breadth first search
 
 For a human it is easy to see how to solve this puzzle:
 
@@ -265,7 +265,7 @@ search:
 
 ![Breadth-First-Search](https://upload.wikimedia.org/wikipedia/commons/5/5d/Breadth-First-Search-Algorithm.gif)
 
-(From Wikipedia: https://en.wikipedia.org/wiki/Breadth-first_search )
+(From Wikipedia: <https://en.wikipedia.org/wiki/Breadth-first_search> )
 
 Here is "my" code to find the shortest solution path:
 
@@ -301,7 +301,7 @@ The SFML documentation suggests that you use this code to draw a window. Note
 how the loop in the main method clears the canvas then draws the various objects
 and then displays the window. This means that the main loop needs to know about
 everything that is going on in the game and needs to keep track of it's state
-so it can decide what to draw. For instance you would not want to draw the victory 
+so it can decide what to draw. For instance you would not want to draw the victory
 roll banner while the game is still playing.
 
 ```c++
@@ -355,18 +355,13 @@ I didn't like my code after a few hundred lines. Can't we do better?
 
 I chose to create an object that knows which objects can be rendered and then
 calls them in the correct Z-order. Thus when the renderable objects are created
-they register themselves with the renderer during object construction and 
+they register themselves with the renderer during object construction and
 de-register themselves when they get destructed.
 
-So we need a class with a pure virtual function that the renderable objects can 
+So we need a class with a pure virtual function that the renderable objects can
 inherit and add their draw function to:
 
 ```c++
-class Renderable {
-public:
-    /**
-     * @brief Implementing classes must define the render method
-     */
     virtual void render() = 0;
 
     /**
@@ -391,8 +386,8 @@ public:
 };
 ```
 
-Next we need the Rendering Singleton. We use the Observer pattern and kill off 
-the default constructors so that you can only call the static getInstance() 
+Next we need the Rendering Singleton. We use the Observer pattern and kill off
+the default constructors so that you can only call the static getInstance()
 method which will create the exactly one instance and return it.
 
 ```c++
@@ -424,7 +419,7 @@ private:
 };
 ```
 
-Next our RenderingSingleton needs to allow Renderables to register and deregister 
+Next our RenderingSingleton needs to allow Renderables to register and deregister
 themselves. Following an example of the Observer pattern we use a std::map
 to hold the references to the Renderables.
 
@@ -478,7 +473,7 @@ void renderAll() {
 }
 ```
 
-Now classes like Button can inherit from Renderable and can register themselves 
+Now classes like Button can inherit from Renderable and can register themselves
 with the Rendering Singleton upon creation. The render() method is called by
 the RenderingSingleton at the right time when the button needs to be drawn,
 
@@ -498,14 +493,14 @@ void render() {
 }
 ```
 
-Check out the whole implementation of the RenderingSingleton in the 
+Check out the whole implementation of the RenderingSingleton in the
 [renderingSingleton.h](renderingSingleton.h) and 
 [renderingSingleton.cpp](renderingSingleton.cpp) files.
 
-The same concept is used for the update cycle. Check out the whole implementation 
+The same concept is used for the update cycle. Check out the whole implementation
 of the UpdatingSingleton in the 
 [updatingSingleton.h](updatingSingleton.h) and 
-[updatingSingleton.cpp](updatingSingleton.cpp) and [updatable.h](updatable.h) 
+[updatingSingleton.cpp](updatingSingleton.cpp) and [updatable.h](updatable.h)
 files.
 
 ## Messaging with ZeroMQ
@@ -513,8 +508,8 @@ files.
 The early versions of the game were built on the premise that the Game class
 directed the flow of events. The Game class would order a puzzle to be loaded
 and would tell the WinnerBlingBling class to celebrate the win. This approach is
-fine for simple applications but there are drawbacks. If something changes 
-you have to go back to the Game class and fix it there. A lot of code accumulates 
+fine for simple applications but there are drawbacks. If something changes
+you have to go back to the Game class and fix it there. A lot of code accumulates
 there and you don't end up with a good "separation of concerns".
 
 A more modern design uses loose coupling where the various objects don't know or
@@ -527,24 +522,24 @@ publisher - subscriber pattern. This allows a publisher to broadcast messages
 that the subscribers receive and can act upon.
 
 I have chosen to use JSON as a format for my messages as the game already links
-to Niels Lohmann's library and JSON is a nice versatile format. Obviously the 
+to Niels Lohmann's library and JSON is a nice versatile format. Obviously the
 serialisation and deserialisation comes at a cost so this approach might not work
 in all cases.
 
 The game probably has multiple places that need to send messages so I created
-a ZmqSingleton ( [zmqSingleton.h](zmqSingleton.h) and 
-[zmqSingleton.cpp](zmqSingleton.cpp) ) where any class can call the 
+a ZmqSingleton ( [zmqSingleton.h](zmqSingleton.h) and
+[zmqSingleton.cpp](zmqSingleton.cpp) ) where any class can call the
 publish(const std::string & message) function.
 
-ZeroMQ can transport the messages over various kinds of connection. Most common 
+ZeroMQ can transport the messages over various kinds of connection. Most common
 certainly is the use of TCP sockets. But it also support In-Process connections.
-For this to work, though, the zmq::context_t object must be shared. I chose to 
+For this to work, though, the zmq::context_t object must be shared. I chose to
 use the ZmqSingleton as the carrier for the context object which is distributed
 to any caller by means of a shared_ptr.
 
 In the receiving classes we need to connect to the socket and check if a message
 was received. The best place to review this is the DebugMessageListener class:
-[debugMessageListener.h](debugMessageListener.h) and 
+[debugMessageListener.h](debugMessageListener.h) and
 [debugMessageListener.cpp](debugMessageListener.cpp)
 
 ```c++
@@ -612,7 +607,7 @@ for (const auto & solutionStep : solutionPath) {
 ZmqSingleton::getInstance().publish(jsonMessage);
 ```
 
-## CPACK packaging to create rpm etc.
+## CPACK packaging to create rpm etc
 
 ```bash
 cd build
@@ -622,7 +617,7 @@ make package_source
 
 These commands create the spec file in `build/_CPack_Packages/Linux/RPM/SPECS/sliding-tiles.spec` and then creates the rpm in `build/sliding-tiles--1.x86_64.rpm`
 
-See this link for information about exporting your gpg key and usign it to sign the rpm. It doesn't work so well I find. (https://gist.github.com/fernandoaleman/1376720/aaff3a7a7ede636b6913f17d97e6fe39b5a79dc0)
+See this link for information about exporting your gpg key and usign it to sign the rpm. It doesn't work so well I find. <https://gist.github.com/fernandoaleman/1376720/aaff3a7a7ede636b6913f17d97e6fe39b5a79dc0>
 
 ```bash
 # export your public key and import it into rpm
@@ -646,12 +641,12 @@ sudo rpm -q --qf '%{SIGPGP:pgpsig} %{SIGGPG:pgpsig}\n' -p sliding-tiles--1.x86_6
 
 ## Testing the package on a openSUSE leap Docker container
 
-see: (https://medium.com/@SaravSun/running-gui-applications-inside-docker-containers-83d65c0db110)
-and (http://somatorio.org/en/post/running-gui-apps-with-docker/)
+see: <https://medium.com/@SaravSun/running-gui-applications-inside-docker-containers-83d65c0db110>
+and <http://somatorio.org/en/post/running-gui-apps-with-docker>
 
 ```bash
 xhost + # allow other computers to use your DISPLAY
-docker run -it --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --volume /tmp/.X11-unix:/tmp/.X11-unix --volume /etc/localtime:/etc/localtime --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap 
+docker run -it --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --volume /tmp/.X11-unix:/tmp/.X11-unix --volume /etc/localtime:/etc/localtime --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap
 docker run -it --net=host --env="DISPLAY" -v /tmp/.X11-unix:/tmp/.X11-unix --device /dev/dri --device /dev/snd --device /dev/input --rm opensuse/leap
 
 # on a different terminal find the container it
@@ -698,15 +693,15 @@ decided on a license. Please contact me with any questions.
 
 The source includes a copy of JSON for Modern C++ from Niels Lohmann [GitHub](https://github.com/nlohmann/json) This is MIT licenced.
 
-Trophy Clipart from http://www.clipartbest.com/clipart-aieonzEzT
+Trophy Clipart from <http://www.clipartbest.com/clipart-aieonzEzT>
 
-Undo Button from http://www.clipartbest.com/clipart-nTX8LaxKc
+Undo Button from <http://www.clipartbest.com/clipart-nTX8LaxKc>
 
-The buttons were created by https://dabuttonfactory.com/
+The buttons were created by <https://dabuttonfactory.com/>
 
-The Raleway font is a Google Font with Open Font License: https://fonts.google.com/specimen/Raleway
+The Raleway font is a Google Font with Open Font License: <https://fonts.google.com/specimen/Raleway>
 
 The tiles were drawn by Richard Eigenmann using Blender.
 
-The Over Par Clipart is from https://pixabay.com/vectors/smiley-emoticon-smilies-emotion-150837/ 
-The license is https://pixabay.com/service/license/ 
+The Over Par Clipart is from <https://pixabay.com/vectors/smiley-emoticon-smilies-emotion-150837/>
+The license is <https://pixabay.com/service/license/>

@@ -100,10 +100,7 @@ namespace SlidingTiles {
         void undoLatestMove();
 
         /**
-         * @brief broadcasts a message with the curent number of moves$
-         */
-        void broadcastMovesCount();
-
+         * @brief broadcasts a message with the curent number of moves$random_device
         /**
          * @brief return whether the move is possible
          * @param move the position of the tile to move and the direction in which to move it

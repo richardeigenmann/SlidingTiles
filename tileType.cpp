@@ -1,5 +1,6 @@
 #include "tileType.h"
 #include <array>
+#include <random>
 
 auto tileTypeToString(const SlidingTiles::TileType & t) -> std::string {
     switch (t) {
@@ -187,7 +188,11 @@ const std::array<SlidingTiles::TileType,4> START_TILES {
  * @brief Returns if a random start TileType
  */
 auto randomStartTileType() -> SlidingTiles::TileType {
-    return START_TILES.at(random() % START_TILES.size());
+    std::random_device rd{};
+    std::mt19937 mtgen = std::mt19937 {rd()};
+    auto ud = std::uniform_int_distribution<>(0, START_TILES.size()-1);
+    return START_TILES.at(ud(mtgen));
+    //return START_TILES.at(random() % START_TILES.size());
 }
 
 
@@ -217,7 +222,11 @@ const std::array<SlidingTiles::TileType,4> END_TILES {SlidingTiles::TileType::En
  * @brief Returns if a random end TileType
  */
 auto randomEndTileType() -> SlidingTiles::TileType {
-    return END_TILES.at(random() % END_TILES.size());
+    std::random_device rd{};
+    std::mt19937 mtgen = std::mt19937 {rd()};
+    auto ud = std::uniform_int_distribution<>(0, END_TILES.size()-1);
+    return END_TILES.at(ud(mtgen));
+    //return END_TILES.at(random() % END_TILES.size());
 }
 
 auto isGameTileType(const SlidingTiles::TileType & t) -> bool {
@@ -239,5 +248,8 @@ const std::array<SlidingTiles::TileType,7> GAME_TILES {
     SlidingTiles::TileType::Obstacle};
 
 auto randomGameTileType() -> SlidingTiles::TileType {
-    return GAME_TILES.at(random() % GAME_TILES.size());
+    std::random_device rd{};
+    std::mt19937 mtgen = std::mt19937 {rd()};
+    auto ud = std::uniform_int_distribution<>(0, GAME_TILES.size()-1);
+    return GAME_TILES.at(ud(mtgen));
 }
