@@ -138,23 +138,18 @@ private:
     std::map<Renderable *const, Renderable *const> renderables;
 
     /**
- * @brief Cross platform way to get the path of the executable so we can derive the 
- * asset directory.
- * @see https://en.sfml-dev.org/forums/index.php?topic=12416.msg86622#msg86622
- */
-    std::string get_executable_path() const
-    {
+     * @brief Cross platform way to get the path of the executable so we can derive the 
+     * asset directory.
+     * @see https://en.sfml-dev.org/forums/index.php?topic=12416.msg86622#msg86622
+     */
+    std::string get_executable_path() const noexcept (false) {
         char buff[1024];
 //#if defined(LINUX)
         ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff) - 1);
-        if (len != -1)
-        {
+        if (len != -1) {
             buff[len] = '\0';
-            //return boost::filesystem::path(buff).parent_path.string();
             return std::experimental::filesystem::path(buff).parent_path().string();
-        }
-        else
-        {
+        } else {
             std::cerr << "Failed to retrieve the executable path." << std::endl;
             return std::experimental::filesystem::current_path().string();
         }

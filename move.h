@@ -19,14 +19,14 @@ namespace SlidingTiles {
          * @param startPosition the game board coordinates of the moving tile
          * @param direction the direction to move in
          */
-        explicit Move(const sf::Vector2i & startPosition, const SlidingTiles::Direction & direction)
+        explicit Move(const sf::Vector2<int> & startPosition, const SlidingTiles::Direction & direction)
         : startPosition(startPosition), direction(direction) {
         };
 
         /**
          * @brief the game board coordinates of the moving tile
          */
-        sf::Vector2i startPosition;
+        sf::Vector2<int> startPosition;
 
         /**
          * @brief the direction we are moving in

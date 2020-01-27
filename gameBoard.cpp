@@ -3,7 +3,6 @@
 #include "tileType.h"
 
 #include <algorithm> // std::shuffle
-#include <cassert> // assert
 #include <chrono> // std::chrono::system_clock
 #include <codecvt>
 #include <cstdlib> // srand, rand
@@ -333,38 +332,33 @@ auto SlidingTiles::GameBoard::findStartTile() -> const SlidingTiles::Tile* {
     return nullptr;
 }
 
-auto SlidingTiles::GameBoard::getOutputPosition(const Move & move) -> sf::Vector2i {
-    assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+auto SlidingTiles::GameBoard::getOutputPosition(const Move & move) noexcept (false) -> sf::Vector2i   {
+    if ( (move.startPosition.x < 0 ) 
+        || ( move.startPosition.x >= boardSize)
+        || ( move.startPosition.y < 0 )
+        || ( move.startPosition.y >= boardSize) ) {
+            throw std::out_of_range ("getOutputPosition called with an invalid startPosition in the move");
+    }
     auto type = getTile(move.startPosition.x, move.startPosition.y)->getTileType();
     sf::Vector2i nextTile{move.startPosition.x, move.startPosition.y};
 
-    if (type == TileType::StartRight && move.startPosition.x < boardSize - 1) {
+    if ( (type == TileType::StartRight && move.startPosition.x < boardSize - 1) 
+        || (type == TileType::Horizontal && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoRight) 
+        || (type == TileType::BottomRight && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoUp) ) {
         ++nextTile.x;
-    } else if (type == TileType::StartLeft && move.startPosition.x < boardSize - 1 && move.startPosition.x > 0) {
+    } else if ( (type == TileType::StartLeft && move.startPosition.x < boardSize - 1 && move.startPosition.x > 0) 
+        || (type == TileType::Horizontal && move.startPosition.x > 0 && move.direction == Direction::GoLeft) 
+        || (type == TileType::LeftBottom && move.startPosition.x > 0 && move.direction == Direction::GoUp) 
+        || (type == TileType::LeftTop && move.startPosition.x > 0 && move.direction == Direction::GoDown) ) {
         --nextTile.x;
-    } else if (type == TileType::StartTop && move.startPosition.y > 0) {
+    } else if ( (type == TileType::StartTop && move.startPosition.y > 0) 
+        || (type == TileType::Vertical && move.startPosition.y > 0 && move.direction == Direction::GoUp) 
+        || (type == TileType::LeftTop && move.startPosition.y > 0 && move.direction == Direction::GoRight) ) {
         --nextTile.y;
-    } else if (type == TileType::StartBottom && move.startPosition.y < boardSize - 1) {
+    } else if ( (type == TileType::StartBottom && move.startPosition.y < boardSize - 1) 
+        || (type == TileType::Vertical && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoDown) 
+        || (type == TileType::LeftBottom && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoRight) ) {
         ++nextTile.y;
-    } else if (type == TileType::Horizontal && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoRight) {
-        ++nextTile.x;
-    } else if (type == TileType::Horizontal && move.startPosition.x > 0 && move.direction == Direction::GoLeft) {
-        --nextTile.x;
-    } else if (type == TileType::Vertical && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoDown) {
-        ++nextTile.y;
-    } else if (type == TileType::Vertical && move.startPosition.y > 0 && move.direction == Direction::GoUp) {
-        --nextTile.y;
-    } else if (type == TileType::LeftBottom && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoRight) {
-        ++nextTile.y;
-    } else if (type == TileType::LeftBottom && move.startPosition.x > 0 && move.direction == Direction::GoUp) {
-        --nextTile.x;
-    } else if (type == TileType::LeftTop && move.startPosition.x > 0 && move.direction == Direction::GoDown) {
-        --nextTile.x;
-    } else if (type == TileType::LeftTop && move.startPosition.y > 0 && move.direction == Direction::GoRight) {
-        --nextTile.y;
-    } else if (type == TileType::BottomRight && move.startPosition.x < boardSize - 1 && move.direction == Direction::GoUp) {
-        ++nextTile.x;
     } else {
         if (type == TileType::BottomRight && move.startPosition.y < boardSize - 1 && move.direction == Direction::GoLeft) {
             ++nextTile.y;
@@ -389,19 +383,18 @@ auto SlidingTiles::GameBoard::getOutputPosition(const Move & move) -> sf::Vector
             }
         }
     }
-
-    assert(nextTile.x >= -2 && nextTile.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    assert(nextTile.y >= -2 && nextTile.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     return nextTile;
 }
 
 auto SlidingTiles::GameBoard::getOutputMove(const Move & move) -> SlidingTiles::Move {
-    assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+    if ( (move.startPosition.x < 0 ) 
+        || ( move.startPosition.x >= boardSize)
+        || ( move.startPosition.y < 0 )
+        || ( move.startPosition.y >= boardSize) ) {
+            throw std::out_of_range ("getOutputPosition called with an invalid startPosition in the move");
+    }
     auto startTile = getTile(move.startPosition.x, move.startPosition.y);
     Move outputMove{getOutputPosition(move), startTile->outputDirection(move.direction)};
-    assert(outputMove.startPosition.x >= -2 && outputMove.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    assert(outputMove.startPosition.y >= -2 && outputMove.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     return outputMove;
 }
 
@@ -426,4 +419,3 @@ auto SlidingTiles::GameBoard::isSolved() -> std::vector<sf::Vector2i> {
     }
     return solutionPath;
 }
-

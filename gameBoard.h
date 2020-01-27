@@ -93,14 +93,19 @@ namespace SlidingTiles {
          */
         void moveTile(const Move & move);
 
+
+        /**
+         * @brief broadcasts via ZMQ the current count of moves in the count field of 
+         * the JSON message
+         */
+        void broadcastMovesCount();
+
         /**
          * @brief undoes the latest move in the moves vector. Calls slideTile.
          * @param move The movement
          */
         void undoLatestMove();
 
-        /**
-         * @brief broadcasts a message with the curent number of moves$random_device
         /**
          * @brief return whether the move is possible
          * @param move the position of the tile to move and the direction in which to move it
