@@ -67,11 +67,8 @@ install:
     - lcov --version
 
 script:
-    - mkdir -p build
-    - cd build
-    - cmake ..
-    - make -j4
-    - xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests
+    - if [ ${COVERITY_SCAN_BRANCH} != 1 ]; then mkdir -p build && cd build && cmake .. &&  make -j4; fi
+    - if [ ${COVERITY_SCAN_BRANCH} != 1 ]; then xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests ; fi
 
 after_success:
     # Creating report
