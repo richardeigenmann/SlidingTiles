@@ -1,7 +1,7 @@
 #include "texturesSingleton.h"
 #include "renderingSingleton.h"
 
-SlidingTiles::TexturesSingleton::TexturesSingleton() {
+SlidingTiles::TexturesSingleton::TexturesSingleton() noexcept(false) {
     sf::Texture texture;
 
     // TODO(richi): Better to load the textures in one big blob

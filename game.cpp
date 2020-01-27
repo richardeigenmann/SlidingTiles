@@ -16,7 +16,7 @@ using json = nlohmann::json;
 
 namespace SlidingTiles {
 
-    Game::Game() {
+    Game::Game() noexcept(false) {
         // read a JSON file and parse it
         const std::string CONFIG_FILENAME = RenderingSingleton::getInstance().getAssetDir() + "sliding-tiles.json";
         std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
