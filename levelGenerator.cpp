@@ -1,9 +1,14 @@
 #include "puzzleSolver.h"
 #include <chrono>
+#include <iostream>
 
 using namespace SlidingTiles;
 
-int main() {
+auto main() -> int {
     PuzzleSolver puzzleSolver{};
-    puzzleSolver.generateGames(10);
+    try {
+        puzzleSolver.generateGames(10);
+    } catch (zmq::error_t & e) {
+        std::cout << e.what() << std::endl;
+    }
 }
