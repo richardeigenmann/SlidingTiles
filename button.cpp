@@ -5,8 +5,8 @@
 
 using json = nlohmann::json;
 
-SlidingTiles::Button::Button(const std::string & filename, const std::string & command) 
-    : command(command) {
+SlidingTiles::Button::Button(const std::string & filename, const std::string & command) noexcept(false)
+    : command(command)  {
 
     if (texture.loadFromFile(RenderingSingleton::getInstance().getAssetDir() + filename)) {
         sprite.setTexture(texture);

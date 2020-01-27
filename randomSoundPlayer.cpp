@@ -2,7 +2,7 @@
 #include "renderingSingleton.h"
 #include <cassert>
 
-void SlidingTiles::RandomSoundPlayer::loadSounds(const json & jsonArray) {
+void SlidingTiles::RandomSoundPlayer::loadSounds(const json & jsonArray) noexcept(false) {
     for (auto& element : jsonArray) {
         const std::string filename = RenderingSingleton::getInstance().getAssetDir() + element["File"].get<std::string>();
         sf::SoundBuffer sb{};

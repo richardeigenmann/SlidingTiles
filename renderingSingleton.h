@@ -73,8 +73,7 @@ public:
          * Add a Renderable to the list of object to render
          * @param renderable The Renderable to add
          */
-    void add(Renderable &renderable)
-    {
+    void add(Renderable &renderable) {
         renderables.insert(std::pair<Renderable *const, Renderable *const>(&renderable, &renderable));
     }
 
@@ -82,16 +81,14 @@ public:
          * Removes a renderable from the list of objects to render
          * @param renderable The Renderable to remove
          */
-    void remove(Renderable &renderable)
-    {
+    void remove(Renderable &renderable) {
         renderables.erase(&renderable);
     }
 
     /**
-         * Tell all renderables to render
-         */
-    void renderAll()
-    {
+     * Tell all renderables to render
+     */
+    void renderAll() {
         for (auto &pair : renderables)
         {
             if (pair.second->getRenderPriority() == Renderable::RenderPriority::Background)
@@ -116,25 +113,24 @@ public:
         getRenderWindow()->display();
     }
 
-    std::string getAssetDir() const
-    {
+    auto getAssetDir() const noexcept(false) -> std::string  {
         return this->get_executable_path() + "/sliding-tiles-assets/";
     }
 
 private:
     /**
-         * @brief Private constructor for singleton
-         */
+     * @brief Private constructor for singleton
+     */
     explicit RenderingSingleton();
 
     /**
-         * @brief the rendering window
-         */
+     * @brief the rendering window
+     */
     sf::RenderWindow window;
 
     /**
-         * @brief The map of Renderables
-         */
+     * @brief The map of Renderables
+     */
     std::map<Renderable *const, Renderable *const> renderables;
 
     /**
@@ -142,7 +138,7 @@ private:
      * asset directory.
      * @see https://en.sfml-dev.org/forums/index.php?topic=12416.msg86622#msg86622
      */
-    std::string get_executable_path() const noexcept (false) {
+    auto get_executable_path() const noexcept (false) -> std::string {
         char buff[1024];
 //#if defined(LINUX)
         ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff) - 1);

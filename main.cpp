@@ -1,6 +1,15 @@
 #include "game.h"
+#include <exception>
+#include <iostream>
 
-int main(int argc, char *argv[]) { // NOLINT (misc-unused-parameters)
-    SlidingTiles::Game game{};
-    game.run();
+
+auto main() -> int {
+    try {
+        SlidingTiles::Game game{};
+        game.run();
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+    } catch (...) {
+        std::cout << "An exception occurred";
+    }
 }

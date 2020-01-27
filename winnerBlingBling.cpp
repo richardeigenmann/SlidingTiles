@@ -1,6 +1,6 @@
 #include "winnerBlingBling.h"
 
-SlidingTiles::WinnerBlingBling::WinnerBlingBling() {
+SlidingTiles::WinnerBlingBling::WinnerBlingBling() noexcept(false) {
     const std::string filename{RenderingSingleton::getInstance().getAssetDir() + "trophy.png"};
     if (texture.loadFromFile(filename)) {
         sprite.setTexture(texture);
