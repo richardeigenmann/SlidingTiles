@@ -5,12 +5,17 @@ PROJECT(sliding-tiles)
 # cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang ..
 
 SET(CMAKE_CXX_STANDARD 17)
-IF (WIN32)
-  SET(SFML_ROOT "C:/Users/Richard/Documents/SFML-2.4.2")
-  SET(CMAKE_MODULE_PATH "${SFML_ROOT}/cmake/Modules" "${PROJECT_SOURCE_DIR}" "${CMAKE_MODULE_PATH}")
-  message( STATUS "CMAKE_GENERATOR: ${CMAKE_GENERATOR}")
-  message( STATUS "CMAKE_CL_64: ${CMAKE_CL_64}")
-ENDIF (WIN32)
+IF (MSVC)
+  MESSAGE(STATUS "Doing Microsoft Visual Studio")
+  #set(SFML_DIR "C:/Users/richa/Documents/SFML-2.5.1-64/lib/cmake/SFML")
+  set(VCPKG_TARGET_ARCHITECTURE x64)
+  set(VCPKG_CRT_LINKAGE dynamic)
+  set(VCPKG_LIBRARY_LINKAGE dynamic)
+  #.\vcpkg.exe install sfml:x64-windows
+  #.\vcpkg.exe install zeromq:x64-windows
+  #.\vcpkg.exe install gtest:x64-windows
+  #.\vcpkg integrate install
+ENDIF (MSVC)
 IF (UNIX)
     SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR} ${CMAKE_MODULE_PATH})
     ## If you want to link SFML statically
@@ -160,14 +165,14 @@ endif()
 
 #INSTALL(TARGETS sliding-tiles "/usr/local/bin")
 
-IF (WIN32)
+IF (Win64)
   ADD_CUSTOM_COMMAND( TARGET sliding-tiles POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-      ${SFML_ROOT}/bin $<TARGET_FILE_DIR:sliding-tiles>
+      ${SFML_DIR}/bin $<TARGET_FILE_DIR:sliding-tiles>
   )
   set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sliding-tiles)
   set_target_properties(sliding-tiles PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY $(Configuration))
-ENDIF (WIN32)
+ENDIF (Win64)
 
 
 # Download and unpack googletest at configure time
@@ -215,9 +220,9 @@ target_link_libraries( unit-tests LINK_PUBLIC
 
 
 # see http://stackoverflow.com/questions/13116488/detailed-guide-on-using-gcov-with-cmake-cdash
-IF (WIN32)
+IF (Win64)
   SET(CHECK_COVERAGE OFF)
-ENDIF (WIN32)
+ENDIF (Win64)
 IF (UNIX)
     SET(CHECK_COVERAGE ON)
 ENDIF (UNIX)
