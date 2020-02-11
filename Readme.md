@@ -103,35 +103,29 @@ sourcetrail
 # Files > main.cpp > explore!
 ```
 
-## Build and run on Visual Studio 2017
+## Build and run on Visual Studio 2019
 
-Currently broken because of broken UTF-8 support
+Visual Studio now has support for CMake projects.
 
-This is a CMake project. That means that we let CMake create the solution files in the build directory from the CMakeLists.txt file
-
-You need to install
+Prerequisites:
 
 * [CMake](https://cmake.org/download)
-* [Python 2.x, not 3.x](https://www.python.org/downloads/release)
-* [SFML](https://www.sfml-dev.org/download.php)
-* [Visual Studio 2017](https://www.visualstudio.com/downloads)
+* Git (https://git-scm.com/download/win)
+* VCPKG (https://github.com/microsoft/vcpkg)
 
-On windows there is no standard place that SFML goes. So you need to tell CMake in the CMakeLists.txt file where it is. Edit this file and adjust the SFML_ROOT delcaration on line 6.
+```bash
+.\vcpkg.exe install sfml:x64-windows
+.\vcpkg.exe install zeromq:x64-windows
+.\vcpkg.exe install gtest:x64-windows
+.\vcpkg integrate install
+```
 
-Then open the CMake GUI. It wants to know "Where is the source code:". Give it the sliding-tiles root directory.
-It also wants to know the build directory. Create a build subdirectory and point the gui at that.
+Open Visual Studio 2019.
+File Open Filder.
+Pick the folder of Sliding Tiles.
+Next to the green triangle pick main.cpp
+Click on the green triangle.
 
-Click the Configure button. If you do this the first time it will ask you for the generator. Pick the Visual Sutdio 15 2017 Win64 generator. Be sure to pick a 64 bit generator if you downloaded the 64 bit SFML library! You could end up with an unhelpful linker error saying it doesn't like x86 in a x64 project.
-
-![CMakeScreenshot](http://opentechschool-zurich.github.io/cpp-co-learning/topics/games/monkey-keg/Richard/sliding-tiles/doc/cmake.png)
-
-Then click Generate to create the sliding-tiles.sln solution file along with lots of other stuff in the sliding-tiles/build directory. Open this with Visual Studio 2017 by clicking "Open Project".
-
-To build the software click Build > Build Solution from the menu. (Be sure not to have the game open or the build will fail to overwrite the exe file "LINK1168: Cannot open ... for writing".)
-
-You should now have a sliding-tiles.exe file in the sliding-tiles/build/Debug directory. You can run it from that directory or start it with the debugger (green triangle or F5).
-
-To run the unit tests. Right click in the Solution Explorer on "unit-tests" and pick "Set as StartUp project". Now you can run them without the debugger by pressing Ctrl-F5 or perhaps with the debugger by pressing F5 (but the terminal window closes on you then).
 
 ## Doxygen Documentation
 
