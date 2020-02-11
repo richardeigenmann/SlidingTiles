@@ -4,7 +4,7 @@
 
 const int SlidingTiles::PuzzleSolver::DEFAULT_DEPTH;
 
-auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::experimental::optional<SlidingTiles::MoveNode> {
+auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::optional<SlidingTiles::MoveNode> {
     assert((moveNode.startPosition.x >= -1) && (moveNode.startPosition.x <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
     assert((moveNode.startPosition.y >= -1) && (moveNode.startPosition.y <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
 
@@ -64,7 +64,7 @@ auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::expe
     return {};
 }
 
-auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int levels) -> std::experimental::optional<SlidingTiles::MoveNode> {
+auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int levels) -> std::optional<SlidingTiles::MoveNode> {
     assert(moveNode.startPosition.x >= -1 && moveNode.startPosition.x <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
     assert(moveNode.startPosition.y >= -1 && moveNode.startPosition.y <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
     //std::cout << "\n\naddPossibleMoves levels: " << levels << " " << moveNode.toString();
@@ -89,7 +89,7 @@ auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int 
     //moveNode.possibleMoves.insert(std::end(moveNode.possibleMoves), std::begin(possMoves), std::end(possMoves));
 }
 
-auto SlidingTiles::PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) -> std::experimental::optional<SlidingTiles::MoveNode> {
+auto SlidingTiles::PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) -> std::optional<SlidingTiles::MoveNode> {
     gameBoard.rootNode.possibleMoves.clear();
     gameBoard.rootNode.endingBoard = gameBoard.serialiseGame();
     return addPossibleMoves(gameBoard.rootNode, depth);

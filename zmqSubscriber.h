@@ -1,6 +1,6 @@
 #pragma once
 #include "zmqSingleton.h"
-#include <experimental/optional>
+#include <optional>
 
 namespace SlidingTiles {
 
@@ -38,7 +38,7 @@ namespace SlidingTiles {
          * Call this periodically and test if it is true.
          * @return a std::optional with the json object that was found
          */
-        std::experimental::optional<json> getZmqMessage() {
+        std::optional<json> getZmqMessage() {
             zmq::message_t reply;
             if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
                 std::string message = std::string(static_cast<char*> (reply.data()), reply.size());

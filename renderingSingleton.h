@@ -1,6 +1,6 @@
 #pragma once
 
-#include <experimental/filesystem>
+#include <filesystem>
 #include "renderable.h"
 #include <SFML/Graphics.hpp>
 #include <map>
@@ -144,10 +144,10 @@ private:
         ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff) - 1);
         if (len != -1) {
             buff[len] = '\0';
-            return std::experimental::filesystem::path(buff).parent_path().string();
+            return std::filesystem::path(buff).parent_path().string();
         } else {
             std::cerr << "Failed to retrieve the executable path." << std::endl;
-            return std::experimental::filesystem::current_path().string();
+            return std::filesystem::current_path().string();
         }
 /* #elif defined(WINDOWS)
         HMODULE module_handle = GetModuleHandle(nullptr);

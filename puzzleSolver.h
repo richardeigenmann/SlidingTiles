@@ -26,21 +26,21 @@ public:
     /**
          * @brief returns all moves that are possible on the current gameboard
          */
-    auto static possibleMoves(MoveNode &moveNode) -> std::experimental::optional<MoveNode>;
+    auto static possibleMoves(MoveNode &moveNode) -> std::optional<MoveNode>;
 
     /**
          * @brief Adds the possibleMoves as MoveNodes to the supplied MoveNode
          * @param moveNode the node on which to Search and add the new Moves
          * @param levels how many levels deep to search 1 .. n
          */
-    auto addPossibleMoves(MoveNode &moveNode, const int levels) -> std::experimental::optional<MoveNode>;
+    auto addPossibleMoves(MoveNode &moveNode, const int levels) -> std::optional<MoveNode>;
 
     /**
          * @brief Builds the tree in the supplied gameBoard
          * @param gameBoard The GameBoard on which to build the tree
          * @param depth The depth to which the tree should be built
          */
-    auto buildTree(GameBoard &gameBoard, int depth) -> std::experimental::optional<MoveNode>;
+    auto buildTree(GameBoard &gameBoard, int depth) -> std::optional<MoveNode>;
 
     /**
          * @brief saves the solution to the supplied GameBoard
