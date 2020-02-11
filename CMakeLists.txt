@@ -149,10 +149,18 @@ TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
     ${ZeroMQ_INCLUDE_DIR}
 )
 
+# See https://stackoverflow.com/questions/50172835/how-do-i-use-cmake-to-ensure-a-c14-compiler-links-with-the-experimental-filesy/50173063#50173063
+# What a mess!
+if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+    set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
+else()
+    set(CXX_FILESYSTEM_LIBRARIES)
+endif()
+
 TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
     sfml-graphics  sfml-window sfml-system sfml-audio
     ${ZeroMQ_LIBRARIES}
-    stdc++fs
+    ${CXX_FILESYSTEM_LIBRARIES}
 )
 
 if(CLANG_TIDY_EXE)
@@ -215,7 +223,7 @@ target_link_libraries( unit-tests LINK_PUBLIC
     GTest::GTest GTest::Main
     sfml-graphics sfml-window sfml-system sfml-audio
     ${ZeroMQ_LIBRARIES}
-    stdc++fs
+    ${CXX_FILESYSTEM_LIBRARIES}
 )
 
 
