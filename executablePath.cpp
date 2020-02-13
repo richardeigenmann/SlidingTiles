@@ -1,9 +1,9 @@
 #include <array>
 
-#if defined(LINUX)
+#ifdef __linux__
     #include <linux/limits.h>
     #include <unistd.h>
-#elif defined _MSC_VER
+#elif _WIN32
     #include <../include/limits.h>
     #include <windows.h>
 #endif
