@@ -163,6 +163,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
   set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
 else()
   set(CXX_FILESYSTEM_LIBRARIES)
+  set(ZeroMQ_LIBRARIES libzmq libzmq-static)
 endif()
 
 TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
