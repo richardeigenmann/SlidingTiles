@@ -1,7 +1,8 @@
 #include "overPar.h"
+#include "executablePath.h"
 
 SlidingTiles::OverPar::OverPar() noexcept(false) {
-    const std::string filename{RenderingSingleton::getInstance().getAssetDir() + "over_par.png"};
+    const std::string filename{getAssetDir() + "over_par.png"};
     if (texture.loadFromFile(filename)) {
         sprite.setTexture(texture);
     } else {

@@ -1,3 +1,4 @@
+#include "executablePath.h"
 #include "game.h"
 #include "gameBoard.h"
 #include "json.hpp"
@@ -18,7 +19,7 @@ namespace SlidingTiles {
 
     Game::Game() noexcept(false) {
         // read a JSON file and parse it
-        const std::string CONFIG_FILENAME = RenderingSingleton::getInstance().getAssetDir() + "sliding-tiles.json";
+        const std::string CONFIG_FILENAME = getAssetDir() + "sliding-tiles.json";
         std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
         std::ifstream configIfstream(CONFIG_FILENAME);
         if (!configIfstream) {

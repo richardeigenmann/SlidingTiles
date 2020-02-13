@@ -1,7 +1,8 @@
+#include "executablePath.h"
 #include "label.h"
 #include "renderingSingleton.h"
 
-const sf::String FONT_FILE {SlidingTiles::RenderingSingleton::getInstance().getAssetDir() + "Raleway-Regular.ttf"}; //NOLINT (cert-err58-cpp)
+const sf::String FONT_FILE {getAssetDir() + "Raleway-Regular.ttf"}; //NOLINT (cert-err58-cpp)
 const unsigned int FONT_SIZE {16};
 
 SlidingTiles::Label::Label() noexcept(false) {

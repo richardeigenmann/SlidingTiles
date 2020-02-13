@@ -52,7 +52,7 @@ Learn C++ game programming by building a nice little game. Along the way I have 
 * cross platform (sort of)
 * Graphics & Sound
 * Animation
-* C++ 11 --> 17
+* C++ 17
 * Code Coverage
 * Linting with clang-tidy
 * Packaging with CPACK

@@ -2,7 +2,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.6)
 PROJECT(sliding-tiles)
 
 # To run with Clang:
-# cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_CC_COMPILER=/usr/bin/clang ..
+# cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ ..
+# To run with gcc:
+# cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ ..
 
 SET(CMAKE_CXX_STANDARD 17)
 IF (MSVC)
@@ -114,6 +116,7 @@ SET( SOURCE_FILES
     parLabel.cpp
     movesLabel.cpp
     overPar.cpp
+    executablePath.cpp
 )
 
 set( UNIT_TESTS
@@ -151,14 +154,19 @@ TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
 
 # See https://stackoverflow.com/questions/50172835/how-do-i-use-cmake-to-ensure-a-c14-compiler-links-with-the-experimental-filesy/50173063#50173063
 # What a mess!
-if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
+MESSAGE(STATUS "CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}")
+if (CMAKE_CXX_COMPILER_ID STREQUAL GNU) # GCC
+  #set(CXX_FILESYSTEM_LIBRARIES)
+  set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
+  #set(CXX_FILESYSTEM_LIBRARIES c++fs)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+  set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
 else()
-    set(CXX_FILESYSTEM_LIBRARIES)
+  set(CXX_FILESYSTEM_LIBRARIES)
 endif()
 
 TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
-    sfml-graphics  sfml-window sfml-system sfml-audio
+    sfml-graphics sfml-window sfml-system sfml-audio
     ${ZeroMQ_LIBRARIES}
     ${CXX_FILESYSTEM_LIBRARIES}
 )

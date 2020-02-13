@@ -1,10 +1,8 @@
 #pragma once
 
-#include <filesystem>
 #include "renderable.h"
 #include <SFML/Graphics.hpp>
 #include <map>
-#include <unistd.h>
 
 namespace SlidingTiles
 {
@@ -113,9 +111,7 @@ public:
         getRenderWindow()->display();
     }
 
-    auto getAssetDir() const noexcept(false) -> std::string  {
-        return this->get_executable_path() + "/sliding-tiles-assets/";
-    }
+
 
 private:
     /**
@@ -133,31 +129,6 @@ private:
      */
     std::map<Renderable *const, Renderable *const> renderables;
 
-    /**
-     * @brief Cross platform way to get the path of the executable so we can derive the 
-     * asset directory.
-     * @see https://en.sfml-dev.org/forums/index.php?topic=12416.msg86622#msg86622
-     */
-    auto get_executable_path() const noexcept (false) -> std::string {
-        char buff[1024];
-//#if defined(LINUX)
-        ssize_t len = ::readlink("/proc/self/exe", buff, sizeof(buff) - 1);
-        if (len != -1) {
-            buff[len] = '\0';
-            return std::filesystem::path(buff).parent_path().string();
-        } else {
-            std::cerr << "Failed to retrieve the executable path." << std::endl;
-            return std::filesystem::current_path().string();
-        }
-/* #elif defined(WINDOWS)
-        HMODULE module_handle = GetModuleHandle(nullptr);
-        GetModuleFileName(module_handle, buff, sizeof(buff));
-        return std::experimental::filesystem::path(buff).parent_path.string();
-#else
-#error "MISSING CODE :-( - See StackOverflow 1023306"
-*/
-//#endif
-    }
 };
 
 } // namespace SlidingTiles

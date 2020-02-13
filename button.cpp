@@ -1,17 +1,19 @@
 #include "button.h"
+#include "executablePath.h"
 #include "json.hpp"
 #include "zmqSingleton.h"
 #include <iostream>
+
 
 using json = nlohmann::json;
 
 SlidingTiles::Button::Button(const std::string & filename, const std::string & command) noexcept(false)
     : command(command)  {
 
-    if (texture.loadFromFile(RenderingSingleton::getInstance().getAssetDir() + filename)) {
+    if (texture.loadFromFile( getAssetDir() + filename)) {
         sprite.setTexture(texture);
     } else {
-        throw std::runtime_error("Failed to load texture: " + RenderingSingleton::getInstance().getAssetDir() + filename);
+        throw std::runtime_error("Failed to load texture: " + getAssetDir() + filename);
     }
     RenderingSingleton::getInstance().add(*this);
 
