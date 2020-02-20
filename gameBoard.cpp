@@ -15,42 +15,6 @@ using json = nlohmann::json;
 
 const int SlidingTiles::GameBoard::boardSize;
 
-void SlidingTiles::GameBoard::loadGame(const std::string game[boardSize][boardSize]) { // NOLINT (cppcoreguidelines-avoid-c-arrays)
-    for (int x = 0; x < boardSize; ++x) {
-        for (int y = 0; y < boardSize; ++y) {
-            Tile* tile = &tiles[x][y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
-            tile->setTilePosition(sf::Vector2i{x, y});
-            tile->setTileType(game[y][x]); // note the inversion here!  // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index, cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            //std::cout << "[" << x << "][" << y << "] char: " << game[x][y] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
-            json jsonMessage{};
-            jsonMessage["state"] = ZmqSingleton::SET_TILE;
-            jsonMessage["position"]["x"] = x;
-            jsonMessage["position"]["y"] = y;
-            jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            ZmqSingleton::getInstance().publish(jsonMessage);
-        }
-    }
-    solution.clear();
-}
-
-void SlidingTiles::GameBoard::loadGame(const std::vector<std::string> & game) {
-    for (int y = 0; y < boardSize; ++y) {
-        for (int x = 0; x < boardSize; ++x) {
-            Tile* tile = &tiles[x][y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
-            tile->setTilePosition(sf::Vector2i{x, y});
-            tile->setTileType(game[y * 4 + x]);
-            //std::cout << "[" << x << "][" << y << "] game[y*4+x]: " << game[y*4+x] << " became: " << tileTypeToString(tile->getTileType()) << "\n";
-            json jsonMessage{};
-            jsonMessage["state"] = ZmqSingleton::SET_TILE;
-            jsonMessage["position"]["x"] = x;
-            jsonMessage["position"]["y"] = y;
-            jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            ZmqSingleton::getInstance().publish(jsonMessage);
-        }
-    }
-    solution.clear();
-}
-
 void SlidingTiles::GameBoard::loadGame(const std::wstring & game) {
     assert(game.size() == boardSize * boardSize);  // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     for (int y = 0; y < boardSize; ++y) {
@@ -58,27 +22,6 @@ void SlidingTiles::GameBoard::loadGame(const std::wstring & game) {
             auto tile = getTile(x,y);
             tile->setTilePosition(sf::Vector2i{x, y});
             tile->setTileType(std::wstring{game[y * 4 + x]});
-            //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
-            json jsonMessage{}; 
-            jsonMessage["state"] = ZmqSingleton::SET_TILE;
-            jsonMessage["position"]["x"] = x;
-            jsonMessage["position"]["y"] = y;
-            jsonMessage["tileType"] = tileTypeToString(tile->getTileType());
-            ZmqSingleton::getInstance().publish(jsonMessage);
-        }
-    }
-    solution.clear();
-}
-
-void SlidingTiles::GameBoard::loadGame(const std::string & game) {
-    std::u16string utf16 = std::wstring_convert < std::codecvt_utf8_utf16<char16_t>, char16_t>{}.from_bytes(game.data());
-    assert(utf16.size() >= boardSize * boardSize);  // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-
-    for (int y = 0; y < boardSize; ++y) {
-        for (int x = 0; x < boardSize; ++x) {
-            auto tile = getTile(x,y);
-            tile->setTilePosition(sf::Vector2i{x, y});
-            tile->setTileType(std::wstring{utf16[y * 4 + x]});
             //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
             json jsonMessage{}; 
             jsonMessage["state"] = ZmqSingleton::SET_TILE;
@@ -186,28 +129,18 @@ void SlidingTiles::GameBoard::randomGameImpl(const int emptyTiles) {
     }
 }
 
-auto SlidingTiles::GameBoard::serialiseGame() -> std::vector<std::string>{
-    std::vector<std::string> serialisedGame;
+auto SlidingTiles::GameBoard::serialiseGameToWstring() -> std::wstring {
+    std::wstringstream ss;
     for (int y = 0; y < boardSize; ++y) {
         for (int x = 0; x < boardSize; ++x) {
-            serialisedGame.push_back(tileTypeToChar(getTile(x,y)->getTileType()));
-        }
-    }
-    return serialisedGame;
-}
-
-auto SlidingTiles::GameBoard::serialiseGameToString() -> std::string {
-    std::stringstream ss;
-    for (int y = 0; y < boardSize; ++y) {
-        for (int x = 0; x < boardSize; ++x) {
-            ss << tileTypeToChar(getTile(x,y)->getTileType());
+            ss << tileTypeToWstringChar(getTile(x,y)->getTileType());
         }
     }
     return ss.str();
 }
 
 void SlidingTiles::GameBoard::printGame() {
-    std::cout << serialiseGameToString() << std::endl;
+    std::wcout << serialiseGameToWstring() << std::endl;
 }
 
 auto SlidingTiles::GameBoard::getAdjacentTilePosition(const Move & move) -> sf::Vector2i {

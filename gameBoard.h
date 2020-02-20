@@ -37,22 +37,7 @@ namespace SlidingTiles {
         /**
          * @brief load the game into the board
          */
-        void loadGame(const std::string game[boardSize][boardSize]);
-
-        /**
-         * @brief load the game into the board
-         */
-        void loadGame(const std::vector<std::string> & game);
-
-        /**
-         * @brief load the game into the board
-         */
         void loadGame(const std::wstring & game);
-
-        /**
-         * @brief load the game into the board
-         */
-        void loadGame(const std::string & game);
 
         /**
          * @brief sets up a random game by placing random tiles on the board.
@@ -65,14 +50,9 @@ namespace SlidingTiles {
 
 
         /**
-         * @brief saves the game into an vector of string characters
-         */
-        std::vector<std::string> serialiseGame();
-
-        /**
          * @brief saves the game into a string;
          */
-        auto serialiseGameToString() -> std::string;
+        auto serialiseGameToWstring() -> std::wstring;
 
         /**
          * @brief prints the game to the console

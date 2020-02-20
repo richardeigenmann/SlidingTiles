@@ -96,6 +96,18 @@ namespace SlidingTiles {
 
     private:
         /**
+         * @brief calls loadConfigFile to pull the JSON config file and
+         * the sends the CONFIGURATION_LOADED message to all listeners 
+         * who might want to use this information.
+         */
+        static void loadAndPublishConfigFile();
+
+        /**
+         * @brief loads the config file and returns the json object with the content
+         */
+        static auto loadConfigFile(const std::string & filename) -> nlohmann::json;
+
+        /**
          * @brief the clock
          */
         sf::Clock deltaClock;

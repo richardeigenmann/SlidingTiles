@@ -6,10 +6,10 @@ TEST(TileType, Empty) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("Empty", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ(" ", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L" ", single);
 }
 
 TEST(TileType, Horizontal) {
@@ -17,10 +17,10 @@ TEST(TileType, Horizontal) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("Horizontal", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("-", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"-", single);
 }
 
 TEST(TileType, Vertical) {
@@ -28,10 +28,10 @@ TEST(TileType, Vertical) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("Vertical", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("|", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"|", single);
 }
 
 TEST(TileType, StartTop) {
@@ -39,10 +39,10 @@ TEST(TileType, StartTop) {
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("StartTop", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┴", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┴", single);
 }
 
 TEST(TileType, StartBottom) {
@@ -50,10 +50,10 @@ TEST(TileType, StartBottom) {
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("StartBottom", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┬", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┬", single);
 }
 
 TEST(TileType, StartLeft) {
@@ -61,10 +61,10 @@ TEST(TileType, StartLeft) {
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("StartLeft", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┤", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┤", single);
 }
 
 TEST(TileType, StartRight) {
@@ -72,10 +72,10 @@ TEST(TileType, StartRight) {
     ASSERT_TRUE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("StartRight", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("├", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"├", single);
 }
 
 TEST(TileType, EndTop) {
@@ -83,10 +83,10 @@ TEST(TileType, EndTop) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("EndTop", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┻", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┻", single);
 }
 
 TEST(TileType, EndBottom) {
@@ -94,10 +94,10 @@ TEST(TileType, EndBottom) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("EndBottom", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┳", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┳", single);
 }
 
 TEST(TileType, EndRight) {
@@ -105,10 +105,10 @@ TEST(TileType, EndRight) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("EndRight", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┣", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┣", single);
 }
 
 TEST(TileType, EndLeft) {
@@ -116,10 +116,10 @@ TEST(TileType, EndLeft) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_TRUE(isEndTileType(t));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("EndLeft", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┫", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┫", single);
 }
 
 TEST(TileType, LeftTop) {
@@ -127,10 +127,10 @@ TEST(TileType, LeftTop) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("LeftTop", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┘", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┘", single);
 }
 
 TEST(TileType, LeftBottom) {
@@ -138,10 +138,10 @@ TEST(TileType, LeftBottom) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("LeftBottom", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┐", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┐", single);
 }
 
 TEST(TileType, TopRight) {
@@ -149,10 +149,10 @@ TEST(TileType, TopRight) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("TopRight", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("└", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"└", single);
 }
 
 TEST(TileType, BottomRight) {
@@ -160,10 +160,10 @@ TEST(TileType, BottomRight) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t ));
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("BottomRight", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("┌", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"┌", single);
 }
 
 TEST(TileType, Obstacle) {
@@ -171,10 +171,10 @@ TEST(TileType, Obstacle) {
     ASSERT_FALSE(isStartTileType( t ));
     ASSERT_FALSE(isEndTileType( t ));
     ASSERT_FALSE(isMoveableType( t ));
-    std::string s = tileTypeToString( t );
+    auto s = tileTypeToString( t );
     ASSERT_EQ("Obstacle", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("o", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"o", single);
 }
 
 
@@ -183,10 +183,10 @@ TEST(TileType, Unknown) {
     ASSERT_FALSE(isStartTileType(t));
     ASSERT_FALSE(isEndTileType(t));
     ASSERT_TRUE(isMoveableType( t )); // Actually undefined behaviour
-    std::string s = tileTypeToString(t);
+    auto s = tileTypeToString(t);
     ASSERT_EQ("Unknown Type", s);
-    std::string single = tileTypeToChar(t);
-    ASSERT_EQ("?", single);
+    std::wstring single = tileTypeToWstringChar(t);
+    ASSERT_EQ(L"?", single);
 }
 
 TEST(TileType, randomStartTileType) {

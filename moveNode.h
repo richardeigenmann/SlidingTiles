@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include "move.h"
+#include <codecvt>
 #include <iostream>
 #include <string>
 
@@ -57,12 +58,12 @@ namespace SlidingTiles {
         /**
          * @brief ending board (serialised)
          */
-        std::vector <std::string> endingBoard{};
+        std::wstring endingBoard{};
 
         /**
          * @brief sets the ending board state
          */
-        void setEndingBoard(const std::vector <std::string> & serialisedGame) {
+        void setEndingBoard(const std::wstring & serialisedGame) {
             endingBoard = serialisedGame;
         }
 
@@ -80,8 +81,7 @@ namespace SlidingTiles {
                     << " startPosition: [" << startPosition.x
                     << "][" << startPosition.y << "]" << " depth: " << depth
                     << " direction: " << directionToString(direction)
-                    << " possibleMoves: " << possibleMoves.size() ; //<< "\n";
-            //ss << std::string(indent, ' ');
+                    << " possibleMoves: " << possibleMoves.size();
             ss << " parent: ";
             if ( parent == nullptr ) {
                 ss << "nullptr";
@@ -89,9 +89,8 @@ namespace SlidingTiles {
                 ss << " #" << parent->id;
             }
             ss << " endingBoard: ";
-            for (std::string s : endingBoard) {
-                ss << s;
-            }
+            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
+            ss << convert.to_bytes(endingBoard);
             ss << "\n";
             for (int i = 0; i < possibleMoves.size(); ++i) {
                 ss << std::string(indent, ' ') << "possibleMove[" << i << "] -->\n";

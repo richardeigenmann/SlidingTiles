@@ -9,20 +9,11 @@ TEST(GameView, ObjectCreation) {
 }
 
 TEST(GameView, renderMethod) {
-    std::string game2[GameBoard::boardSize][GameBoard::boardSize]{
-        " ", " ", " ", " ",
-        " ", " ", " ", " ",
-        " ", " ", "-", " ",
-        //" "," ","├",""
-        " ", " ", "├", "┐"
-    };
-
-    //GameBoardSingleton::getInstance().loadGame(game2);
+    std::wstring game{L"          -   ├┐"};
     GameBoard gameBoard{};
-    gameBoard.loadGame(game2);
+    gameBoard.loadGame(game);
     SlidingTiles::GameView gameView{};
     gameView.setGameBoard(&gameBoard);
-
 
     gameView.render();
 }

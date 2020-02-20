@@ -18,20 +18,7 @@ using json = nlohmann::json;
 namespace SlidingTiles {
 
     Game::Game() noexcept(false) {
-        // read a JSON file and parse it
-        const std::string CONFIG_FILENAME = getAssetDir() + "sliding-tiles.json";
-        std::cout << "Reading configuration from file: " << CONFIG_FILENAME << std::endl;
-        std::ifstream configIfstream(CONFIG_FILENAME);
-        if (!configIfstream) {
-            throw std::runtime_error("Could not read configuration file: " + CONFIG_FILENAME);
-        }
-        json configJson;
-        configIfstream >> configJson;
-        configIfstream.close();
-
-        // send the configuration to all listeners
-        configJson["state"] = ZmqSingleton::CONFIGURATION_LOADED;
-        ZmqSingleton::getInstance().publish(configJson);
+        loadAndPublishConfigFile();
 
         gameView.setGameBoard(&gameBoard);
         UpdatingSingleton::getInstance().add(*this);
@@ -39,6 +26,27 @@ namespace SlidingTiles {
 
     Game::~Game() {
         UpdatingSingleton::getInstance().remove(*this);
+    }
+
+    auto Game::loadConfigFile(const std::string & filename) -> nlohmann::json {
+        std::cout << "Reading configuration from file: " << filename << std::endl;
+        std::ifstream configIfstream(filename);
+        if (!configIfstream) {
+            throw std::runtime_error("Could not read configuration file: " + filename);
+        }
+        json configJson;
+        configIfstream >> configJson;
+        configIfstream.close();
+        std::cout << "Read & parsed configuration from file: " << filename << std::endl;
+        return configJson;
+    }
+
+    void Game::loadAndPublishConfigFile() {
+        const std::string CONFIG_FILENAME = getAssetDir() + "sliding-tiles.json";
+        json configJson = loadConfigFile(CONFIG_FILENAME);
+
+        configJson["state"] = ZmqSingleton::CONFIGURATION_LOADED;
+        ZmqSingleton::getInstance().publish(configJson);
     }
 
     void Game::run() {
@@ -76,7 +84,6 @@ namespace SlidingTiles {
                     }
                 }
             }
-
             sf::Time dt = deltaClock.restart();
             UpdatingSingleton::getInstance().updateAll(dt.asSeconds());
             RenderingSingleton::getInstance().renderAll();
@@ -117,7 +124,6 @@ namespace SlidingTiles {
                 gameState = GameState::Playing;
             }
         }
-
         auto msg = getZmqMessage();
         if (msg) {
             handleMessage(msg.value());
@@ -139,6 +145,7 @@ namespace SlidingTiles {
             gameBoard.undoLatestMove();
         }
     }
+
     void Game::onRestartButtonClick() {
         loadLevel();
     }
@@ -147,7 +154,10 @@ namespace SlidingTiles {
         PuzzleSolver puzzleSolver;
         const unsigned int EMPTY_TILES {8};
         const unsigned int DEPTH {2};
-        gameBoard.loadGame(puzzleSolver.generateRandomGame(EMPTY_TILES, DEPTH).serialiseGame());
+        std::cout<<"Generating a random game\n";
+        auto randomGame = puzzleSolver.generateRandomGame(EMPTY_TILES, DEPTH).serialiseGameToWstring();
+        std::cout<<"loading the random game\n";
+        gameBoard.loadGame(randomGame);
     }
 
     void Game::doMousePressed(const sf::Vector2i & mousePosition) {
@@ -200,7 +210,10 @@ namespace SlidingTiles {
 
         json jsonLevel = levelsArray[level];
         auto serializedGame = jsonLevel["SerializedGame"].get<std::string>();
-        gameBoard.loadGame(serializedGame);
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring wide = converter.from_bytes(serializedGame);
+        std::wcout << "wide string: " << wide << std::endl;
+        gameBoard.loadGame(wide);
         gameState = GameState::Playing;
 
         json jsonMessage{};

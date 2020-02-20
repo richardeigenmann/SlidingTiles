@@ -40,7 +40,7 @@ SlidingTiles::TileType stringToTileType(const std::string & s);
 /**
  * @brief Returns a char for the tile type. Used for Serialisation
  */
-std::string tileTypeToChar(const SlidingTiles::TileType & t);
+//std::string tileTypeToChar(const SlidingTiles::TileType & t);
 
 /**
  * @brief Returns a char for the tile type. Used for Serialisation

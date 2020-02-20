@@ -18,7 +18,7 @@ auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::opti
                     MoveNode childNode{position, Direction::GoUp};
                     childNode.setParent(moveNode);
                     gameBoard.slideTile(childNode);
-                    childNode.setEndingBoard(gameBoard.serialiseGame());
+                    childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
                     moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
@@ -29,7 +29,7 @@ auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::opti
                     MoveNode childNode{position, Direction::GoDown};
                     childNode.setParent(moveNode);
                     gameBoard.slideTile(childNode);
-                    childNode.setEndingBoard(gameBoard.serialiseGame());
+                    childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
                     moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
@@ -40,7 +40,7 @@ auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::opti
                     MoveNode childNode{position, Direction::GoLeft};
                     childNode.setParent(moveNode);
                     gameBoard.slideTile(childNode);
-                    childNode.setEndingBoard(gameBoard.serialiseGame());
+                    childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
                     moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
@@ -51,7 +51,7 @@ auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::opti
                     MoveNode childNode{position, Direction::GoRight};
                     childNode.setParent(moveNode);
                     gameBoard.slideTile(childNode);
-                    childNode.setEndingBoard(gameBoard.serialiseGame());
+                    childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
                     moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
@@ -91,7 +91,7 @@ auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const int 
 
 auto SlidingTiles::PuzzleSolver::buildTree(GameBoard & gameBoard, int depth) -> std::optional<SlidingTiles::MoveNode> {
     gameBoard.rootNode.possibleMoves.clear();
-    gameBoard.rootNode.endingBoard = gameBoard.serialiseGame();
+    gameBoard.rootNode.endingBoard = gameBoard.serialiseGameToWstring();
     return addPossibleMoves(gameBoard.rootNode, depth);
 }
 
@@ -127,9 +127,10 @@ auto SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std:
         gameBoard.randomGame(emptyTiles);
         auto solution = buildTree(gameBoard, maxDepth);
         //saveSolution(gameBoard);
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
         if (solution) {
             std::cout << "\n{\n\t\"SerializedGame\": \""
-            << gameBoard.serialiseGameToString()
+            << convert.to_bytes(gameBoard.serialiseGameToWstring())
             << '\"'
             << ",\n"
             << solution.value().enumerateMoves() << "\n"

@@ -18,7 +18,7 @@ TEST(PuzzleSolver, possibleMovesOne) {
     SlidingTiles::GameBoard gameBoard{};
     gameBoard.loadGame(game);
     SlidingTiles::MoveNode rootNode{sf::Vector2i{-1, -1}, SlidingTiles::Direction::Unknown};
-    rootNode.endingBoard = gameBoard.serialiseGame();
+    rootNode.endingBoard = gameBoard.serialiseGameToWstring();
     SlidingTiles::PuzzleSolver puzzleSolver;
     puzzleSolver.possibleMoves(rootNode);
     ASSERT_THAT(rootNode.possibleMoves.size(), 1);
@@ -107,7 +107,7 @@ TEST(PuzzleSolver, possibleMovesDontGoBack) {
     SlidingTiles::GameBoard gameBoard{};
     gameBoard.loadGame(game);
     SlidingTiles::MoveNode rootNode{sf::Vector2i{1, 1}, SlidingTiles::Direction::GoDown};
-    rootNode.endingBoard = gameBoard.serialiseGame();
+    rootNode.endingBoard = gameBoard.serialiseGameToWstring();
     SlidingTiles::PuzzleSolver puzzleSolver;
     puzzleSolver.possibleMoves(rootNode);
     ASSERT_THAT(rootNode.possibleMoves.size(), 3);

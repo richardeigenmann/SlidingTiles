@@ -326,10 +326,11 @@ TEST(Tile, setTileTypeChar) {
 }
 
 TEST(Tile, transition) {
-    std::string game [SlidingTiles::GameBoard::boardSize][SlidingTiles::GameBoard::boardSize]{"├", "-", "-", "┐",
+    /*std::string game [SlidingTiles::GameBoard::boardSize][SlidingTiles::GameBoard::boardSize]{"├", "-", "-", "┐",
         "┣", "┐", " ", "|",
         "┌", "┘", " ", "|",
-        "└", "-", "-", "┘"};
+        "└", "-", "-", "┘"};*/
+    std::wstring game {L"├--┐┣┐ |┌┘ |└--┘"};
     SlidingTiles::GameBoard gameBoard;
     gameBoard.loadGame(game);
     SlidingTiles::Tile t = gameBoard.tiles[0][0];

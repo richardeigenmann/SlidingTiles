@@ -46,7 +46,7 @@ namespace SlidingTiles {
          */
         sf::Texture & getTexture(const TileType & tileType) {
             if ( texturesMap.find(tileType) == texturesMap.end() ) {
-                std::cout << "Haven't got a texture for tileType: " << tileTypeToString(tileType) << "! Returning an empty Texture instead.\n";
+                std::wcout << "Haven't got a texture for tileType: " << tileTypeToWstringChar(tileType) << "! Returning an empty Texture instead.\n";
                 return texturesMap[TileType::Empty];
             } else {
                 return texturesMap[tileType];

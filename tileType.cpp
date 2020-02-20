@@ -90,46 +90,6 @@ auto stringToTileType(const std::string & s) -> SlidingTiles::TileType {
     return SlidingTiles::TileType::Empty;  
 }
 
-// TODO(richi): Why to Char and return a String??
-auto tileTypeToChar(const SlidingTiles::TileType & t) -> std::string {
-    switch (t) {
-        case SlidingTiles::TileType::Empty:
-            return " ";
-        case SlidingTiles::TileType::Horizontal:
-            return "-";
-        case SlidingTiles::TileType::Vertical:
-            return "|";
-        case SlidingTiles::TileType::StartTop:
-            return "┴";
-        case SlidingTiles::TileType::StartBottom:
-            return "┬";
-        case SlidingTiles::TileType::StartLeft:
-            return "┤";
-        case SlidingTiles::TileType::StartRight:
-            return "├";
-        case SlidingTiles::TileType::EndTop:
-            return "┻";
-        case SlidingTiles::TileType::EndBottom:
-            return "┳";
-        case SlidingTiles::TileType::EndRight:
-            return "┣";
-        case SlidingTiles::TileType::EndLeft:
-            return "┫";
-        case SlidingTiles::TileType::LeftTop:
-            return "┘";
-        case SlidingTiles::TileType::LeftBottom:
-            return "┐";
-        case SlidingTiles::TileType::TopRight:
-            return "└";
-        case SlidingTiles::TileType::BottomRight:
-            return "┌";
-        case SlidingTiles::TileType::Obstacle:
-            return "o";
-        default:
-            return "?";
-    }
-}
-
 auto tileTypeToWstringChar(const SlidingTiles::TileType & t) -> std::wstring {
     switch (t) {
         case SlidingTiles::TileType::Empty:
