@@ -12,6 +12,7 @@
 #include <random> // random_shuffle, std::default_random_engine
 #include <sstream>
 #include <thread>
+#include <typeinfo> 
 
 using json = nlohmann::json;
 
@@ -155,9 +156,9 @@ namespace SlidingTiles {
         const unsigned int EMPTY_TILES {8};
         const unsigned int DEPTH {2};
         std::cout<<"Generating a random game\n";
-        auto randomGame = puzzleSolver.generateRandomGame(EMPTY_TILES, DEPTH).serialiseGameToWstring();
-        std::cout<<"loading the random game\n";
-        gameBoard.loadGame(randomGame);
+        auto randomGameBoard = puzzleSolver.generateRandomGame(EMPTY_TILES, DEPTH);
+        auto serialisedBoard = randomGameBoard.serialiseGameToWstring();
+        gameBoard.loadGame(serialisedBoard);
     }
 
     void Game::doMousePressed(const sf::Vector2i & mousePosition) {

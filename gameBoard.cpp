@@ -34,6 +34,20 @@ void SlidingTiles::GameBoard::loadGame(const std::wstring & game) {
     solution.clear();
 }
 
+void SlidingTiles::GameBoard::loadGameNoGui(const std::wstring & game) {
+    assert(game.size() == boardSize * boardSize);  // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+    for (int y = 0; y < boardSize; ++y) {
+        for (int x = 0; x < boardSize; ++x) {
+            auto tile = getTile(x,y);
+            tile->setTilePosition(sf::Vector2i{x, y});
+            tile->setTileType(std::wstring{game[y * 4 + x]});
+            //std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " << std::wstring{game[y * 4 + x]} << L" became: \"" << tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
+        }
+    }
+    solution.clear();
+}
+
+
 void SlidingTiles::GameBoard::randomGame(const int emptyTiles) {
     const size_t MAX_TRIES {200};
     for (size_t passes=0; passes<MAX_TRIES; ++passes) {
@@ -225,15 +239,25 @@ void SlidingTiles::GameBoard::undoLatestMove() {
     }
 }
 
+void SlidingTiles::GameBoard::moveTileNoGui(const Move & move) {
+    auto slidingTile = tiles[move.startPosition.x][move.startPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+    sf::Vector2i newPosition = getAdjacentTilePosition(move);
+    auto obscuredTile = tiles[newPosition.x][newPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+
+    tiles[newPosition.x][newPosition.y] = slidingTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+    tiles[move.startPosition.x][move.startPosition.y] = obscuredTile;  // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+}
+
+
 
 auto SlidingTiles::GameBoard::slideTile(const Move & move) -> bool {
     assert(move.startPosition.x >= 0 && move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     assert(move.startPosition.y >= 0 && move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     bool canSlide = canSlideTile(move);
     if (canSlide) {
-        sf::Vector2i newPosition = getAdjacentTilePosition(move);
         // TODO(richi): Fix all this tile copying...
         auto slidingTile = tiles[move.startPosition.x][move.startPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+        sf::Vector2i newPosition = getAdjacentTilePosition(move);
         auto obscuredTile = tiles[newPosition.x][newPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
 
         slidingTile.transition(newPosition);

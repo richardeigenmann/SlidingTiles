@@ -40,6 +40,12 @@ namespace SlidingTiles {
         void loadGame(const std::wstring & game);
 
         /**
+         * @brief load the game into the board
+         */
+        void loadGameNoGui(const std::wstring & game);
+
+
+        /**
          * @brief sets up a random game by placing random tiles on the board.
          *        Games that are directly solved without moving a tile are 
          *        discarded.
@@ -67,7 +73,7 @@ namespace SlidingTiles {
         static auto getAdjacentTilePosition(const Move & move) -> sf::Vector2i;
 
         /**
-         * @brief slides the tile from the old position to the new position 
+         * @brief moves the tile from the old position to the new position 
          * and remebers the move in the moves vector. Calls slideTile.
          * @param move The movement
          */
@@ -101,6 +107,11 @@ namespace SlidingTiles {
          * @param move The movement
          */
         auto slideTile(const Move & move) -> bool;
+
+        /**
+         * @brief does the same thing as slideTile but without the graphics
+         */
+        void moveTileNoGui(const Move & move);
 
         /**
          *  @brief returns the start tile on the gameboard. If none is found it returns nullptr

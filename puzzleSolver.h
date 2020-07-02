@@ -56,15 +56,11 @@ public:
          */
     auto generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) -> GameBoard;
 
-    /**
-         * @brief generates a single playable Game and prints it
-         * @param emptyTiles The number of empty tiles
-         * @param maxDepth The maximum depth for a solution
-         */
-    void generateGame(std::size_t emptyTiles, std::size_t maxDepth);
+    auto generateRandomGameBoardAndSolution(std::size_t emptyTiles, std::size_t maxDepth) -> std::tuple<SlidingTiles::GameBoard, std::optional<SlidingTiles::MoveNode>>;
 
     /**
          * @brief generates a series of games
+         * @param games The number of games to generate
          */
     void generateGames(std::size_t games);
 

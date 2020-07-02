@@ -9,54 +9,56 @@ auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode & moveNode) -> std::opti
     assert((moveNode.startPosition.y >= -1) && (moveNode.startPosition.y <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
 
     GameBoard gameBoard{};
-    gameBoard.loadGame(moveNode.endingBoard);
+    gameBoard.loadGameNoGui(moveNode.endingBoard);
     for (int x = 0; x < GameBoard::boardSize; ++x) {
         for (int y = 0; y < GameBoard::boardSize; ++y) {
             sf::Vector2i position{x, y};
             if (gameBoard.getTile(x,y)->isMoveable) {
+                
                 if (moveNode.direction != Direction::GoDown && gameBoard.canSlideTile(Move{position, Direction::GoUp})) {
                     MoveNode childNode{position, Direction::GoUp};
                     childNode.setParent(moveNode);
-                    gameBoard.slideTile(childNode);
+                    gameBoard.moveTileNoGui(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
                     moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
-                    gameBoard.loadGame(moveNode.endingBoard); // restore
+                    gameBoard.loadGameNoGui(moveNode.endingBoard); // restore
+                    
                 }
                 if (moveNode.direction != Direction::GoUp && gameBoard.canSlideTile(Move{position, Direction::GoDown})) {
                     MoveNode childNode{position, Direction::GoDown};
                     childNode.setParent(moveNode);
-                    gameBoard.slideTile(childNode);
+                    gameBoard.moveTileNoGui(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
                     moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
-                    gameBoard.loadGame(moveNode.endingBoard); // restore
+                    gameBoard.loadGameNoGui(moveNode.endingBoard); // restore
                 }
                 if (moveNode.direction != Direction::GoRight && gameBoard.canSlideTile(Move{position, Direction::GoLeft})) {
                     MoveNode childNode{position, Direction::GoLeft};
                     childNode.setParent(moveNode);
-                    gameBoard.slideTile(childNode);
+                    gameBoard.moveTileNoGui(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
                     moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
-                    gameBoard.loadGame(moveNode.endingBoard); // restore
+                    gameBoard.loadGameNoGui(moveNode.endingBoard); // restore
                 }
                 if (moveNode.direction != Direction::GoLeft && gameBoard.canSlideTile(Move{position, Direction::GoRight})) {
                     MoveNode childNode{position, Direction::GoRight};
                     childNode.setParent(moveNode);
-                    gameBoard.slideTile(childNode);
+                    gameBoard.moveTileNoGui(childNode);
                     childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
                     moveNode.possibleMoves.push_back(childNode);
                     if ( ! gameBoard.isSolved().empty() ) {
                         return childNode;
                     }
-                    gameBoard.loadGame(moveNode.endingBoard); // restore
+                    gameBoard.loadGameNoGui(moveNode.endingBoard); // restore
                 }
             }
         }
@@ -104,7 +106,7 @@ void SlidingTiles::PuzzleSolver::saveSolution(GameBoard & gameBoard) {
     while (!Q.empty()) {
         MoveNode t = Q.front();
         Q.pop();
-        gameBoard.loadGame(t.endingBoard);
+        gameBoard.loadGameNoGui(t.endingBoard);
         if ( ! gameBoard.isSolved().empty()) {
             while (t.parent != nullptr) {
                 auto iteratorFront = gameBoard.solution.begin();
@@ -120,36 +122,40 @@ void SlidingTiles::PuzzleSolver::saveSolution(GameBoard & gameBoard) {
     gameBoard.solution.clear();
 }
 
-auto SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) -> SlidingTiles::GameBoard {
+auto SlidingTiles::PuzzleSolver::generateRandomGameBoardAndSolution(std::size_t emptyTiles, std::size_t maxDepth) -> std::tuple<SlidingTiles::GameBoard, std::optional<SlidingTiles::MoveNode>> {
     SlidingTiles::PuzzleSolver puzzleSolver;
     while (true) {
         GameBoard gameBoard{};
         gameBoard.randomGame(emptyTiles);
         auto solution = buildTree(gameBoard, maxDepth);
-        //saveSolution(gameBoard);
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
+
         if (solution) {
-            std::cout << "\n{\n\t\"SerializedGame\": \""
-            << convert.to_bytes(gameBoard.serialiseGameToWstring())
-            << '\"'
-            << ",\n"
-            << solution.value().enumerateMoves() << "\n"
-            << "},\n";
-            return gameBoard;
+            return std::tuple(gameBoard, solution);
         }
         std::cout << "Discarding game as it can't be solved in " << maxDepth << " moves\n";
     }
 }
 
-void SlidingTiles::PuzzleSolver::generateGame(std::size_t emptyTiles, std::size_t maxDepth) {
-    GameBoard gameBoard = generateRandomGame(emptyTiles, maxDepth);
+
+auto SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) -> SlidingTiles::GameBoard {
+    SlidingTiles::PuzzleSolver puzzleSolver;
+    auto [gameBoard, solution] = generateRandomGameBoardAndSolution(emptyTiles, maxDepth);
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
+    std::cout << "\n{\n\t\"SerializedGame\": \""
+        << convert.to_bytes(gameBoard.serialiseGameToWstring())
+        << '\"'
+        << ",\n"
+        //<< solution.value().enumerateMoves() << "\n"
+        << "},\n";
+    return gameBoard;
 }
+
 
 void SlidingTiles::PuzzleSolver::generateGames(std::size_t games) {
     while (games > 0) {
         //std::size_t emptyTiles = (rand() % MAXIMUM_EMPTY_TILES) + 1;
         std::size_t emptyTiles = ud(randomNumberGenerator);
-        generateGame(emptyTiles, DEFAULT_DEPTH);
+        generateRandomGame(emptyTiles, DEFAULT_DEPTH);
         --games;
     }
 }
