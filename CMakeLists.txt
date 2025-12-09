@@ -1,8 +1,8 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.28)
 PROJECT(sliding-tiles)
 
 # To run with Clang:
-# cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ ..
+# cmake -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_EXE_LINKER_FLAGS="-L/usr/lib64" ..
 # To run with gcc:
 # cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ ..
 
@@ -244,7 +244,7 @@ IF (UNIX)
     SET(CHECK_COVERAGE ON)
 ENDIF (UNIX)
 if (CHECK_COVERAGE)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fprofile-arcs -ftest-coverage")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} -g -O0 -fprofile-arcs -ftest-coverage")
     include(CodeCoverage)
     setup_target_for_coverage(${PROJECT_NAME}_coverage unit-tests coverage)
 ENDIF (CHECK_COVERAGE)
