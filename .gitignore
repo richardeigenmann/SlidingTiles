@@ -4,4 +4,5 @@ nbproject
 .vscode/c_cpp_properties.json
 .vscode/
 .kdev4
+.idea
 SlidingTiles.kdev4
