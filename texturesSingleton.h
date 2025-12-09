@@ -3,7 +3,7 @@
 #include <iostream>
 #include <map>
 #include "tileType.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 namespace SlidingTiles {
 

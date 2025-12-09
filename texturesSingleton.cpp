@@ -1,6 +1,7 @@
 #include "texturesSingleton.h"
-//#include "renderingSingleton.h"
 #include "executablePath.h"
+#include "tileType.h"
+#include <SFML/Graphics/Texture.hpp>
 
 SlidingTiles::TexturesSingleton::TexturesSingleton() noexcept(false) {
     sf::Texture texture;
