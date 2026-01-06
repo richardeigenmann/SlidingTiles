@@ -84,7 +84,7 @@ namespace SlidingTiles {
          * @brief broadcasts via ZMQ the current count of moves in the count field of 
          * the JSON message
          */
-        void broadcastMovesCount();
+        void broadcastMovesCount() const;
 
         /**
          * @brief undoes the latest move in the moves vector. Calls slideTile.

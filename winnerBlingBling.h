@@ -37,7 +37,7 @@ namespace SlidingTiles {
         /**
          * @brief set the position of the button
          */
-        void setPosition(float x, float y);
+        void setPosition(const sf::Vector2f& position);
 
 
         /**

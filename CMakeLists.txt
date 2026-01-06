@@ -25,7 +25,7 @@ IF (UNIX)
 ENDIF (UNIX)
 
 # Since SFML 2.5 everything is now easier: see https://en.sfml-dev.org/forums/index.php?topic=24070.0
-FIND_PACKAGE(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
+FIND_PACKAGE(SFML 2.6 COMPONENTS graphics window system audio REQUIRED)
 
 find_package(ZeroMQ)
 MESSAGE(STATUS "ZeroMQ_INCLUDE_DIR: ${ZeroMQ_INCLUDE_DIR}")
@@ -43,7 +43,7 @@ else()
   message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
   set(DO_CLANG_TIDY
         "${CLANG_TIDY_EXE}"
-          "-checks=*,-clang-analyzer-alpha.*,-fuchsia-*,-llvmlibc-*")
+        "-checks=*,-clang-analyzer-alpha.*,-fuchsia-*,-llvmlibc-*,-altera-*,-readability-identifier-length,-cppcoreguidelines-pro-type-union-access")
 endif()
 
 
@@ -147,31 +147,35 @@ ADD_CUSTOM_COMMAND( TARGET sliding-tiles POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${sliding-tiles_assets_dir} $<TARGET_FILE_DIR:sliding-tiles>/sliding-tiles-assets/
 )
 
-TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}
-    ${SFML_INCLUDE_DIR}
-    ${ZeroMQ_INCLUDE_DIR}
-)
+#TARGET_INCLUDE_DIRECTORIES(sliding-tiles PUBLIC
+#    ${CMAKE_CURRENT_SOURCE_DIR}
+#    ${CMAKE_SOURCE_DIR}
+#    ${SFML_INCLUDE_DIR}
+#    ${ZeroMQ_INCLUDE_DIR}
+#)
 
 # See https://stackoverflow.com/questions/50172835/how-do-i-use-cmake-to-ensure-a-c14-compiler-links-with-the-experimental-filesy/50173063#50173063
 # What a mess!
 MESSAGE(STATUS "CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}")
 if (CMAKE_CXX_COMPILER_ID STREQUAL GNU) # GCC
   #set(CXX_FILESYSTEM_LIBRARIES)
-  set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
+  #set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
   #set(CXX_FILESYSTEM_LIBRARIES c++fs)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-  set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
+  #set(CXX_FILESYSTEM_LIBRARIES stdc++fs)
 else()
   set(CXX_FILESYSTEM_LIBRARIES)
   set(ZeroMQ_LIBRARIES libzmq libzmq-static)
 endif()
 
 TARGET_LINK_LIBRARIES(sliding-tiles LINK_PUBLIC
-    sfml-graphics sfml-window sfml-system sfml-audio
-    ${ZeroMQ_LIBRARIES}
-    ${CXX_FILESYSTEM_LIBRARIES}
+    sfml-graphics
+    sfml-window
+    sfml-system
+    sfml-audio
+    zmq
+    #${ZeroMQ_LIBRARIES}
+    #${CXX_FILESYSTEM_LIBRARIES}
 )
 
 if(CLANG_TIDY_EXE)
@@ -292,10 +296,10 @@ set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CP
 SET(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/richardeigenmann/SlidingTiles")
 set(CPACK_PACKAGE_CHECKSUM "MD5")
 #SET(CPACK_PACKAGE_EXECUTABLES "sliding-tiles;Slding Tiles Game")
-SET(CPACK_RPM_PACKAGE_REQUIRES "libzmq5 libsfml2-2_5 Mesa")
+SET(CPACK_RPM_PACKAGE_REQUIRES "libzmq5 libsfml2-2_6 Mesa")
 SET(CPACK_RPM_INSTALL_WITH_EXEC ON)
 SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libzmq5,libsfml-audio2.5,libsfml-graphics2.5,libsfml-network2.5,libsfml-system2.5,libsfml-window2.5")
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libzmq5,libsfml-audio2.6,libsfml-graphics2.6,libsfml-network2.6,libsfml-system2.6,libsfml-window2.6")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 install(TARGETS sliding-tiles
   RUNTIME

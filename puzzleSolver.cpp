@@ -81,16 +81,12 @@ auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode,
          moveNode.startPosition.x <=
              GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
   assert(moveNode.startPosition.y >= -1 &&
-         moveNode.startPosition.y <=
-             GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
-  // std::cout << "\n\naddPossibleMoves levels: " << levels << " " <<
-  // moveNode.toString();
+         moveNode.startPosition.y <= GameBoard::boardSize); // NOLINT (hicpp-no-array-decay)
 
   auto opt = possibleMoves(moveNode);
   if (opt) {
     return opt;
   }
-  // std::cout << "Entering if with levels: " << levels << "\n";
   for (MoveNode &mn : moveNode.possibleMoves) {
     // note the & above to ensure we work with the members and not a copy
     mn.depth = moveNode.depth + 1;
@@ -136,7 +132,7 @@ void SlidingTiles::PuzzleSolver::saveSolution(GameBoard &gameBoard) {
         t = *t.parent;
       }
       return;
-    };
+    }
     for (const auto &possibleMove : t.possibleMoves) {
       Q.push(possibleMove);
     }
@@ -148,7 +144,6 @@ auto SlidingTiles::PuzzleSolver::generateRandomGameBoardAndSolution(
     std::size_t emptyTiles, std::size_t maxDepth)
     -> std::tuple<SlidingTiles::GameBoard,
                   std::optional<SlidingTiles::MoveNode>> {
-  SlidingTiles::PuzzleSolver puzzleSolver;
   while (true) {
     GameBoard gameBoard{};
     gameBoard.randomGame(emptyTiles);
@@ -165,21 +160,17 @@ auto SlidingTiles::PuzzleSolver::generateRandomGameBoardAndSolution(
 auto SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles,
                                                     std::size_t maxDepth)
     -> SlidingTiles::GameBoard {
-  SlidingTiles::PuzzleSolver puzzleSolver;
   auto [gameBoard, solution] =
       generateRandomGameBoardAndSolution(emptyTiles, maxDepth);
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
-  std::cout << "\n{\n\t\"SerializedGame\": \""
-            << convert.to_bytes(gameBoard.serialiseGameToWstring()) << '\"'
-            << ",\n"
-            //<< solution.value().enumerateMoves() << "\n"
-            << "},\n";
+  std::wcout << L"\n{\n\t\"SerializedGame\": \""
+    << gameBoard.serialiseGameToWstring()
+    << L"\"\n"
+    << L"},\n";
   return gameBoard;
 }
 
 void SlidingTiles::PuzzleSolver::generateGames(std::size_t games) {
   while (games > 0) {
-    // std::size_t emptyTiles = (rand() % MAXIMUM_EMPTY_TILES) + 1;
     std::size_t emptyTiles = ud(randomNumberGenerator);
     generateRandomGame(emptyTiles, DEFAULT_DEPTH);
     --games;

@@ -2,6 +2,9 @@
 #include "executablePath.h"
 #include "json.hpp"
 #include "zmqSingleton.h"
+#include <SFML/System/Vector2.hpp>
+#include <stdexcept>
+#include <string>
 
 using json = nlohmann::json;
 

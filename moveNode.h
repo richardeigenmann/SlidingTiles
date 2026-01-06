@@ -75,26 +75,22 @@ namespace SlidingTiles {
         /**
          * @brief explains the move
          */
-        std::string toString(const int & indent) {
+        std::string toString(const int & indent) const {
             std::stringstream ss;
-            ss << std::string(indent, ' ') << "Move #" << id
+            const std::string padding(indent, ' ');
+
+            ss << padding << "Move #" << id
                     << " startPosition: [" << startPosition.x
                     << "][" << startPosition.y << "]" << " depth: " << depth
                     << " direction: " << directionToString(direction)
                     << " possibleMoves: " << possibleMoves.size();
-            ss << " parent: ";
-            if ( parent == nullptr ) {
-                ss << "nullptr";
-            } else {
-                ss << " #" << parent->id;
-            }
-            ss << " endingBoard: ";
-            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
-            ss << convert.to_bytes(endingBoard);
-            ss << "\n";
-            for (int i = 0; i < possibleMoves.size(); ++i) {
-                ss << std::string(indent, ' ') << "possibleMove[" << i << "] -->\n";
-                ss << possibleMoves[i].toString(indent + 2);
+            ss << " parent: " << (parent == nullptr?  "nullptr" : " #" + std::to_string(parent->id));
+            ss << " endingBoard: " << sf::String(endingBoard).toAnsiString();
+            ss << '\n';
+            int i = 0;
+            for (const auto& move : possibleMoves) {
+                ss << padding << "possibleMove[" << i++ << "] -->\n";
+                ss << move.toString(indent + 2);
             }
             return ss.str();
         }

@@ -1,11 +1,19 @@
+#include "direction.h"
 #include "gameBoard.h"
 #include "json.hpp"
+#include "move.h"
 #include "tileType.h"
 
 #include <algorithm> // std::shuffle
+#include <cassert>
+#include <cstddef>
+#include <iostream>
+#include <iterator>
 #include <random>  // random_shuffle, std::default_random_engine
 #include <sstream> // stringstream
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 using json = nlohmann::json;
 
@@ -38,18 +46,12 @@ void SlidingTiles::GameBoard::loadGame(const std::wstring &game) {
 
 void SlidingTiles::GameBoard::loadGameNoGui(const std::wstring &game) {
   assert(
-      game.size() ==
-      boardSize *
-          boardSize); // NOLINT
-                      // (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+      game.size() == boardSize * boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   for (int y = 0; y < boardSize; ++y) {
     for (int x = 0; x < boardSize; ++x) {
       auto tile = getTile(x, y);
       tile->setTilePosition(sf::Vector2i{x, y});
       tile->setTileType(std::wstring{game[y * 4 + x]});
-      // std::wcout << L"[" << x << L"][" << y << L"] game[y*4+x]: " <<
-      // std::wstring{game[y * 4 + x]} << L" became: \"" <<
-      // tileTypeToWstringChar(tile->getTileType()) << L"\"\n";
     }
   }
   solution.clear();
@@ -70,8 +72,7 @@ void SlidingTiles::GameBoard::randomGame(const int emptyTiles) {
       "solved board 200 times? What a conincidence...");
 }
 
-auto SlidingTiles::GameBoard::pickStartTile(const sf::Vector2i &startPos)
-    -> SlidingTiles::Tile {
+auto SlidingTiles::GameBoard::pickStartTile(const sf::Vector2i &startPos) -> SlidingTiles::Tile {
   Tile startTile{};
   startTile.setTilePosition(startPos);
   TileType type = randomStartTileType();
@@ -127,7 +128,7 @@ void SlidingTiles::GameBoard::randomGameImpl(const int emptyTiles) {
   std::vector<sf::Vector2i> positions{};
   for (int x = 0; x < boardSize; ++x) {
     for (int y = 0; y < boardSize; ++y) {
-      positions.emplace_back(sf::Vector2i{x, y});
+      positions.emplace_back(x, y);
     }
   }
   std::random_device rd{};
@@ -173,7 +174,7 @@ auto SlidingTiles::GameBoard::serialiseGameToWstring() -> std::wstring {
 }
 
 void SlidingTiles::GameBoard::printGame() {
-  std::wcout << serialiseGameToWstring() << std::endl;
+  std::wcout << serialiseGameToWstring() << '\n';
 }
 
 auto SlidingTiles::GameBoard::getAdjacentTilePosition(const Move &move)
@@ -218,23 +219,16 @@ auto SlidingTiles::GameBoard::getAdjacentTilePosition(const Move &move)
 auto SlidingTiles::GameBoard::canSlideTile(const Move &move) -> bool {
   assert(
       move.startPosition.x >= 0 &&
-      move.startPosition.x <
-          boardSize); // NOLINT
-                      // (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+      move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   assert(
       move.startPosition.y >= 0 &&
-      move.startPosition.y <
-          boardSize); // NOLINT
-                      // (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+      move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   auto movingTile = getTile(move.startPosition.x, move.startPosition.y);
-  /*std::cout << "canSlideTile: [" << move.startPosition.x << "][" <<
-     move.startPosition.y
-           << "] Direction: " << directionToString(move.direction) << "\n";*/
   if (!movingTile->isMoveable) {
     return false;
   }
 
-  sf::Vector2i newPosition = getAdjacentTilePosition(move);
+  const sf::Vector2i newPosition = getAdjacentTilePosition(move);
   // check for move off the board
   if (newPosition.x >= boardSize || newPosition.y >= boardSize ||
       newPosition.x < 0 || newPosition.y < 0) {
@@ -256,7 +250,7 @@ void SlidingTiles::GameBoard::moveTile(const Move &move) {
   }
 }
 
-void SlidingTiles::GameBoard::broadcastMovesCount() {
+void SlidingTiles::GameBoard::broadcastMovesCount() const {
   json jsonMessage{};
   jsonMessage["state"] = ZmqSingleton::BROADCAST_MOVES_COUNT;
   jsonMessage["count"] = moves.size();
@@ -283,9 +277,7 @@ void SlidingTiles::GameBoard::moveTileNoGui(const Move &move) {
   sf::Vector2i newPosition = getAdjacentTilePosition(move);
   auto obscuredTile =
       tiles[newPosition.x]
-           [newPosition
-                .y]; // NOLINT
-                     // (cppcoreguidelines-pro-bounds-constant-array-index)
+           [newPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
 
   tiles[newPosition.x][newPosition.y] =
       slidingTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
@@ -446,7 +438,7 @@ auto SlidingTiles::GameBoard::getOutputMove(const Move &move)
 auto SlidingTiles::GameBoard::isSolved() -> std::vector<sf::Vector2i> {
   std::vector<sf::Vector2i> solutionPath{};
 
-  auto startTile = findStartTile();
+  const auto *const startTile = findStartTile();
   if (startTile == nullptr) {
     return solutionPath;
   } // no start tile

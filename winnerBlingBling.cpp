@@ -1,5 +1,10 @@
 #include "winnerBlingBling.h"
 #include "executablePath.h"
+#include "gameState.h"
+#include "zmqSingleton.h"
+#include <cstddef>
+#include <stdexcept>
+#include <string>
 
 SlidingTiles::WinnerBlingBling::WinnerBlingBling() noexcept(false) {
   const std::string filename{getAssetDir() + "trophy.png"};
@@ -8,10 +13,10 @@ SlidingTiles::WinnerBlingBling::WinnerBlingBling() noexcept(false) {
   } else {
     throw std::runtime_error("Failed to load texture: " + filename);
   }
-  const unsigned int X{400};
-  const unsigned int Y{5};
+
+  const auto position = sf::Vector2f {400, 5};
+  setPosition( position );
   const float SCALE{0.2F};
-  setPosition(X, Y);
   sprite.setScale(SCALE, SCALE);
   RenderingSingleton::getInstance().add(*this);
   UpdatingSingleton::getInstance().add(*this);
@@ -26,8 +31,8 @@ void SlidingTiles::WinnerBlingBling::loadSounds(const json &jsonArray) {
   winnerSounds.loadSounds(jsonArray);
 }
 
-void SlidingTiles::WinnerBlingBling::setPosition(float x, float y) {
-  sprite.setPosition(x, y);
+void SlidingTiles::WinnerBlingBling::setPosition(const sf::Vector2f& position) {
+  sprite.setPosition( position );
 }
 
 void SlidingTiles::WinnerBlingBling::startBlingBling(std::size_t moves,

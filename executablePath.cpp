@@ -60,5 +60,5 @@ auto my_executable_path() noexcept(false) -> std::string {
 } // namespace
 
 auto getAssetDir() noexcept(false) -> std::string {
-  return my_executable_path() + "/sliding-tiles-assets/";
+    return my_executable_path() + "/sliding-tiles-assets/";
 }

@@ -1,5 +1,12 @@
+#include "gameBoard.h"
 #include "gameView.h"
+#include "renderable.h"
 #include "renderingSingleton.h"
+#include "tileView.h"
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <memory>
+#include <utility>
 
 SlidingTiles::GameView::GameView() {
   RenderingSingleton::getInstance().add(*this);

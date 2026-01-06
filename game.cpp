@@ -1,15 +1,23 @@
-#include "game.h"
+#include "direction.h"
 #include "executablePath.h"
+#include "game.h"
 #include "gameBoard.h"
+#include "gameState.h"
 #include "json.hpp"
 #include "puzzleSolver.h"
 #include "renderingSingleton.h"
 #include "updatingSingleton.h"
 #include "zmqSingleton.h"
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/Window/Event.hpp>
 #include <cmath>
 #include <fstream>
-#include <random> // random_shuffle, std::default_random_engine
-#include <thread>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 using json = nlohmann::json;
 
@@ -25,7 +33,7 @@ Game::Game() noexcept(false) {
 Game::~Game() { UpdatingSingleton::getInstance().remove(*this); }
 
 auto Game::loadConfigFile(const std::string &filename) -> nlohmann::json {
-  std::cout << "Reading configuration from file: " << filename << std::endl;
+  std::cout << "Reading configuration from file: " << filename << '\n';
   std::ifstream configIfstream(filename);
   if (!configIfstream) {
     throw std::runtime_error("Could not read configuration file: " + filename);
@@ -34,7 +42,7 @@ auto Game::loadConfigFile(const std::string &filename) -> nlohmann::json {
   configIfstream >> configJson;
   configIfstream.close();
   std::cout << "Read & parsed configuration from file: " << filename
-            << std::endl;
+            << '\n';
   return configJson;
 }
 
@@ -57,8 +65,8 @@ void Game::run() {
       } else if (event.type == sf::Event::MouseButtonPressed) {
         doMousePressed(sf::Vector2i{
             event.mouseButton.x,
-            event.mouseButton
-                .y}); // NOLINT(cppcoreguidelines-pro-type-union-access)
+            event.mouseButton.y
+        });
       } else if (event.type == sf::Event::MouseButtonReleased) {
         doMouseReleased(sf::Vector2i{
             event.mouseButton.x,
@@ -96,15 +104,15 @@ void Game::run() {
         }
       }
     }
-    sf::Time dt = deltaClock.restart();
-    UpdatingSingleton::getInstance().updateAll(dt.asSeconds());
+    const sf::Time deltaTime = deltaClock.restart();
+    UpdatingSingleton::getInstance().updateAll(deltaTime.asSeconds());
     RenderingSingleton::getInstance().renderAll();
   }
 }
 
-void Game::update(const float dt) {
+void Game::update(const float deltaTime) {
   if (gameState == GameState::Playing || gameState == GameState::OverPar) {
-    std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
+    const std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
     if (!solutionPath.empty()) {
       gameState = GameState::VictoryRolling;
 
@@ -132,7 +140,7 @@ void Game::update(const float dt) {
   }
 
   if (gameState == GameState::VictoryRolling) {
-    victoryRollingTime -= dt;
+    victoryRollingTime -= deltaTime;
     if (victoryRollingTime < 0.0F) {
       doLevelUp();
       gameState = GameState::Playing;
@@ -177,18 +185,15 @@ void Game::doMousePressed(const sf::Vector2i &mousePosition) {
 }
 
 void Game::doMouseReleased(const sf::Vector2i &mousePosition) {
-  sf::Vector2i movingTilePosition =
+  const sf::Vector2i movingTilePosition =
       RenderingSingleton::getInstance().findTile(mousePositionPressed);
   if (movingTilePosition.x != -1 && movingTilePosition.y != -1) {
     // out of grid
-    int deltaX = mousePosition.x - mousePositionPressed.x;
-    int deltaY = mousePosition.y - mousePositionPressed.y;
+    const int deltaX = mousePosition.x - mousePositionPressed.x;
+    const int deltaY = mousePosition.y - mousePositionPressed.y;
     if (abs(deltaX) > 2 || abs(deltaY) > 2) {
       if (abs(deltaX) > abs(deltaY)) {
         // horizontal movement
-        sf::Vector2i newPosition = sf::Vector2i(
-            movingTilePosition.x + copysign(1, deltaX),
-            movingTilePosition.y); // NOLINT (bugprone-narrowing-conversions)
         if (deltaX > 0) {
           doMove(Move{movingTilePosition, Direction::GoRight});
         } else {
@@ -196,10 +201,6 @@ void Game::doMouseReleased(const sf::Vector2i &mousePosition) {
         }
       } else {
         // vertical movement
-        sf::Vector2i newPosition = sf::Vector2i(
-            movingTilePosition.x,
-            movingTilePosition.y +
-                copysign(1, deltaY)); // NOLINT (bugprone-narrowing-conversions)
         if (deltaY > 0) {
           doMove(Move{movingTilePosition, Direction::GoDown});
         } else {
@@ -225,11 +226,10 @@ void Game::doMove(const Move &move) {
 void Game::loadLevel() {
   gameBoard.moves.clear();
 
-  json jsonLevel = levelsArray[level];
+  const json& jsonLevel = levelsArray[level];
   auto serializedGame = jsonLevel["SerializedGame"].get<std::string>();
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-  std::wstring wide = converter.from_bytes(serializedGame);
-  std::wcout << "wide string: " << wide << std::endl;
+  const std::wstring wide = sf::String::fromUtf8(serializedGame.begin(), serializedGame.end()).toWideString();
+  std::wcout << L"wide string: " << wide << '\n';
   gameBoard.loadGame(wide);
   gameState = GameState::Playing;
 

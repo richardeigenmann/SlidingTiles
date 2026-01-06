@@ -7,7 +7,7 @@ auto main() -> int {
     SlidingTiles::Game game{};
     game.run();
   } catch (std::exception &e) {
-    std::cout << e.what() << std::endl;
+    std::cout << e.what() << '\n';
   } catch (...) {
     std::cout << "An exception occurred";
   }
