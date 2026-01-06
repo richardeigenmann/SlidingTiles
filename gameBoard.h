@@ -52,7 +52,7 @@ namespace SlidingTiles {
          * @param emptyTiles the number of empty tiles to place defaults to 3
          * @throws a runtime_error if we can't get a non-solved game board placed after 200 tries
          */
-        void randomGame(const int emptyTiles = 3);
+        void randomGame(const std::size_t emptyTiles = 3);
 
 
         /**
@@ -181,7 +181,7 @@ namespace SlidingTiles {
          * @brief sets up a random game by placing random tiles on the board.
          * @param emptyTiles the number of empty tiles to place defaults to 3
          */
-        void randomGameImpl(const int emptyTiles = 3);
+        void randomGameImpl(const std::size_t emptyTiles = 3);
 
     };
 

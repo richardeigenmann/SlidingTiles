@@ -1,4 +1,5 @@
 #pragma once
+#include "strongTypes.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "renderingSingleton.h"
@@ -17,7 +18,7 @@ namespace SlidingTiles {
          * @param textureFilename takes the filename of the button bitmap as parameter
          * @param command to issue when clicked
          */
-        explicit Button(const std::string & textureFilename, const std::string & command);
+        explicit Button(const AssetPath & textureFilename, const std::string command);
 
         /**
          * @brief Destructor
@@ -67,7 +68,7 @@ namespace SlidingTiles {
         /**
          * @brief The texture of the button
          */
-        sf::Texture texture;
+        std::unique_ptr<sf::Texture> texture;
 
         /**
          * @brief The sprite of the button
@@ -77,6 +78,6 @@ namespace SlidingTiles {
         /**
          * @brief the command to send via ZMQ when the button is clicked
          */
-        const std::string & command;
+        std::string command;
     };
 }

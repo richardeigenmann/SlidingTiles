@@ -1,6 +1,7 @@
 #pragma once
 
 #include "button.h"
+#include "strongTypes.h"
 
 namespace SlidingTiles {
 
@@ -13,7 +14,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for the button with Random on it
          */
-        explicit NextButton() : Button("button_next.png", ZmqSingleton::LOAD_NEXT_LEVEL) {
+        explicit NextButton() : Button(AssetPath{"button_next.png"}, ZmqSingleton::LOAD_NEXT_LEVEL) {
             setPosition(400, 270);
         };
 

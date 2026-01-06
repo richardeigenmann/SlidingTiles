@@ -55,42 +55,43 @@ namespace SlidingTiles {
         /**
          * a Button for a random level
          */
-        RandomButton randomSfmlButton{};
+        std::unique_ptr<RandomButton> randomSfmlButton{};
 
         /**
          * a Button to go to the next level
          */
-        NextButton nextSfmlButton{};
+        std::unique_ptr<NextButton> nextSfmlButton{};
         /**
          * a restart button
          */
-        RestartButton restartSfmlButton{};
+        std::unique_ptr<RestartButton> restartSfmlButton{};
+
+        /**
+         * Add the Undo Button
+        */
+        std::unique_ptr<UndoButton> undoButton{};
 
         /**
          * Add the AttitudeSoundPlayer
          */
-        AttitudeSoundPlayer attitudeSoundPlayer{};
+        std::unique_ptr<AttitudeSoundPlayer> attitudeSoundPlayer{};
 
         /**
          * Add the LevelLabel
          */
-        LevelLabel levelLabel{};
+        std::unique_ptr<LevelLabel> levelLabel{};
 
         /**
          * Add the ParLabel
          */
-        ParLabel parLabel{};
+        std::unique_ptr<ParLabel> parLabel{};
         
         /**
          * Add the MovesLabel
          */
-        MovesLabel movesLabel{};
+        std::unique_ptr<MovesLabel> movesLabel{};
 
-        /**
-         * Add the Undo Button
-         */
-        UndoButton undoButton{};
-        
+
     };
 
 } // namespace SlidingTiles

@@ -214,7 +214,7 @@ void Game::doMouseReleased(const sf::Vector2i &mousePosition) {
     jsonMessage["x"] = mousePosition.x;
     jsonMessage["y"] = mousePosition.y;
     ZmqSingleton::getInstance().publish(jsonMessage);
-  }
+ }
 }
 
 void Game::doMove(const Move &move) {

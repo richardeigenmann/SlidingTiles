@@ -1,5 +1,6 @@
 #pragma once
 #include "button.h"
+#include "strongTypes.h"
 
 namespace SlidingTiles {
 
@@ -12,7 +13,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for the button with Random on it
          */
-        explicit RandomButton() : Button("button_random.png", ZmqSingleton::LOAD_RANDOM_LEVEL) {
+        explicit RandomButton() : Button(AssetPath{"button_random.png"}, ZmqSingleton::LOAD_RANDOM_LEVEL) {
             setPosition(400, 230);
         };
 

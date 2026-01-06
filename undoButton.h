@@ -1,6 +1,6 @@
 #pragma once
 #include "button.h"
-#include "zmqSubscriber.h"
+#include "strongTypes.h"
 
 namespace SlidingTiles {
 
@@ -13,7 +13,7 @@ namespace SlidingTiles {
         /**
          * @brief Constructor for the undo button
          */
-        explicit UndoButton() : Button("undo.png", ZmqSingleton::UNDO_MOVE) {
+        explicit UndoButton() : Button(AssetPath{"undo.png"}, ZmqSingleton::UNDO_MOVE) {
             isVisible = false;
             setPosition(430, 350);
             getSprite().setScale(0.4f, 0.4f);

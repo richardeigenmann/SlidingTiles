@@ -1,4 +1,8 @@
+#include "json.hpp"
+#include "zmq.hpp"
 #include "zmqSingleton.h"
+#include <stdexcept>         // For std::runtime_error
+#include <string>
 
 using json = nlohmann::json;
 
@@ -14,14 +18,15 @@ SlidingTiles::ZmqSingleton::ZmqSingleton() {
 
 void SlidingTiles::ZmqSingleton::publish(const json &jsonMessage) {
   auto message = jsonMessage.dump();
-  zmq::message_t zmqMessage(message.size());
-  memcpy(zmqMessage.data(), message.data(), message.size());
+  //zmq::message_t zmqMessage(message.size());
+  //memcpy(zmqMessage.data(), message.data(), message.size());
+  zmq::message_t zmqMessage(message.begin(), message.end());
   socket.send(zmqMessage);
 }
 
-// const std::string ZmqSingleton::PUBLISHER_SOCKET = "tcp://*:64123";
+//const std::string SlidingTiles::ZmqSingleton::PUBLISHER_SOCKET = "tcp://*:64123";
 const std::string SlidingTiles::ZmqSingleton::PUBLISHER_SOCKET = "inproc://#1";
-// const std::string ZmqSingleton::RECEIVER_SOCKET = "tcp://localhost:64123";
+// const std::string SlidingTiles::ZmqSingleton::RECEIVER_SOCKET = "tcp://localhost:64123";
 const std::string SlidingTiles::ZmqSingleton::RECEIVER_SOCKET = "inproc://#1";
 const std::string SlidingTiles::ZmqSingleton::CONFIGURATION_LOADED =
     "Configuration Loaded";

@@ -1,72 +1,61 @@
+#include "direction.h"
+#include "move.h"
+#include "moveNode.h"
 #include "puzzleSolver.h"
+#include <SFML/System/Vector2.hpp>
 #include <cassert>
+#include <cstddef>
+#include <iostream>
+#include <optional>
 #include <queue>
+#include <tuple>
+#include <utility>
+#include <vector>
 
 const int SlidingTiles::PuzzleSolver::DEFAULT_DEPTH;
 
 auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode &moveNode)
     -> std::optional<SlidingTiles::MoveNode> {
   assert((moveNode.startPosition.x >= -1) &&
-         (moveNode.startPosition.x <=
-          GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
+         (moveNode.startPosition.x <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
   assert((moveNode.startPosition.y >= -1) &&
-         (moveNode.startPosition.y <=
-          GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
+         (moveNode.startPosition.y <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
+
+  // Define all possible directions and their "opposites" to prevent backtracking
+  const std::vector<std::pair<Direction, Direction>> directions = {
+    {Direction::GoUp,    Direction::GoDown},
+    {Direction::GoDown,  Direction::GoUp},
+    {Direction::GoLeft,  Direction::GoRight},
+    {Direction::GoRight, Direction::GoLeft}
+  };
 
   GameBoard gameBoard{};
   gameBoard.loadGameNoGui(moveNode.endingBoard);
   for (int x = 0; x < GameBoard::boardSize; ++x) {
     for (int y = 0; y < GameBoard::boardSize; ++y) {
-      sf::Vector2i position{x, y};
-      if (gameBoard.getTile(x, y)->isMoveable) {
+      if (!gameBoard.getTile(x, y)->isMoveable) { continue; }
 
-        if (moveNode.direction != Direction::GoDown &&
-            gameBoard.canSlideTile(Move{position, Direction::GoUp})) {
-          MoveNode childNode{position, Direction::GoUp};
+      const sf::Vector2i position{x, y};
+
+      for (const auto& [dir, opposite] : directions) {
+        // Skip if this move just undoes the previous move
+        if (moveNode.direction == opposite) { continue; }
+
+        const Move move{position, dir};
+        if (gameBoard.canSlideTile(move)) {
+          MoveNode childNode{position, dir};
           childNode.setParent(moveNode);
+
           gameBoard.moveTileNoGui(childNode);
           childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
           moveNode.possibleMoves.push_back(childNode);
+
           if (!gameBoard.isSolved().empty()) {
             return childNode;
           }
-          gameBoard.loadGameNoGui(moveNode.endingBoard); // restore
-        }
-        if (moveNode.direction != Direction::GoUp &&
-            gameBoard.canSlideTile(Move{position, Direction::GoDown})) {
-          MoveNode childNode{position, Direction::GoDown};
-          childNode.setParent(moveNode);
-          gameBoard.moveTileNoGui(childNode);
-          childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
-          moveNode.possibleMoves.push_back(childNode);
-          if (!gameBoard.isSolved().empty()) {
-            return childNode;
-          }
-          gameBoard.loadGameNoGui(moveNode.endingBoard); // restore
-        }
-        if (moveNode.direction != Direction::GoRight &&
-            gameBoard.canSlideTile(Move{position, Direction::GoLeft})) {
-          MoveNode childNode{position, Direction::GoLeft};
-          childNode.setParent(moveNode);
-          gameBoard.moveTileNoGui(childNode);
-          childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
-          moveNode.possibleMoves.push_back(childNode);
-          if (!gameBoard.isSolved().empty()) {
-            return childNode;
-          }
-          gameBoard.loadGameNoGui(moveNode.endingBoard); // restore
-        }
-        if (moveNode.direction != Direction::GoLeft &&
-            gameBoard.canSlideTile(Move{position, Direction::GoRight})) {
-          MoveNode childNode{position, Direction::GoRight};
-          childNode.setParent(moveNode);
-          gameBoard.moveTileNoGui(childNode);
-          childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
-          moveNode.possibleMoves.push_back(childNode);
-          if (!gameBoard.isSolved().empty()) {
-            return childNode;
-          }
-          gameBoard.loadGameNoGui(moveNode.endingBoard); // restore
+
+          // Restore board state for the next direction/tile check
+          gameBoard.loadGameNoGui(moveNode.endingBoard);
         }
       }
     }
@@ -142,8 +131,7 @@ void SlidingTiles::PuzzleSolver::saveSolution(GameBoard &gameBoard) {
 
 auto SlidingTiles::PuzzleSolver::generateRandomGameBoardAndSolution(
     std::size_t emptyTiles, std::size_t maxDepth)
-    -> std::tuple<SlidingTiles::GameBoard,
-                  std::optional<SlidingTiles::MoveNode>> {
+    -> std::tuple<SlidingTiles::GameBoard, std::optional<SlidingTiles::MoveNode>> {
   while (true) {
     GameBoard gameBoard{};
     gameBoard.randomGame(emptyTiles);
@@ -171,7 +159,7 @@ auto SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles,
 
 void SlidingTiles::PuzzleSolver::generateGames(std::size_t games) {
   while (games > 0) {
-    std::size_t emptyTiles = ud(randomNumberGenerator);
+    const std::size_t emptyTiles = ud(randomNumberGenerator);
     generateRandomGame(emptyTiles, DEFAULT_DEPTH);
     --games;
   }
