@@ -13,6 +13,6 @@ void SlidingTiles::DebugMessageListener::update(
     const float dt) { // NOLINT (misc-unused-parameters)
   auto msg = getZmqMessage();
   if (msg) {
-    std::cout << "DebugMessageListener received: " << msg.value() << std::endl;
+    std::cout << "DebugMessageListener received: " << msg.value() << '\n';
   }
 }
