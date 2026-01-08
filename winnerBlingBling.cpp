@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 
 SlidingTiles::WinnerBlingBling::WinnerBlingBling() noexcept(false) {
   const std::string filename{getAssetDir() + "trophy.png"};
@@ -56,7 +57,7 @@ void SlidingTiles::WinnerBlingBling::update(
 }
 
 void SlidingTiles::WinnerBlingBling::handleMessage(const json &jsonMessage) {
-  auto state = jsonMessage["state"].get<std::string>();
+  auto state = jsonMessage["state"].get<std::string_view>();
   if (state == ZmqSingleton::CONFIGURATION_LOADED) {
     loadSounds(jsonMessage["winnerSoundBites"]);
   } else if (state == SlidingTiles::ZmqSingleton::GAME_WON) {

@@ -1,10 +1,10 @@
 #pragma once
 #include "strongTypes.h"
-#include <SFML/Graphics.hpp>
-#include <string>
 #include "renderingSingleton.h"
 #include "updatingSingleton.h"
 #include "zmqSubscriber.h"
+#include <SFML/Graphics.hpp>
+#include <string_view>
 
 namespace SlidingTiles {
 
@@ -18,7 +18,7 @@ namespace SlidingTiles {
          * @param textureFilename takes the filename of the button bitmap as parameter
          * @param command to issue when clicked
          */
-        explicit Button(const AssetPath & textureFilename, const std::string command);
+        explicit Button(const AssetPath & textureFilename, const std::string_view command);
 
         /**
          * @brief Destructor

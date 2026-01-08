@@ -15,11 +15,11 @@ namespace SlidingTiles {
             contextPtr = ZmqSingleton::getInstance().getContext();
             try {
                 socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);
-                socket->connect(ZmqSingleton::RECEIVER_SOCKET);
+                socket->connect(std::string(ZmqSingleton::RECEIVER_SOCKET));
                 socket->setsockopt(ZMQ_SUBSCRIBE, 0, 0);
             } catch (const zmq::error_t & e) {
                 throw std::runtime_error("ZeroMQ Error when connecting LevelLabel to socket "
-                        + ZmqSingleton::RECEIVER_SOCKET + ": " + e.what());
+                        + std::string(ZmqSingleton::RECEIVER_SOCKET) + ": " + e.what());
             }
         }
 

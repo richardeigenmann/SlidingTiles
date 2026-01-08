@@ -1,7 +1,7 @@
 #include "attitudeSoundPlayer.h"
 #include "json.hpp"
 #include "zmqSingleton.h"
-#include <string>
+#include <string_view>
 
 using json = nlohmann::json;
 
@@ -23,7 +23,7 @@ void SlidingTiles::AttitudeSoundPlayer::update(
 
 void SlidingTiles::AttitudeSoundPlayer::handleMessage(
     const nlohmann::json &jsonMessage) {
-  auto state = jsonMessage["state"].get<std::string>();
+  auto state = jsonMessage["state"].get<std::string_view>();
   if (state == SlidingTiles::ZmqSingleton::CONFIGURATION_LOADED) {
     loadSounds(jsonMessage["attitudeSoundBites"]);
   } else if (state == SlidingTiles::ZmqSingleton::RESTART_LEVEL) {

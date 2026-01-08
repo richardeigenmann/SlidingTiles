@@ -1,7 +1,11 @@
 #include "movesLabel.h"
+#include "json.hpp"
+#include "zmqSingleton.h"
 #include <sstream>
+#include <string>
 
 using json = nlohmann::json;
+
 
 const unsigned int X{400};
 const unsigned int Y{150};

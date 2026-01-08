@@ -1,9 +1,9 @@
 #pragma once
 
-//#include <string>
+#include "json.hpp"
 #include "zmq.hpp"
 #include <memory>
-#include "json.hpp"
+#include <string_view>
 
 using json = nlohmann::json;
 
@@ -45,77 +45,79 @@ namespace SlidingTiles {
         /**
          * @brief the socket definition for the publishing socket
          */
-        static const std::string PUBLISHER_SOCKET;
+        //const std::string SlidingTiles::ZmqSingleton::PUBLISHER_SOCKET = "tcp://*:64123";
+        static inline std::string_view PUBLISHER_SOCKET = "inproc://#1";
 
         /**
          * @brief the socket definition for the receiving sockets
          */
-        static const std::string RECEIVER_SOCKET;
+        // const std::string SlidingTiles::ZmqSingleton::RECEIVER_SOCKET = "tcp://localhost:64123";
+        static inline std::string_view RECEIVER_SOCKET = "inproc://#1";
 
         /**
          * @brief the configuration has been loaded
          */
-        static const std::string CONFIGURATION_LOADED;
+        static inline std::string_view CONFIGURATION_LOADED = "Configuration Loaded";
 
         /**
          * @brief the Game was won
          */
-        static const std::string GAME_WON;
+        static inline std::string_view GAME_WON = "Game Won";
 
         /**
          * @brief signifies that the game has started
          */
-        static const std::string GAME_STARTED;
+        static inline std::string_view GAME_STARTED = "Game Started";
 
         /**
          * @brief signifies that the game has gone over par
          */
-        static const std::string OVER_PAR;
+        static inline std::string_view OVER_PAR = "Over Par";
 
         /**
          * @brief set a specific tile
          */
-        static const std::string SET_TILE;
-        
+        static inline std::string_view SET_TILE = "Set Tile";
+
         /**
          * @brief slide the tile as specified in the details of the message
          */
-        static const std::string SLIDE_TILE;
+        static inline std::string_view SLIDE_TILE = "Slide Tile";
 
         /**
          * @brief the mouse was clicked further information available in the message
          */
-        static const std::string MOUSE_CLICKED;
+        static inline std::string_view MOUSE_CLICKED = "Mouse Clicked";
 
         /**
          * @brief load the next level
          */
-        static const std::string LOAD_NEXT_LEVEL;
+        static inline std::string_view LOAD_NEXT_LEVEL = "Load Next Level";
 
         /**
          * @brief search for a new random level and start to play it
          */
-        static const std::string LOAD_RANDOM_LEVEL;
+        static inline std::string_view LOAD_RANDOM_LEVEL = "Load Random Level";
 
         /**
          * @brief undo the last move
          */
-        static const std::string UNDO_MOVE;
+        static inline std::string_view UNDO_MOVE = "Undo Move";
 
         /**
          * @brief restart the same level
          */
-        static const std::string RESTART_LEVEL;
+        static inline std::string_view RESTART_LEVEL = "Restart Level";
 
         /**
          * @brief broadcast moves count
          */
-        static const std::string BROADCAST_MOVES_COUNT;
+        static inline std::string_view BROADCAST_MOVES_COUNT = "Broadcast Moves Count";
 
         /**
          * @brief when sent instructs the listening objects to output debug information
          */
-        static const std::string DEBUG;
+        static inline std::string_view DEBUG = "Debug";
 
         /**
          * @brief returns a shared_ptr to the context for the ZeroMQ messaging.
@@ -126,7 +128,6 @@ namespace SlidingTiles {
         std::shared_ptr<zmq::context_t> & getContext() {
             return contextPtr;
         }
-
 
 
     private:

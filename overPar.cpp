@@ -1,5 +1,10 @@
 #include "overPar.h"
 #include "executablePath.h"
+#include "gameState.h"
+#include "json.hpp"
+#include "zmqSingleton.h"
+#include <stdexcept>
+#include <string>
 
 SlidingTiles::OverPar::OverPar() noexcept(false) {
   const std::string filename{getAssetDir() + "over_par.png"};

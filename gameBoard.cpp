@@ -43,9 +43,9 @@ void SlidingTiles::GameBoard::loadGameNoGui(const std::wstring &game) {
       game.size() == boardSize * boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   for (int y = 0; y < boardSize; ++y) {
     for (int x = 0; x < boardSize; ++x) {
-      auto tile = getTile(x, y);
+      auto *tile = getTile(x, y);
       tile->setTilePosition(sf::Vector2i{x, y});
-      tile->setTileType(std::wstring{game[y * 4 + x]});
+      tile->setTileType(std::wstring{game[(y * 4) + x]});
     }
   }
   solution.clear();
@@ -130,20 +130,17 @@ void SlidingTiles::GameBoard::randomGameImpl(const std::size_t emptyTiles) {
                std::default_random_engine(rd()));
 
   const sf::Vector2i startPos = positions[0];
-  tiles[startPos.x][startPos.y] = pickStartTile(
-      startPos); // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+  tiles[startPos.x][startPos.y] = pickStartTile(startPos); // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
 
   const sf::Vector2i endPos = positions[1];
-  tiles[endPos.x][endPos.y] = pickEndTile(
-      endPos); // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+  tiles[endPos.x][endPos.y] = pickEndTile(endPos); // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
 
   for (int i = 0; i < emptyTiles; ++i) {
     sf::Vector2i emptyPos = positions[2 + i];
     SlidingTiles::Tile emptyTile{};
     emptyTile.setTilePosition(emptyPos);
     emptyTile.setTileType(TileType::Empty);
-    tiles[emptyPos.x][emptyPos.y] =
-        emptyTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+    tiles[emptyPos.x][emptyPos.y] = emptyTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
   }
 
   const int totalTiles = boardSize * boardSize;
@@ -152,8 +149,7 @@ void SlidingTiles::GameBoard::randomGameImpl(const std::size_t emptyTiles) {
     Tile tile{};
     tile.setTilePosition(tilePos);
     tile.setTileType(randomGameTileType());
-    tiles[tilePos.x][tilePos.y] =
-        tile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+    tiles[tilePos.x][tilePos.y] = tile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
   }
 }
 
@@ -176,14 +172,10 @@ auto SlidingTiles::GameBoard::getAdjacentTilePosition(const Move &move)
   // TODO(richi): should this not be a function of the move?
   assert(
       move.startPosition.x >= 0 &&
-      move.startPosition.x <
-          boardSize); // NOLINT
-                      // (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+      move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   assert(
       move.startPosition.y >= 0 &&
-      move.startPosition.y <
-          boardSize); // NOLINT
-                      // (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+      move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   sf::Vector2i adjacentPosition{move.startPosition.x, move.startPosition.y};
 
   if (move.direction == Direction::GoDown) {
@@ -307,12 +299,8 @@ auto SlidingTiles::GameBoard::slideTile(const Move &move) -> bool {
     jsonMessage["newPosition"]["y"] = newPosition.y;
     ZmqSingleton::getInstance().publish(jsonMessage);
 
-    tiles[newPosition.x][newPosition.y] =
-        slidingTile; // NOLINT
-                     // (cppcoreguidelines-pro-bounds-constant-array-index)
-    tiles[move.startPosition.x][move.startPosition.y] =
-        obscuredTile; // NOLINT
-                      // (cppcoreguidelines-pro-bounds-constant-array-index)
+    tiles[newPosition.x][newPosition.y] = slidingTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+    tiles[move.startPosition.x][move.startPosition.y] = obscuredTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
   }
   solution.clear();
   return canSlide;

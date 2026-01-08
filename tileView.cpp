@@ -5,8 +5,11 @@
 #include "zmqSingleton.h"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-
+#include <SFML/System/Vector2.hpp>
+#include <cstddef>
 #include <iostream>
+#include <string>
+#include <string_view>
 
 using json = nlohmann::json;
 
@@ -32,7 +35,7 @@ void TileView::render() {
 
   sf::Sprite sprite;
   sprite.setTexture(TexturesSingleton::getInstance().getTexture(tileType));
-  sprite.setPosition(renderPosition.x, renderPosition.y);
+  sprite.setPosition(sf::Vector2f(renderPosition));
   if (winner) {
     sprite.setColor(WINNER_COLOR);
   }
@@ -64,7 +67,7 @@ void TileView::update(const float dt) {
 }
 
 void TileView::handleMessage(const json &jsonMessage) {
-  auto state = jsonMessage["state"].get<std::string>();
+  auto state = jsonMessage["state"].get<std::string_view>();
   if (state == ZmqSingleton::SLIDE_TILE) {
     const int startPositionX = jsonMessage["startPosition"]["x"];
     const int startPositionY = jsonMessage["startPosition"]["y"];

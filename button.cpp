@@ -8,13 +8,14 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 
 using json = nlohmann::json;
 
 SlidingTiles::Button::Button(const AssetPath &filename,
-                             std::string command) noexcept(false)
-    : command(std::move(command)) {
+                             std::string_view command) noexcept(false)
+    : command(command) {
 
   texture = std::make_unique<sf::Texture>();
   if (texture->loadFromFile(getAssetDir() + filename.value)) {
@@ -59,7 +60,7 @@ void SlidingTiles::Button::update(
 
 
 void SlidingTiles::Button::handleMessage(const json &jsonMessage) {
-  if (jsonMessage["state"].get<std::string>() == ZmqSingleton::MOUSE_CLICKED) {
+  if (jsonMessage["state"].get<std::string_view>() == ZmqSingleton::MOUSE_CLICKED) {
     if (mouseReleased(sf::Vector2i{(jsonMessage["x"]), (jsonMessage["y"])})) {
       json commandMessage{};
       commandMessage["state"] = command;

@@ -1,5 +1,8 @@
+#include "json.hpp"
 #include "parLabel.h"
+#include "zmqSingleton.h"
 #include <sstream>
+#include <string_view>
 
 using json = nlohmann::json;
 
@@ -28,9 +31,9 @@ void SlidingTiles::ParLabel::update(
 }
 
 void SlidingTiles::ParLabel::handleMessage(const json &jsonMessage) {
-  auto state = jsonMessage["state"].get<std::string>();
+  auto state = jsonMessage["state"].get<std::string_view>();
   if (state == ZmqSingleton::GAME_STARTED) {
-    int par = jsonMessage["par"];
+    const int par = jsonMessage["par"];
     std::ostringstream parText{};
     parText << "Par: " << par;
     setText(parText.str());
