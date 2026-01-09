@@ -265,22 +265,14 @@ void SlidingTiles::GameBoard::moveTileNoGui(const Move &move) {
 }
 
 auto SlidingTiles::GameBoard::slideTile(const Move &move) -> bool {
-  assert(
-      move.startPosition.x >= 0 &&
-      move.startPosition.x < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-  assert(
-      move.startPosition.y >= 0 &&
-      move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+  assert( move.startPosition.x >= 0 && move.startPosition.x < boardSize);
+  assert( move.startPosition.y >= 0 && move.startPosition.y < boardSize);
   const bool canSlide = canSlideTile(move);
   if (canSlide) {
     // TODO(richi): Fix all this tile copying...
-    auto slidingTile =
-        tiles[move.startPosition.x]
-             [move.startPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+    auto slidingTile = tiles.at(move.startPosition.x).at(move.startPosition.y);
     const sf::Vector2i newPosition = getAdjacentTilePosition(move);
-    auto obscuredTile =
-        tiles[newPosition.x]
-             [newPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+    auto obscuredTile = tiles.at(newPosition.x).at(newPosition.y);
 
     slidingTile.transition(newPosition);
     obscuredTile.setTilePosition(move.startPosition);
@@ -293,8 +285,8 @@ auto SlidingTiles::GameBoard::slideTile(const Move &move) -> bool {
     jsonMessage["newPosition"]["y"] = newPosition.y;
     ZmqSingleton::getInstance().publish(jsonMessage);
 
-    tiles[newPosition.x][newPosition.y] = slidingTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
-    tiles[move.startPosition.x][move.startPosition.y] = obscuredTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+    tiles.at(newPosition.x).at(newPosition.y) = slidingTile;
+    tiles.at(move.startPosition.x).at(move.startPosition.y) = obscuredTile;
   }
   solution.clear();
   return canSlide;
@@ -311,6 +303,7 @@ auto SlidingTiles::GameBoard::findStartTile() -> const SlidingTiles::Tile * {
   return nullptr;
 }
 
+/*
 auto SlidingTiles::GameBoard::getOutputPosition(const Move &move) noexcept(
     false) -> sf::Vector2i {
   if ((move.startPosition.x < 0) || (move.startPosition.x >= boardSize) ||
@@ -386,6 +379,139 @@ auto SlidingTiles::GameBoard::getOutputPosition(const Move &move) noexcept(
     }
   }
   return nextTile;
+}*/
+
+auto SlidingTiles::GameBoard::validateMoveBounds(const Move &move) -> void {
+  if (move.startPosition.x < 0 || move.startPosition.x >= boardSize ||
+      move.startPosition.y < 0 || move.startPosition.y >= boardSize) {
+    throw std::out_of_range("getOutputPosition: startPosition out of bounds");
+      }
+}
+
+auto SlidingTiles::GameBoard::handleHorizontal(const Move &move) -> sf::Vector2i {
+  if (move.direction == Direction::GoRight && move.startPosition.x < boardSize - 1) {
+    return {move.startPosition.x + 1, move.startPosition.y};
+  }
+  if (move.direction == Direction::GoLeft && move.startPosition.x > 0) {
+    return {move.startPosition.x - 1, move.startPosition.y};
+  }
+  return POS_BLOCKED;
+}
+
+auto SlidingTiles::GameBoard::handleVertical(const Move &move) -> sf::Vector2i {
+  if (move.direction == Direction::GoUp && move.startPosition.y > 0) {
+    return {move.startPosition.x, move.startPosition.y - 1};
+  }
+  if (move.direction == Direction::GoDown && move.startPosition.y < boardSize - 1) {
+    return {move.startPosition.x, move.startPosition.y + 1};
+  }
+  return POS_BLOCKED;
+}
+
+/*auto SlidingTiles::GameBoard::handleCorner(const Move &move, TileType type) -> sf::Vector2i {
+  const auto [x, y] = move.startPosition;
+
+  if (type == TileType::BottomRight) {
+    if (move.direction == Direction::GoUp && x < boardSize - 1) { return {x + 1, y}; }
+    if (move.direction == Direction::GoLeft && y < boardSize - 1) { return {x, y + 1}; }
+  }
+  else if (type == TileType::TopRight) {
+    if (move.direction == Direction::GoDown && x < boardSize - 1) { return {x + 1, y}; }
+    if (move.direction == Direction::GoLeft && y > 0) { return {x, y - 1}; }
+  }
+  else if (type == TileType::LeftBottom) {
+    if (move.direction == Direction::GoUp && x > 0) { return {x - 1, y}; }
+    if (move.direction == Direction::GoRight && y < boardSize - 1) { return {x, y + 1}; }
+  }
+  else if (type == TileType::LeftTop) {
+    if (move.direction == Direction::GoDown && x > 0) { return {x - 1, y}; }
+    if (move.direction == Direction::GoRight && y > 0) { return {x, y - 1}; }
+  }
+
+  return POS_BLOCKED;
+}*/
+auto SlidingTiles::GameBoard::handleCorner(const Move &move, TileType type) -> sf::Vector2i {
+  const auto [x, y] = move.startPosition;
+
+  switch (type) {
+    case TileType::BottomRight:
+      if (move.direction == Direction::GoUp && x < boardSize - 1) { return {x + 1, y}; }
+      if (move.direction == Direction::GoLeft && y < boardSize - 1) { return {x, y + 1}; }
+      break;
+
+    case TileType::TopRight:
+      if (move.direction == Direction::GoDown && x < boardSize - 1) { return {x + 1, y}; }
+      if (move.direction == Direction::GoLeft && y > 0) { return {x, y - 1}; }
+      break;
+
+    case TileType::LeftBottom:
+      if (move.direction == Direction::GoUp && x > 0) { return {x - 1, y}; }
+      if (move.direction == Direction::GoRight && y < boardSize - 1) { return {x, y + 1}; }
+      break;
+
+    case TileType::LeftTop:
+      if (move.direction == Direction::GoDown && x > 0) { return {x - 1, y}; }
+      if (move.direction == Direction::GoRight && y > 0) { return {x, y - 1}; }
+      break;
+
+    default:
+      break;
+  }
+
+  return POS_BLOCKED;
+}
+
+
+auto SlidingTiles::GameBoard::handleStartTile(const Move &move, TileType type) -> sf::Vector2i {
+  auto [x, y] = move.startPosition;
+  if (type == TileType::StartRight && x < boardSize - 1) { return {x + 1, y}; }
+  if (type == TileType::StartLeft && x > 0) { return {x - 1, y}; }
+  if (type == TileType::StartTop && y > 0) { return {x, y - 1}; }
+  if (type == TileType::StartBottom && y < boardSize - 1) { return {x, y + 1}; }
+  return POS_BLOCKED;
+}
+
+auto SlidingTiles::GameBoard::handleEndTile(const Move &move, TileType type) -> sf::Vector2i {
+  // Check if the flow entered from the correct direction
+  const bool correctEntry =
+      (type == TileType::EndBottom && move.direction == Direction::GoUp) ||
+      (type == TileType::EndLeft   && move.direction == Direction::GoRight) ||
+      (type == TileType::EndRight  && move.direction == Direction::GoLeft) ||
+      (type == TileType::EndTop    && move.direction == Direction::GoDown);
+
+  return correctEntry ? sf::Vector2i{-2, -2} : POS_BLOCKED;;
+}
+
+auto SlidingTiles::GameBoard::getOutputPosition(const Move &move) -> sf::Vector2i {
+  // 1. Guard Clause: Validation is now separate
+  validateMoveBounds(move);
+
+  auto type = getTile(move.startPosition.x, move.startPosition.y)->getTileType();
+
+  // 2. Clearer structure: Switch by TileType
+  switch (type) {
+    case TileType::Horizontal:
+      return handleHorizontal(move);
+    case TileType::Vertical:
+      return handleVertical(move);
+    case TileType::BottomRight:
+    case TileType::TopRight:
+    case TileType::LeftBottom:
+    case TileType::LeftTop:
+      return handleCorner(move, type);
+    case TileType::StartRight:
+    case TileType::StartLeft:
+    case TileType::StartTop:
+    case TileType::StartBottom:
+      return handleStartTile(move, type);
+    case TileType::EndBottom:
+    case TileType::EndLeft:
+    case TileType::EndRight:
+    case TileType::EndTop:
+      return handleEndTile(move, type);
+    default:
+      return POS_BLOCKED;;
+  }
 }
 
 auto SlidingTiles::GameBoard::getOutputMove(const Move &move)

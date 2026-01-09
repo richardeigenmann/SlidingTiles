@@ -16,7 +16,7 @@ namespace SlidingTiles {
             try {
                 socket = std::make_unique<zmq::socket_t>(*contextPtr, ZMQ_SUB);
                 socket->connect(std::string(ZmqSingleton::RECEIVER_SOCKET));
-                socket->setsockopt(ZMQ_SUBSCRIBE, 0, 0);
+                socket->set(zmq::sockopt::subscribe, "");
             } catch (const zmq::error_t & e) {
                 throw std::runtime_error("ZeroMQ Error when connecting LevelLabel to socket "
                         + std::string(ZmqSingleton::RECEIVER_SOCKET) + ": " + e.what());
@@ -36,15 +36,22 @@ namespace SlidingTiles {
         /**
          * @brief returns the zmq message if one is pending. 
          * Call this periodically and test if it is true.
-         * @return a std::optional with the json object that was found
+         * @return a std::optional with the JSON object that was found
          */
         std::optional<json> getZmqMessage() {
             zmq::message_t reply;
-            if (socket != nullptr && socket->recv(&reply, ZMQ_NOBLOCK)) {
-                std::string message = std::string(static_cast<char*> (reply.data()), reply.size());
-                return  json::parse(message);
+            if ( socket != nullptr ) {
+                auto result = socket->recv(reply, zmq::recv_flags::dontwait);
+                if ( result ) {
+                    std::string_view msg_view(static_cast<const char*>(reply.data()), reply.size());
+                    try {
+                        return json::parse(msg_view);
+                    } catch (const json::parse_error& e) {
+                        return std::nullopt;
+                    }
+                }
             } 
-            return {};
+            return std::nullopt;
         }
 
 

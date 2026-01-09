@@ -2,6 +2,7 @@
 #include "executablePath.h"
 #include "game.h"
 #include "gameBoard.h"
+#include "gameSettings.h"
 #include "gameState.h"
 #include "json.hpp"
 #include "puzzleSolver.h"

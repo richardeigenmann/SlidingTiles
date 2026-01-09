@@ -18,9 +18,7 @@ SlidingTiles::ZmqSingleton::ZmqSingleton() {
 
 void SlidingTiles::ZmqSingleton::publish(const json &jsonMessage) {
   auto message = jsonMessage.dump();
-  //zmq::message_t zmqMessage(message.size());
-  //memcpy(zmqMessage.data(), message.data(), message.size());
-  zmq::message_t zmqMessage(message.begin(), message.end());
-  socket.send(zmqMessage);
+  zmq::message_t zmqMessage(message.data(), message.size());
+  socket.send(zmqMessage, zmq::send_flags::none);
 }
 

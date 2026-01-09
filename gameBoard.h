@@ -185,6 +185,16 @@ namespace SlidingTiles {
          */
         void randomGameImpl(const std::size_t emptyTiles = 3);
 
+        static void validateMoveBounds(const Move &move);
+        static auto handleHorizontal(const Move &move) -> sf::Vector2i;
+        static auto handleVertical(const Move &move) -> sf::Vector2i;
+        static auto handleCorner(const Move &move, TileType type) -> sf::Vector2i;
+        static auto handleStartTile(const Move &move, TileType type) -> sf::Vector2i;
+        static auto handleEndTile(const Move &move, TileType type) -> sf::Vector2i;
+
+        inline static const sf::Vector2i POS_EXIT_REACHED{-2, -2};
+        inline static const sf::Vector2i POS_BLOCKED{-1, -1};
+
     };
 
 } // namespace
