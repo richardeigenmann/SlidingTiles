@@ -44,13 +44,18 @@ addons:
       - libglew-dev
       - libsndfile1-dev
       - libopenal-dev
-      - libudev-dev
       - libjpeg-dev
       - libfreetype6-dev
       - libflac-dev
       - libvorbis-dev
       - libogg-dev
       - libmbedtls-dev
+      - libharfbuzz-dev
+      - libmbedtls-dev     # For SFML Network
+      - libharfbuzz-dev    # For SFML Graphics (Text Shaping)
+      - libx11-xcb-dev   # <--- The "Hidden" Dependency for modern Windowing
+      - libxcb1-dev      # <--- Underlying XCB headers
+      - libudev-dev      # For Controller/Input device hotplugging
 
 
 before_install:
@@ -99,7 +104,7 @@ script:
       mkdir -p build && cd build
       cmake .. -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_PREFIX_PATH=$INSTALL_DIR
       make -j4
-      xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests
+      xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests --sfml-audio-mode=dummy
     fi
 
 after_success:
