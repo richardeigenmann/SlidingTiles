@@ -132,7 +132,19 @@ script:
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}
-  - lcov --directory . -base-directory . --capture --output-file coverage.info
+
+  # 1. Determine the correct gcov tool based on the compiler used
+  - |
+    if [ "$SET_COMPILER" = "gcc-14" ]; then
+      export GCOV_TOOL="gcov-14"
+    elif [ "$SET_COMPILER" = "clang-18" ]; then
+      # Clang uses llvm-cov gcov, which is usually compatible or handled differently
+      export GCOV_TOOL="llvm-cov-18 gcov"
+    else
+      export GCOV_TOOL="gcov"
+    fi
+
+  - lcov --directory . -base-directory . --capture -gcov-tool $GCOV_TOOL --output-file coverage.info
   - lcov --remove coverage.info '/usr/*' '*/googletest/*' '*/SFML/*' --output-file coverage.info
   # 3. Final safety: Clean any remaining absolute paths or ".." artifacts
   - sed -i "s|${TRAVIS_BUILD_DIR}/||g" coverage.info
