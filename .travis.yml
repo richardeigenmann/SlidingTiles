@@ -2,62 +2,89 @@ language: cpp
 dist: jammy
 sudo: required
 
+cache:
+  directories:
+    - $HOME/install_prefix
+
 env:
   global:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
    #   via the "travis encrypt" command using the project repo's public key
    - secure: "SJuH+7HAl0lSxPl34Cy7DORiH5MGc4+r3R/jSECyQqud0S+aPv9Nvd905O4WiRGjetox9OWBmAgg6uUPPoYkiIrPFEUttJW8gFdc9qyJ2+Ar29t96G2vmWtdzQFdsBzdoLO/xySHDDOQcx0kBtynCf6kp0p5U13tWVRv0XBuScDzXSyZTGY9LmLkHRJnvo/K2rksHDl4mfQvdWLR2PhoOV8tXYG5OXfSNcyy/rQU9z2G0/Eea9GbTthPTomcHzm4OdWpsS7+mpcXH0HGULyL+wkFzc9IaNUMchugTXsqyMDN0P0uQsCXlDlwl+Zau9wDPKLcx1DUxXnE0tDonjWev0zg9xHUA6Davw570Dk7f20TF9tbjK+W/ghiO5SlzEornd2BBOedt7SVQe1yML2GGv4J/kZE0l/S3QEwa1a1Qc8lOBhneHPACuqfCl/hwGGm6aSTmXTDwv1ghoJVljJ51LQM0Gp8JxyR6tPqs/57Z2oDqylPjLZ86zqaFvMcbjPcRzLYS56OoRIqjSQ1Sg6Kq7I6BMeKfcoe04PBmy3+8yhIHLpN/aosyLDSzIro9vM7Q+c/kgRDDCSDhpsgtoyXQ7gBjlapL2tMyZJ3CxFIJEQy5U7Ii2KQqdhy51ZHMymq9+his/HeU+DTLuiU343iXvX3+aIlzp9RcNtMzgqDFbY="
+   - CMAKE_BUILD_PARALLEL_LEVEL=4
+   - INSTALL_DIR=$HOME/install_prefix
 
 # Test with modern compiler versions
 jobs:
   include:
     - compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-11', 'libzmq3-dev', 'lcov', 'doxygen', 'xvfb', 'libx11-dev', 'freeglut3-dev', 'libglew-dev', 'libsndfile1-dev', 'libopenal-dev', 'libudev-dev']
       env: SET_COMPILER="gcc-11"
 
     - compiler: clang
-      addons:
-        apt:
-          packages: ['clang-15', 'libzmq3-dev', 'lcov', 'doxygen', 'xvfb', 'libx11-dev', 'freeglut3-dev', 'libglew-dev', 'libsndfile1-dev', 'libopenal-dev', 'libudev-dev']
-      env: SET_COMPILER="clang-15"
+      env: SET_COMPILER="clang-18"
 
   # Coverity Scan moved to its own job for clarity
   allow_failures:
     - env: COVERITY_SCAN_BRANCH=1
 
+addons:
+  apt:
+    packages:
+      - libzmq3-dev
+      - lcov
+      - doxygen
+      - xvfb
+      - libx11-dev
+      - freeglut3-dev
+      - libglew-dev
+      - libsndfile1-dev
+      - libopenal-dev
+      - libudev-dev
+      - libjpeg-dev
+      - libfreetype6-dev
+      - libxrandr-dev
+
 
 before_install:
   # Set compilers based on the job env
   - if [ "$SET_COMPILER" = "gcc-11" ]; then export CC=gcc-11 && export CXX=g++-11; fi
-  - if [ "$SET_COMPILER" = "clang-15" ]; then export CC=clang-15 && export CXX=clang++-15; fi
+  - if [ "$SET_COMPILER" = "clang-18" ]; then export CC=clang-18 && export CXX=clang++-18; fi
+
+  # Ensure our custom install directory exists and is in the path
+  - mkdir -p $INSTALL_DIR
+  - export CMAKE_PREFIX_PATH=$INSTALL_DIR:$CMAKE_PREFIX_PATH
+  - export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
 
   # Update package list
   - sudo apt-get update -qq
 
-  # Build GoogleTest (Note: Many distros now have libgtest-dev, but manual build ensures latest)
-  - git clone --depth=1 https://github.com/google/googletest.git
-  - cmake -S googletest -B googletest/build && cmake --build googletest/build -j4
-  - sudo cmake --install googletest/build
+  # Build GoogleTest only if not cached
+  - |
+    if [ ! -f "$INSTALL_DIR/lib/libgtest.a" ]; then
+      git clone --depth=1 https://github.com/google/googletest.git
+      cmake -S googletest -B googletest/build -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
+      cmake --build googletest/build -j4
+      cmake --install googletest/build
+    fi
 
-  # Build SFML (Essential to build from source if using latest features)
-  - git clone --depth=1 https://github.com/SFML/SFML.git
-  - cmake -S SFML -B SFML/build -DSFML_BUILD_EXAMPLES=OFF
-  - cmake --build SFML/build -j4
-  - sudo cmake --install SFML/build
+  # Build SFML only if not cached
+  - |
+    if [ ! -f "$INSTALL_DIR/lib/libsfml-graphics.so" ]; then
+      git clone --depth=1 https://github.com/SFML/SFML.git
+      cmake -S SFML -B SFML/build -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DSFML_BUILD_EXAMPLES=OFF
+      cmake --build SFML/build -j4
+      cmake --install SFML/build
+    fi
 
 install:
   - $CXX --version
   - cmake --version
 
-
 script:
-  # Normal build and test logic
-  - if [ "${TRAVIS_BRANCH}" != "coverity_scan" ]; then
+  # Standard build excluding coverity branch
+  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
     mkdir build && cd build;
-    cmake ..;
+    cmake .. -DCMAKE_CXX_COMPILER=$CXX;
     make -j4;
     xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests;
     fi
