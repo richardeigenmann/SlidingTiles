@@ -110,7 +110,7 @@ namespace SlidingTiles {
         static inline std::string_view RESTART_LEVEL = "Restart Level";
 
         /**
-         * @brief broadcast moves count
+         * @brief broadcast the number of moves the user has made
          */
         static inline std::string_view BROADCAST_MOVES_COUNT = "Broadcast Moves Count";
 

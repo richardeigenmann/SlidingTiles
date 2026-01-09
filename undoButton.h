@@ -1,6 +1,7 @@
 #pragma once
 #include "button.h"
 #include "strongTypes.h"
+#include <string_view>
 
 namespace SlidingTiles {
 
@@ -21,10 +22,15 @@ namespace SlidingTiles {
 
         void handleMessage(const nlohmann::json & jsonMessage) override {
             Button::handleMessage(jsonMessage);
-            auto state = jsonMessage["state"].get<std::string>();
-            if (state == SlidingTiles::ZmqSingleton::BROADCAST_MOVES_COUNT) {
+            auto state = jsonMessage["state"].get<std::string_view>();
+            if (state == ZmqSingleton::BROADCAST_MOVES_COUNT) {
                 countMoves = jsonMessage["count"].get<size_t>();
                 isVisible = countMoves > 0;
+            }
+            else if (state == ZmqSingleton::RESTART_LEVEL ||
+                     state == ZmqSingleton::GAME_STARTED ||
+                     state == ZmqSingleton::LOAD_RANDOM_LEVEL) {
+                isVisible = false;
             }
         }
 

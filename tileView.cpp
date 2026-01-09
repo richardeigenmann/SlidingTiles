@@ -23,10 +23,10 @@ const sf::Color END_COLOR{ sf::Color{255, 0, 0, 255} }; // NOLINT(cert-err58-cpp
 void TileView::render() {
   sf::Vector2i renderPosition = tileScreenCoordinates;
   if (transitioning) {
-    const int deltaX = static_cast<int>(
+    const auto deltaX = static_cast<int>(
         (transitionTileCoordiantes.x - tileScreenCoordinates.x) *
         timeSpentTransitioning / TRANSITION_TIME);
-    const int deltaY = static_cast<int>(
+    const auto deltaY = static_cast<int>(
         (transitionTileCoordiantes.y - tileScreenCoordinates.y) *
         timeSpentTransitioning / TRANSITION_TIME);
     renderPosition.x += deltaX;
@@ -82,7 +82,7 @@ void TileView::handleMessage(const json &jsonMessage) {
     } else if (tileGameCoordinates.x == newPositionX &&
                tileGameCoordinates.y == newPositionY) {
       std::cout << "I am TileView " << id
-                << " nd am setting my coordinates from "
+                << " and am setting my coordinates from "
                 << tileGameCoordinates.x << "x" << tileGameCoordinates.y
                 << " to " << startPositionX << "x" << startPositionY
                 << '\n';
