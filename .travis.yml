@@ -132,8 +132,13 @@ script:
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}
-  - lcov --directory . --capture --output-file coverage.info
+  - lcov --directory . -base-directory . --capture --output-file coverage.info
   - lcov --remove coverage.info '/usr/*' '*/googletest/*' '*/SFML/*' --output-file coverage.info
+  # 3. Final safety: Clean any remaining absolute paths or ".." artifacts
+  - sed -i "s|${TRAVIS_BUILD_DIR}/||g" coverage.info
+  - sed -i "s|^\.\./||g" coverage.info
+  - echo "cat coverage.info"
+  - cat coverage.info
   # Modern Codecov Uploader (Replacement for the bash script)
   - curl -Os https://uploader.codecov.io/latest/linux/codecov
   - chmod +x codecov
