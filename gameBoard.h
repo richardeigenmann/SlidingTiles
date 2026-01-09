@@ -3,6 +3,7 @@
 #include "moveNode.h"
 #include "tile.h"
 #include "zmqSingleton.h"
+#include <array>
 #include <stdexcept>      // std::out_of_range
 #include <vector>
 
@@ -32,7 +33,8 @@ namespace SlidingTiles {
         /**
          * @brief The 2d array of tiles that makes up the game board
          */
-        Tile tiles [boardSize][boardSize];
+        //Tile tiles [boardSize][boardSize];
+        std::array<std::array<Tile, boardSize>, boardSize> tiles;
 
         /**
          * @brief load the game into the board

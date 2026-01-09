@@ -171,11 +171,11 @@ void Game::handleMessage(const json &jsonMessage) {
 void Game::onRestartButtonClick() { loadLevel(); }
 
 void Game::doRandomGame() {
-  PuzzleSolver puzzleSolver;
+  const PuzzleSolver puzzleSolver;
   const unsigned int EMPTY_TILES{8};
   const unsigned int DEPTH{2};
   std::cout << "Generating a random game\n";
-  auto randomGameBoard = puzzleSolver.generateRandomGame(EMPTY_TILES, DEPTH);
+  auto randomGameBoard = SlidingTiles::PuzzleSolver::generateRandomGame(GameSettings{EMPTY_TILES, DEPTH});
   auto serialisedBoard = randomGameBoard.serialiseGameToWstring();
   gameBoard.loadGame(serialisedBoard);
 }

@@ -6,6 +6,8 @@
 #include "solution.h"
 #include <random>
 
+#include "gameSettings.h"
+
 namespace SlidingTiles
 {
 
@@ -23,6 +25,8 @@ public:
         auto ud = std::uniform_int_distribution<>{1, MAXIMUM_EMPTY_TILES};
     }
 
+     auto static checkTileDirections(MoveNode &moveNode, GameBoard &gameBoard, sf::Vector2i position) -> std::optional<SlidingTiles::MoveNode>;
+
     /**
          * @brief returns all moves that are possible on the current gameboard
          */
@@ -33,14 +37,14 @@ public:
          * @param moveNode the node on which to Search and add the new Moves
          * @param levels how many levels deep to search 1 .. n
          */
-    auto addPossibleMoves(MoveNode &moveNode, const int levels) -> std::optional<MoveNode>;
+    auto static addPossibleMoves(MoveNode &moveNode, const size_t levels) -> std::optional<MoveNode>;
 
     /**
          * @brief Builds the tree in the supplied gameBoard
          * @param gameBoard The GameBoard on which to build the tree
          * @param depth The depth to which the tree should be built
          */
-    auto buildTree(GameBoard &gameBoard, int depth) -> std::optional<MoveNode>;
+    auto static buildTree(GameBoard &gameBoard, size_t depth) -> std::optional<MoveNode>;
 
     /**
          * @brief saves the solution to the supplied GameBoard
@@ -50,13 +54,12 @@ public:
 
     /**
          * Generates a random playable game
-         * @param emptyTiles The number of empty tiles
-         * @param maxDepth The maximum depth to search for 
+         * @param settings The number of empty tiles and the maximum depth to search for
          * @return the GameBoard of the playable game
          */
-    auto generateRandomGame(std::size_t emptyTiles, std::size_t maxDepth) -> GameBoard;
+    auto static generateRandomGame(GameSettings settings) -> GameBoard;
 
-    auto generateRandomGameBoardAndSolution(std::size_t emptyTiles, std::size_t maxDepth) -> std::tuple<SlidingTiles::GameBoard, std::optional<SlidingTiles::MoveNode>>;
+    auto static generateRandomGameBoardAndSolution(GameSettings settings) -> std::tuple<SlidingTiles::GameBoard, std::optional<SlidingTiles::MoveNode>>;
 
     /**
          * @brief generates a series of games

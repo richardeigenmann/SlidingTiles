@@ -6,6 +6,7 @@
 #include "zmqSingleton.h"
 
 #include <algorithm> // std::shuffle
+#include <array>
 #include <cassert>
 #include <cstddef>
 #include <iostream>
@@ -255,19 +256,12 @@ void SlidingTiles::GameBoard::undoLatestMove() {
 }
 
 void SlidingTiles::GameBoard::moveTileNoGui(const Move &move) {
-  auto slidingTile =
-      tiles[move.startPosition.x]
-           [move.startPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+  auto slidingTile = tiles.at(move.startPosition.x).at(move.startPosition.y);
   const sf::Vector2i newPosition = getAdjacentTilePosition(move);
-  auto obscuredTile =
-      tiles[newPosition.x]
-           [newPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
+  auto obscuredTile = tiles.at(newPosition.x).at(newPosition.y);
 
-  tiles[newPosition.x][newPosition.y] =
-      slidingTile; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
-  tiles[move.startPosition.x][move.startPosition.y] =
-      obscuredTile; // NOLINT
-                    // (cppcoreguidelines-pro-bounds-constant-array-index)
+  tiles.at(newPosition.x).at(newPosition.y) = slidingTile;
+  tiles.at(move.startPosition.x).at(move.startPosition.y) = obscuredTile;
 }
 
 auto SlidingTiles::GameBoard::slideTile(const Move &move) -> bool {

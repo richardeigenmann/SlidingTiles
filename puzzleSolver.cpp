@@ -1,4 +1,6 @@
 #include "direction.h"
+#include "gameBoard.h"
+#include "gameSettings.h"
 #include "move.h"
 #include "moveNode.h"
 #include "puzzleSolver.h"
@@ -14,57 +16,59 @@
 
 const int SlidingTiles::PuzzleSolver::DEFAULT_DEPTH;
 
-auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode &moveNode)
-    -> std::optional<SlidingTiles::MoveNode> {
-  assert((moveNode.startPosition.x >= -1) &&
-         (moveNode.startPosition.x <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
-  assert((moveNode.startPosition.y >= -1) &&
-         (moveNode.startPosition.y <= GameBoard::boardSize)); // NOLINT (hicpp-no-array-decay)
+auto SlidingTiles::PuzzleSolver::checkTileDirections(MoveNode &moveNode, GameBoard &gameBoard, sf::Vector2i position)
+  -> std::optional<SlidingTiles::MoveNode>  {
 
-  // Define all possible directions and their "opposites" to prevent backtracking
-  const std::vector<std::pair<Direction, Direction>> directions = {
+  static const std::vector<std::pair<Direction, Direction>> directions = {
     {Direction::GoUp,    Direction::GoDown},
     {Direction::GoDown,  Direction::GoUp},
     {Direction::GoLeft,  Direction::GoRight},
     {Direction::GoRight, Direction::GoLeft}
   };
 
-  GameBoard gameBoard{};
-  gameBoard.loadGameNoGui(moveNode.endingBoard);
-  for (int x = 0; x < GameBoard::boardSize; ++x) {
-    for (int y = 0; y < GameBoard::boardSize; ++y) {
-      if (!gameBoard.getTile(x, y)->isMoveable) { continue; }
+  for (const auto& [dir, opposite] : directions) {
+    if (moveNode.direction == opposite) { continue; }
 
-      const sf::Vector2i position{x, y};
+    const Move move{position, dir};
+    if (gameBoard.canSlideTile(move)) {
+      MoveNode childNode{position, dir};
+      childNode.setParent(moveNode);
 
-      for (const auto& [dir, opposite] : directions) {
-        // Skip if this move just undoes the previous move
-        if (moveNode.direction == opposite) { continue; }
+      gameBoard.moveTileNoGui(childNode);
+      childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
+      moveNode.possibleMoves.push_back(childNode);
 
-        const Move move{position, dir};
-        if (gameBoard.canSlideTile(move)) {
-          MoveNode childNode{position, dir};
-          childNode.setParent(moveNode);
-
-          gameBoard.moveTileNoGui(childNode);
-          childNode.setEndingBoard(gameBoard.serialiseGameToWstring());
-          moveNode.possibleMoves.push_back(childNode);
-
-          if (!gameBoard.isSolved().empty()) {
-            return childNode;
-          }
-
-          // Restore board state for the next direction/tile check
-          gameBoard.loadGameNoGui(moveNode.endingBoard);
-        }
+      if (!gameBoard.isSolved().empty()) {
+        return childNode;
       }
+
+      // Restore board state for the next direction check
+      gameBoard.loadGameNoGui(moveNode.endingBoard);
     }
   }
-  return {};
+  return std::nullopt;
 }
 
-auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode,
-                                                  const int levels)
+auto SlidingTiles::PuzzleSolver::possibleMoves(MoveNode &moveNode)
+    -> std::optional<SlidingTiles::MoveNode> {
+
+    GameBoard gameBoard{};
+    gameBoard.loadGameNoGui(moveNode.endingBoard);
+
+    for (int x = 0; x < GameBoard::boardSize; ++x) {
+        for (int y = 0; y < GameBoard::boardSize; ++y) {
+            // Level 1: Find a movable tile
+            if (!gameBoard.getTile(x, y)->isMoveable) { continue; }
+
+            // Level 2: Check all 4 directions for this specific tile
+            auto winningNode = checkTileDirections(moveNode, gameBoard, {x, y});
+            if (winningNode) { return winningNode; }
+        }
+    }
+    return std::nullopt;
+}
+
+auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode, const size_t levels) // NOLINT(misc-no-recursion)
     -> std::optional<SlidingTiles::MoveNode> {
   assert(moveNode.startPosition.x >= -1 &&
          moveNode.startPosition.x <=
@@ -80,7 +84,7 @@ auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode,
     // note the & above to ensure we work with the members and not a copy
     mn.depth = moveNode.depth + 1;
     if (levels > 0) {
-      opt = addPossibleMoves(mn, levels - 1);
+      opt = addPossibleMoves(mn, levels - 1); // NOLINT(misc-no-recursion)
       if (opt) {
         return opt;
       }
@@ -93,7 +97,7 @@ auto SlidingTiles::PuzzleSolver::addPossibleMoves(MoveNode &moveNode,
   // std::begin(possMoves), std::end(possMoves));
 }
 
-auto SlidingTiles::PuzzleSolver::buildTree(GameBoard &gameBoard, int depth)
+auto SlidingTiles::PuzzleSolver::buildTree(GameBoard &gameBoard, size_t depth)
     -> std::optional<SlidingTiles::MoveNode> {
   gameBoard.rootNode.possibleMoves.clear();
   gameBoard.rootNode.endingBoard = gameBoard.serialiseGameToWstring();
@@ -129,27 +133,25 @@ void SlidingTiles::PuzzleSolver::saveSolution(GameBoard &gameBoard) {
   gameBoard.solution.clear();
 }
 
-auto SlidingTiles::PuzzleSolver::generateRandomGameBoardAndSolution(
-    std::size_t emptyTiles, std::size_t maxDepth)
+auto SlidingTiles::PuzzleSolver::generateRandomGameBoardAndSolution(GameSettings settings)
     -> std::tuple<SlidingTiles::GameBoard, std::optional<SlidingTiles::MoveNode>> {
   while (true) {
     GameBoard gameBoard{};
-    gameBoard.randomGame(emptyTiles);
-    auto solution = buildTree(gameBoard, maxDepth);
+    gameBoard.randomGame(settings.emptyTiles);
+    auto solution = buildTree(gameBoard, settings.maxDepth);
 
     if (solution) {
-      return std::tuple(gameBoard, solution);
+      return {gameBoard, solution};
     }
-    std::cout << "Discarding game as it can't be solved in " << maxDepth
+    std::cout << "Discarding game as it can't be solved in " << settings.maxDepth
               << " moves\n";
   }
 }
 
-auto SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles,
-                                                    std::size_t maxDepth)
+auto SlidingTiles::PuzzleSolver::generateRandomGame(GameSettings settings)
     -> SlidingTiles::GameBoard {
   auto [gameBoard, solution] =
-      generateRandomGameBoardAndSolution(emptyTiles, maxDepth);
+      generateRandomGameBoardAndSolution(settings);
   std::wcout << L"\n{\n\t\"SerializedGame\": \""
     << gameBoard.serialiseGameToWstring()
     << L"\"\n"
@@ -160,7 +162,7 @@ auto SlidingTiles::PuzzleSolver::generateRandomGame(std::size_t emptyTiles,
 void SlidingTiles::PuzzleSolver::generateGames(std::size_t games) {
   while (games > 0) {
     const std::size_t emptyTiles = ud(randomNumberGenerator);
-    generateRandomGame(emptyTiles, DEFAULT_DEPTH);
+    generateRandomGame(GameSettings{emptyTiles, DEFAULT_DEPTH});
     --games;
   }
 }
