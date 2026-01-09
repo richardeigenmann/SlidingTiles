@@ -49,7 +49,7 @@ Learn C++ game programming by building a nice little game. Along the way I have 
 
 ### Features
 
-* cross platform (sort of)
+* cross-platform (sort of)
 * Graphics & Sound
 * Animation
 * C++ 17
@@ -154,7 +154,7 @@ make test
 
 To generate code coverage reports from the unit tests run the below steps.
 The CodeCoverage.cmake file used gcov from the gcc installation and lcov
-which has to be installed separately to generate an html coverage report.
+which has to be installed separately to generate an Html coverage report.
 
 ```bash
 mkdir -p build
@@ -214,7 +214,7 @@ why should this be a problem? After all, the texture exists till the closing
 brace in the render method. A few hundred segfaults later my suspicion is that
 the draw method goes off into some asynchronous heaven and by the time it gets
 round to picking up the texture the closing brace has come along and wiped the
-texture off the stack and we get a segfault.
+texture off the stack, and we get a segfault.
 
 By adding the ampersand the getTexture method returns a reference to the texture
 in the map. This is also on the stack but the texturesMap is a long living object
@@ -229,7 +229,7 @@ For a human it is easy to see how to solve this puzzle:
 ![Solver2](http://opentechschool-zurich.github.io/cpp-co-learning/topics/games/monkey-keg/Richard/sliding-tiles/doc/solver2.png)
 ![Solver3](http://opentechschool-zurich.github.io/cpp-co-learning/topics/games/monkey-keg/Richard/sliding-tiles/doc/solver3.png)
 
-To solve programatically we can take a brute-force approach: Start with the puzzle
+To solve programmatically we can take a brute-force approach: Start with the puzzle
 and figure out all possible moves that can be made by the tiles. In this puzzle
 there is only one tile that can move (start and end tiles are fixed). It can
 move in 4 directions.
@@ -295,7 +295,7 @@ The SFML documentation suggests that you use this code to draw a window. Note
 how the loop in the main method clears the canvas then draws the various objects
 and then displays the window. This means that the main loop needs to know about
 everything that is going on in the game and needs to keep track of it's state
-so it can decide what to draw. For instance you would not want to draw the victory
+so it can decide what to draw. For instance, you would not want to draw the victory
 roll banner while the game is still playing.
 
 ```c++
@@ -348,7 +348,7 @@ int main()
 I didn't like my code after a few hundred lines. Can't we do better?
 
 I chose to create an object that knows which objects can be rendered and then
-calls them in the correct Z-order. Thus when the renderable objects are created
+calls them in the correct Z-order. Thus, when the renderable objects are created
 they register themselves with the renderer during object construction and
 de-register themselves when they get destructed.
 
@@ -494,7 +494,7 @@ Check out the whole implementation of the RenderingSingleton in the
 The same concept is used for the update cycle. Check out the whole implementation
 of the UpdatingSingleton in the 
 [updatingSingleton.h](updatingSingleton.h) and 
-[updatingSingleton.cpp](updatingSingleton.cpp) and [updatable.h](updatable.h)
+[updateable.h](updateable.h)
 files.
 
 ## Messaging with ZeroMQ
@@ -504,7 +504,7 @@ directed the flow of events. The Game class would order a puzzle to be loaded
 and would tell the WinnerBlingBling class to celebrate the win. This approach is
 fine for simple applications but there are drawbacks. If something changes
 you have to go back to the Game class and fix it there. A lot of code accumulates
-there and you don't end up with a good "separation of concerns".
+there, and you don't end up with a good "separation of concerns".
 
 A more modern design uses loose coupling where the various objects don't know or
 care about the bigger picture. They just listen out for things they are concerned
@@ -520,13 +520,13 @@ to Niels Lohmann's library and JSON is a nice versatile format. Obviously the
 serialisation and deserialisation comes at a cost so this approach might not work
 in all cases.
 
-The game probably has multiple places that need to send messages so I created
+The game probably has multiple places that need to send messages, so I created
 a ZmqSingleton ( [zmqSingleton.h](zmqSingleton.h) and
 [zmqSingleton.cpp](zmqSingleton.cpp) ) where any class can call the
 publish(const std::string & message) function.
 
 ZeroMQ can transport the messages over various kinds of connection. Most common
-certainly is the use of TCP sockets. But it also support In-Process connections.
+certainly is the use of TCP sockets. But it also supports In-Process connections.
 For this to work, though, the zmq::context_t object must be shared. I chose to
 use the ZmqSingleton as the carrier for the context object which is distributed
 to any caller by means of a shared_ptr.
@@ -611,7 +611,7 @@ make package_source
 
 These commands create the spec file in `build/_CPack_Packages/Linux/RPM/SPECS/sliding-tiles.spec` and then creates the rpm in `build/sliding-tiles--1.x86_64.rpm`
 
-See this link for information about exporting your gpg key and usign it to sign the rpm. It doesn't work so well I find. <https://gist.github.com/fernandoaleman/1376720/aaff3a7a7ede636b6913f17d97e6fe39b5a79dc0>
+See this link for information about exporting your gpg key and using it to sign the rpm. It doesn't work so well I find. <https://gist.github.com/fernandoaleman/1376720/aaff3a7a7ede636b6913f17d97e6fe39b5a79dc0>
 
 ```bash
 # export your public key and import it into rpm
@@ -682,7 +682,7 @@ sliding-tiles
 
 ## Copyright information
 
-This project is copyrighted by Richard Eigenmann, Zürich, 2016,2020. I have not yet
+This project is copyrighted by Richard Eigenmann, Zürich, 2016,2026. I have not yet
 decided on a license. Please contact me with any questions.
 
 The source includes a copy of JSON for Modern C++ from Niels Lohmann [GitHub](https://github.com/nlohmann/json) This is MIT licenced.
