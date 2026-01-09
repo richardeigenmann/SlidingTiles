@@ -60,8 +60,8 @@ addons:
 
 before_install:
   # Set compilers based on the job env
-  - if [ "$SET_COMPILER" = "gcc-11" ]; then export CC=gcc-11 && export CXX=g++-11; fi
-  - if [ "$SET_COMPILER" = "clang-18" ]; then export CC=clang-18 && export CXX=clang++-18; fi
+  - if [ "$SET_COMPILER" = "gcc-14" ]; then export CC=gcc-14 && export CXX=g++-14; fi
+  - if [ "$SET_COMPILER" = "clang-18" ]; then export CC=clang && export CXX=clang++; fi
 
   # Ensure our custom install directory exists and is in the path
   - mkdir -p $INSTALL_DIR
@@ -83,7 +83,9 @@ before_install:
   # Build SFML only if not cached
   - |
     if [ ! -f "$INSTALL_DIR/lib/libsfml-graphics.so" ]; then
-      git clone --depth=1 https://github.com/SFML/SFML.git
+      # Clone the specific 2.6.x branch instead of master
+      git clone --depth=1 --branch 2.6.x https://github.com/SFML/SFML.git
+      # git clone --depth=1 https://github.com/SFML/SFML.git
       cmake -S SFML -B SFML/build \
           -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR \
           -DCMAKE_BUILD_TYPE=Release \
@@ -95,6 +97,7 @@ before_install:
     fi
 
 install:
+  - which $CC
   - $CXX --version
   - cmake --version
 
