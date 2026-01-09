@@ -19,6 +19,13 @@ jobs:
   include:
     - compiler: gcc
       env: SET_COMPILER="gcc-14"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test # This is required to find gcc-14
+          packages:
+            - g++-14
+            - gcc-14
 
     - compiler: clang
       env: SET_COMPILER="clang-18"

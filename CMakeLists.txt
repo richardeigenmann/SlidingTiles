@@ -276,6 +276,9 @@ TARGET_INCLUDE_DIRECTORIES(levelGenerator PUBLIC
     ${ZeroMQ_INCLUDE_DIR}
 )
 TARGET_LINK_LIBRARIES(levelGenerator LINK_PUBLIC
+    sfml-graphics
+    sfml-window
+    sfml-system
     ${ZeroMQ_LIBRARIES}
 )
 
