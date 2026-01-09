@@ -6,7 +6,8 @@ PROJECT(sliding-tiles)
 # To run with gcc:
 # cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ ..
 
-SET(CMAKE_CXX_STANDARD 17)
+SET(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 IF (MSVC)
   MESSAGE(STATUS "Doing Microsoft Visual Studio")
   #set(SFML_DIR "C:/Users/richa/Documents/SFML-2.5.1-64/lib/cmake/SFML")

@@ -18,7 +18,7 @@ env:
 jobs:
   include:
     - compiler: gcc
-      env: SET_COMPILER="gcc-11"
+      env: SET_COMPILER="gcc-14"
 
     - compiler: clang
       env: SET_COMPILER="clang-18"
@@ -50,6 +50,7 @@ addons:
       - libflac-dev
       - libvorbis-dev
       - libogg-dev
+      - libmbedtls-dev
 
 
 before_install:

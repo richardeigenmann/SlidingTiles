@@ -176,7 +176,7 @@ void Game::doRandomGame() {
   const unsigned int EMPTY_TILES{8};
   const unsigned int DEPTH{2};
   std::cout << "Generating a random game\n";
-  auto randomGameBoard = SlidingTiles::PuzzleSolver::generateRandomGame(GameSettings{EMPTY_TILES, DEPTH});
+  auto randomGameBoard = SlidingTiles::PuzzleSolver::generateRandomGame(GameSettings{ .emptyTiles =EMPTY_TILES, .maxDepth =DEPTH});
   auto serialisedBoard = randomGameBoard.serialiseGameToWstring();
   gameBoard.loadGame(serialisedBoard);
 }
