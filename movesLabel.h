@@ -1,10 +1,11 @@
 #pragma once
 
 #include "label.h"
-#include "zmqSingleton.h"
-#include "updatingSingleton.h"
 #include "json.hpp"
+#include "updatingSingleton.h"
+#include "zmqSingleton.h"
 #include "zmqSubscriber.h"
+#include <cstddef>
 
 namespace SlidingTiles {
 
@@ -38,7 +39,7 @@ namespace SlidingTiles {
         /**
          * Tracks the number of moves the user made
          */
-        int moves{0};
+        size_t moves{0};
         
         /**
          * @brief updates the label

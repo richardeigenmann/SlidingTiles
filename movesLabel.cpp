@@ -1,6 +1,7 @@
 #include "movesLabel.h"
 #include "json.hpp"
 #include "zmqSingleton.h"
+#include <cstddef>
 #include <sstream>
 #include <string>
 
@@ -32,7 +33,7 @@ void SlidingTiles::MovesLabel::update(
 }
 
 void SlidingTiles::MovesLabel::handleMessage(const json &jsonMessage) {
-  auto state = jsonMessage["state"].get<std::string>();
+  auto state = jsonMessage["state"].get<std::string_view>();
   if (state == SlidingTiles::ZmqSingleton::BROADCAST_MOVES_COUNT) {
     moves = jsonMessage["count"].get<size_t>();
     updateLabel();

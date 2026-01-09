@@ -136,7 +136,7 @@ void SlidingTiles::GameBoard::randomGameImpl(const std::size_t emptyTiles) {
   tiles[endPos.x][endPos.y] = pickEndTile(endPos); // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
 
   for (int i = 0; i < emptyTiles; ++i) {
-    sf::Vector2i emptyPos = positions[2 + i];
+    const sf::Vector2i emptyPos = positions[2 + i];
     SlidingTiles::Tile emptyTile{};
     emptyTile.setTilePosition(emptyPos);
     emptyTile.setTileType(TileType::Empty);
@@ -209,7 +209,7 @@ auto SlidingTiles::GameBoard::canSlideTile(const Move &move) -> bool {
   assert(
       move.startPosition.y >= 0 &&
       move.startPosition.y < boardSize); // NOLINT (cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-  auto movingTile = getTile(move.startPosition.x, move.startPosition.y);
+  auto *movingTile = getTile(move.startPosition.x, move.startPosition.y);
   if (!movingTile->isMoveable) {
     return false;
   }
@@ -247,7 +247,7 @@ void SlidingTiles::GameBoard::undoLatestMove() {
   if (!moves.empty()) {
     auto lastMove = moves.back();
     moves.pop_back();
-    Move undoMove{getAdjacentTilePosition(lastMove),
+    const Move undoMove{getAdjacentTilePosition(lastMove),
                   returnOppositeDirection(lastMove.direction)};
     slideTile(undoMove);
     broadcastMovesCount();
@@ -283,7 +283,7 @@ auto SlidingTiles::GameBoard::slideTile(const Move &move) -> bool {
     auto slidingTile =
         tiles[move.startPosition.x]
              [move.startPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)
-    sf::Vector2i newPosition = getAdjacentTilePosition(move);
+    const sf::Vector2i newPosition = getAdjacentTilePosition(move);
     auto obscuredTile =
         tiles[newPosition.x]
              [newPosition.y]; // NOLINT (cppcoreguidelines-pro-bounds-constant-array-index)

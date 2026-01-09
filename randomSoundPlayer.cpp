@@ -1,11 +1,13 @@
 #include "randomSoundPlayer.h"
 #include "executablePath.h"
-#include "renderingSingleton.h"
+#include <SFML/Audio/SoundBuffer.hpp>
 #include <cassert>
+#include <random>
+#include <string>
 
 void SlidingTiles::RandomSoundPlayer::loadSounds(
     const json &jsonArray) noexcept(false) {
-  for (auto &element : jsonArray) {
+  for (const auto &element : jsonArray) {
     const std::string filename =
         getAssetDir() + element["File"].get<std::string>();
     sf::SoundBuffer sb{};

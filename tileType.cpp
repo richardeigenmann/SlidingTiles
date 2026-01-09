@@ -1,6 +1,7 @@
 #include "tileType.h"
 #include <array>
 #include <random>
+#include <string>
 
 auto tileTypeToString(const SlidingTiles::TileType &t) -> std::string {
   switch (t) {
