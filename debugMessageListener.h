@@ -1,10 +1,8 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include "zmq.hpp"
 #include "updatingSingleton.h"
 #include "zmqSingleton.h"
 #include "zmqSubscriber.h"
+#include <SFML/System/Time.hpp>
 
 namespace SlidingTiles {
     /**
@@ -27,7 +25,7 @@ namespace SlidingTiles {
         /**
          * @brief update callback
          */
-        void update(const float dt) override;
+        void update(const sf::Time deltaTime) override;
 
         /**
          * @brief handle a new ZMQ message

@@ -1,9 +1,9 @@
-#ifndef SLIDING_TILES_GAMESETTINGS_H
-#define SLIDING_TILES_GAMESETTINGS_H
+#pragma once
+#include <cstddef> // Required for std::size_t
 
-struct GameSettings {
-    std::size_t emptyTiles;
-    std::size_t maxDepth;
-};
-
-#endif //SLIDING_TILES_GAMESETTINGS_H
+namespace SlidingTiles {
+    struct GameSettings {
+        std::size_t emptyTiles;
+        std::size_t maxDepth;
+    };
+} // namespace SlidingTiles

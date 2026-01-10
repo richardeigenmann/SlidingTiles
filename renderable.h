@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <ostream>
 
 namespace SlidingTiles {
 
@@ -35,9 +35,6 @@ namespace SlidingTiles {
             return RenderPriority::Normal;
         }
         
-        
-
-
         /**
          * Returns the renderable priority in a string
          * @return 

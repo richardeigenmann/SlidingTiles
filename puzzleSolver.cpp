@@ -162,7 +162,7 @@ auto SlidingTiles::PuzzleSolver::generateRandomGame(GameSettings settings)
 void SlidingTiles::PuzzleSolver::generateGames(std::size_t games) {
   while (games > 0) {
     const std::size_t emptyTiles = ud(randomNumberGenerator);
-    generateRandomGame(GameSettings{emptyTiles, DEFAULT_DEPTH});
+    generateRandomGame(GameSettings{.emptyTiles = emptyTiles, .maxDepth = DEFAULT_DEPTH});
     --games;
   }
 }

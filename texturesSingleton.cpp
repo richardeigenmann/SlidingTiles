@@ -1,5 +1,5 @@
-#include "texturesSingleton.h"
 #include "executablePath.h"
+#include "texturesSingleton.h"
 #include "tileType.h"
 #include <SFML/Graphics/Texture.hpp>
 

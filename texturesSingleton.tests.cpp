@@ -1,5 +1,5 @@
-#include "texturesSingleton.h"
 #include "renderingSingleton.h"
+#include "texturesSingleton.h"
 #include <gmock/gmock.h>
 
 using namespace SlidingTiles;

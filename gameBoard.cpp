@@ -4,7 +4,6 @@
 #include "move.h"
 #include "tileType.h"
 #include "zmqSingleton.h"
-
 #include <algorithm> // std::shuffle
 #include <array>
 #include <cassert>

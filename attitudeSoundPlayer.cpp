@@ -13,16 +13,14 @@ SlidingTiles::AttitudeSoundPlayer::~AttitudeSoundPlayer() {
   UpdatingSingleton::getInstance().remove(*this);
 }
 
-void SlidingTiles::AttitudeSoundPlayer::update(
-    const float dt) { // NOLINT (misc-unused-parameters)
+void SlidingTiles::AttitudeSoundPlayer::update([[maybe_unused]] const sf::Time deltaTime) {
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
 
-void SlidingTiles::AttitudeSoundPlayer::handleMessage(
-    const nlohmann::json &jsonMessage) {
+void SlidingTiles::AttitudeSoundPlayer::handleMessage(const nlohmann::json &jsonMessage) {
   auto state = jsonMessage["state"].get<std::string_view>();
   if (state == SlidingTiles::ZmqSingleton::CONFIGURATION_LOADED) {
     loadSounds(jsonMessage["attitudeSoundBites"]);

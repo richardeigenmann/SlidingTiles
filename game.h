@@ -30,7 +30,7 @@ namespace SlidingTiles {
         /**
          * @brief update call to modify the model with a delta time in seconds
          */
-        void update(const float deltaTime) override;
+        void update(const sf::Time deltaTime) override;
 
         /**
          * @brief handle a new ZMQ message

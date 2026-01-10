@@ -5,6 +5,7 @@
 #include "zmqSingleton.h"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Time.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <cstddef>
 #include <iostream>
@@ -51,9 +52,9 @@ void TileView::render() {
   RenderingSingleton::getInstance().getRenderWindow()->draw(sprite);
 }
 
-void TileView::update(const float dt) {
+void TileView::update(const sf::Time deltaTime) {
   if (transitioning) {
-    timeSpentTransitioning += dt;
+    timeSpentTransitioning += deltaTime.asSeconds();
     if (timeSpentTransitioning > TRANSITION_TIME) {
       transitioning = false;
       tileScreenCoordinates = transitionTileCoordiantes;
@@ -62,7 +63,7 @@ void TileView::update(const float dt) {
 
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
 

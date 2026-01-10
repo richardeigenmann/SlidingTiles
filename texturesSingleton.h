@@ -1,9 +1,9 @@
 #pragma once
 
-#include <iostream>
-#include <map>
 #include "tileType.h"
 #include <SFML/Graphics/Texture.hpp>
+#include <iostream>
+#include <map>
 
 namespace SlidingTiles {
 

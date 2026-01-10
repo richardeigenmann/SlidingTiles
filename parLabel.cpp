@@ -22,11 +22,10 @@ SlidingTiles::ParLabel::~ParLabel() {
   UpdatingSingleton::getInstance().remove(*this);
 }
 
-void SlidingTiles::ParLabel::update(
-    const float dt) { // NOLINT (misc-unused-parameters)
+void SlidingTiles::ParLabel::update([[maybe_unused]] const sf::Time deltaTime) {
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
 

@@ -2,6 +2,7 @@
 #include "executablePath.h"
 #include "gameState.h"
 #include "json.hpp"
+#include "renderingSingleton.h"
 #include "zmqSingleton.h"
 #include <stdexcept>
 #include <string>
@@ -44,11 +45,10 @@ void SlidingTiles::OverPar::endOverPar() {
   gameState = GameState::VictoryRolling;
 }
 
-void SlidingTiles::OverPar::update(
-    const float dt) { // NOLINT (misc-unused-parameters)
+void SlidingTiles::OverPar::update([[maybe_unused]] const sf::Time deltaTime) {
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
 

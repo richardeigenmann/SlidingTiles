@@ -3,7 +3,6 @@
 #include "label.h"
 #include "zmqSingleton.h"
 #include "updatingSingleton.h"
-#include "json.hpp"
 #include "zmqSubscriber.h"
 
 namespace SlidingTiles {
@@ -27,7 +26,7 @@ namespace SlidingTiles {
         /**
          * @brief update callback
          */
-        void update(const float dt) override;
+        void update(const sf::Time deltaTime) override;
 
         /**
          * @brief handle a new ZMQ message

@@ -1,12 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "json.hpp"
 #include "randomSoundPlayer.h"
 #include "renderable.h"
 #include "gameState.h"
 #include "updatingSingleton.h"
-#include "renderingSingleton.h"
-#include "zmqSingleton.h"
 #include "zmqSubscriber.h"
 
 
@@ -43,7 +40,7 @@ namespace SlidingTiles {
         /**
          * @brief update callback for the update loop
          */
-        void update(const float dt) override;
+        void update(const sf::Time deltaTime) override;
 
         /**
          * @brief handle a new ZMQ message

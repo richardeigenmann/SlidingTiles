@@ -1,11 +1,9 @@
 #pragma once
 
 #include "direction.h"
+#include "move.h"
 #include <SFML/Graphics.hpp>
 #include <sstream>
-#include "move.h"
-#include <codecvt>
-#include <iostream>
 #include <string>
 
 namespace SlidingTiles {

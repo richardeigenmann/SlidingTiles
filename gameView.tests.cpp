@@ -10,7 +10,7 @@ TEST(GameView, renderMethod) {
   std::wstring game{L"          -   ├┐"};
   GameBoard gameBoard{};
   gameBoard.loadGame(game);
-  SlidingTiles::GameView gameView{};
+  GameView gameView{};
   gameView.setGameBoard(&gameBoard);
 
   gameView.render();

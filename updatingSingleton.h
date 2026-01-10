@@ -51,9 +51,9 @@ namespace SlidingTiles {
         /**
          * Tell all Updateables to render
          */
-        void updateAll(const float dt) {
+        void updateAll(const sf::Time deltaTime) {
             for (auto& pair : updateables) {
-                pair.second->update(dt);
+                pair.second->update(deltaTime);
 
             }
         }

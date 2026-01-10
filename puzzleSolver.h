@@ -1,6 +1,5 @@
 #pragma once
 
-#include "direction.h"
 #include "gameBoard.h"
 #include "moveNode.h"
 #include "solution.h"

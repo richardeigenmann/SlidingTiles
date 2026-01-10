@@ -4,19 +4,18 @@
 #include "strongTypes.h"
 #include "zmqSingleton.h"
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Time.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 
-
 using json = nlohmann::json;
 
 SlidingTiles::Button::Button(const AssetPath &filename,
                              std::string_view command) noexcept(false)
-    : command(command) {
-
+  : command(command) {
   texture = std::make_unique<sf::Texture>();
   if (texture->loadFromFile(getAssetDir() + filename.value)) {
     sprite.setTexture(*texture);
@@ -49,14 +48,12 @@ auto SlidingTiles::Button::mouseReleased(const sf::Vector2i &mousePosition) -> b
   return sprite.getGlobalBounds().contains(sf::Vector2f(mousePosition));
 }
 
-void SlidingTiles::Button::update(
-    const float dt) { // NOLINT (misc-unused-parameters)
+void SlidingTiles::Button::update([[maybe_unused]] const sf::Time deltaTime) {
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
-
 
 
 void SlidingTiles::Button::handleMessage(const json &jsonMessage) {

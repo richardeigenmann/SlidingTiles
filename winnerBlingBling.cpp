@@ -48,11 +48,10 @@ void SlidingTiles::WinnerBlingBling::endBlingBling() {
   gameState = GameState::Playing;
 }
 
-void SlidingTiles::WinnerBlingBling::update(
-    const float dt) { // NOLINT (misc-unused-parameters)
+void SlidingTiles::WinnerBlingBling::update([[maybe_unused]] const sf::Time deltaTime) {
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
 
@@ -60,16 +59,16 @@ void SlidingTiles::WinnerBlingBling::handleMessage(const json &jsonMessage) {
   auto state = jsonMessage["state"].get<std::string_view>();
   if (state == ZmqSingleton::CONFIGURATION_LOADED) {
     loadSounds(jsonMessage["winnerSoundBites"]);
-  } else if (state == SlidingTiles::ZmqSingleton::GAME_WON) {
+  } else if (state == ZmqSingleton::GAME_WON) {
     startBlingBling(jsonMessage["moves"], jsonMessage["par"]);
-  } else if (state == SlidingTiles::ZmqSingleton::GAME_STARTED) {
+  } else if (state == ZmqSingleton::GAME_STARTED) {
     endBlingBling();
   }
 }
 
 void SlidingTiles::WinnerBlingBling::render() {
   if (gameState == GameState::VictoryRolling) {
-    SlidingTiles::RenderingSingleton::getInstance().getRenderWindow()->draw(
+    RenderingSingleton::getInstance().getRenderWindow()->draw(
         sprite);
   }
 }

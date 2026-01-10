@@ -1,5 +1,5 @@
-#include "tile.h"
 #include "gameBoard.h"
+#include "tile.h"
 #include <gmock/gmock.h>
 
 TEST(Tile, ObjectCreation) { SlidingTiles::Tile tile; }

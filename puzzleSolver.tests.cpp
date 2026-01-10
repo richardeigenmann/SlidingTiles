@@ -49,62 +49,6 @@ TEST(PuzzleSolver, possibleMovesOne) {
   ASSERT_EQ(right, 0);
 }
 
-TEST(PuzzleSolver, DISABLED_possibleMovesTwo) {
-  std::wstring game{L"├┫          -   "};
-  SlidingTiles::PuzzleSolver puzzleSolver;
-  SlidingTiles::GameBoard gameBoard{};
-  gameBoard.loadGame(game);
-  puzzleSolver.buildTree(gameBoard, 3);
-  ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 2);
-  int up{0};
-  int down{0};
-  int left{0};
-  int right{0};
-  for (const auto &moveNode : gameBoard.rootNode.possibleMoves) {
-    if (moveNode.direction == SlidingTiles::Direction::GoDown) {
-      ++down;
-    } else if (moveNode.direction == SlidingTiles::Direction::GoUp) {
-      ++up;
-    } else if (moveNode.direction == SlidingTiles::Direction::GoLeft) {
-      ++left;
-    } else if (moveNode.direction == SlidingTiles::Direction::GoRight) {
-      ++right;
-    }
-  }
-  ASSERT_EQ(up, 1);
-  ASSERT_EQ(down, 0);
-  ASSERT_EQ(left, 0);
-  ASSERT_EQ(right, 1);
-}
-
-TEST(PuzzleSolver, DISABLED_possibleMovesFour) {
-  std::wstring game{L"├ ┫  -          "};
-  SlidingTiles::GameBoard gameBoard{};
-  gameBoard.loadGame(game);
-  SlidingTiles::PuzzleSolver puzzleSolver;
-  puzzleSolver.buildTree(gameBoard, 3);
-  ASSERT_THAT(gameBoard.rootNode.possibleMoves.size(), 4);
-  int up{0};
-  int down{0};
-  int left{0};
-  int right{0};
-  for (const auto &moveNode : gameBoard.rootNode.possibleMoves) {
-    if (moveNode.direction == SlidingTiles::Direction::GoDown) {
-      ++down;
-    } else if (moveNode.direction == SlidingTiles::Direction::GoUp) {
-      ++up;
-    } else if (moveNode.direction == SlidingTiles::Direction::GoLeft) {
-      ++left;
-    } else if (moveNode.direction == SlidingTiles::Direction::GoRight) {
-      ++right;
-    }
-  }
-  ASSERT_EQ(up, 1);
-  ASSERT_EQ(down, 1);
-  ASSERT_EQ(left, 1);
-  ASSERT_EQ(right, 1);
-}
-
 TEST(PuzzleSolver, possibleMovesDontGoBack) {
   std::wstring game{L"├ ┫  -          "};
   SlidingTiles::GameBoard gameBoard{};
@@ -268,26 +212,4 @@ TEST(PuzzleSolver, noSolution) {
   puzzleSolver.saveSolution(gameBoard);
   ASSERT_THAT(gameBoard.solution.size(), 0)
       << "There should be no solution for this puzzle";
-}
-
-TEST(PuzzleSolver, DISABLED_depth) {
-  std::wstring game{L"├┫          -   "};
-  SlidingTiles::PuzzleSolver puzzleSolver;
-  SlidingTiles::GameBoard gameBoard{};
-  gameBoard.loadGame(game);
-  puzzleSolver.buildTree(gameBoard, 3);
-  ASSERT_THAT(gameBoard.rootNode.depth, 0);
-
-  SlidingTiles::MoveNode firstChild = gameBoard.rootNode.possibleMoves.at(0);
-  ASSERT_THAT(firstChild.depth, 1);
-
-  SlidingTiles::MoveNode secondChild = gameBoard.rootNode.possibleMoves.at(1);
-  ASSERT_THAT(secondChild.depth, 1);
-
-  SlidingTiles::MoveNode firstChildChild = firstChild.possibleMoves.at(0);
-  ASSERT_THAT(firstChildChild.depth, 2);
-
-  SlidingTiles::MoveNode firstChildChildChild =
-      firstChildChild.possibleMoves.at(0);
-  ASSERT_THAT(firstChildChildChild.depth, 3);
 }

@@ -82,17 +82,12 @@ void Game::run() {
         // better NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
         if (event.text.unicode == LOWERCASE_R) {
           doRandomGame();
-        } else if (
-            event.text.unicode ==
-            LOWERCASE_P) { // NOLINT(cppcoreguidelines-pro-type-union-access)
+        } else if ( event.text.unicode == LOWERCASE_P) { // NOLINT(cppcoreguidelines-pro-type-union-access)
           gameBoard.printGame();
-        } else if (
-            event.text.unicode ==
-            LOWERCASE_N) { // NOLINT(cppcoreguidelines-pro-type-union-access)
+        } else if ( event.text.unicode == LOWERCASE_N) { // NOLINT(cppcoreguidelines-pro-type-union-access)
           doLevelUp();
         } else {
-          if (event.text.unicode ==
-              LOWERCASE_D) { // NOLINT(cppcoreguidelines-pro-type-union-access)
+          if (event.text.unicode == LOWERCASE_D) { // NOLINT(cppcoreguidelines-pro-type-union-access)
             json jsonMessage{};
             jsonMessage["state"] = ZmqSingleton::DEBUG;
             ZmqSingleton::getInstance().publish(jsonMessage);
@@ -106,12 +101,12 @@ void Game::run() {
       }
     }
     const sf::Time deltaTime = deltaClock.restart();
-    UpdatingSingleton::getInstance().updateAll(deltaTime.asSeconds());
+    UpdatingSingleton::getInstance().updateAll(deltaTime);
     RenderingSingleton::getInstance().renderAll();
   }
 }
 
-void Game::update(const float deltaTime) {
+void Game::update(const sf::Time deltaTime) {
   if (gameState == GameState::Playing || gameState == GameState::OverPar) {
     const std::vector<sf::Vector2i> solutionPath = gameBoard.isSolved();
     if (!solutionPath.empty()) {
@@ -141,7 +136,7 @@ void Game::update(const float deltaTime) {
   }
 
   if (gameState == GameState::VictoryRolling) {
-    victoryRollingTime -= deltaTime;
+    victoryRollingTime -= deltaTime.asSeconds();
     if (victoryRollingTime < 0.0F) {
       doLevelUp();
       gameState = GameState::Playing;
@@ -149,7 +144,7 @@ void Game::update(const float deltaTime) {
   }
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
 

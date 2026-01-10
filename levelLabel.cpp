@@ -1,6 +1,7 @@
 #include "levelLabel.h"
 #include "json.hpp"
 #include "zmqSingleton.h"
+#include <SFML/System/Time.hpp>
 #include <sstream>
 #include <string_view>
 
@@ -26,11 +27,10 @@ SlidingTiles::LevelLabel::~LevelLabel() {
  * Listens for the ZmqSingleton::GAME_STARTED message and updates the level
  * label
  */
-void SlidingTiles::LevelLabel::update(
-    const float dt) { // NOLINT (misc-unused-parameters)
+void SlidingTiles::LevelLabel::update([[maybe_unused]] const sf::Time deltaTime) {
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
 

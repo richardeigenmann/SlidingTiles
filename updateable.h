@@ -1,5 +1,6 @@
 #pragma once
-#include "zmqSingleton.h"
+
+#include <SFML/System/Time.hpp>
 
 namespace SlidingTiles {
 
@@ -10,9 +11,12 @@ namespace SlidingTiles {
      */
     class Updateable {
     public:
+        // Always include a virtual destructor for interfaces!
+        virtual ~Updateable() = default;
+
         /**
          * @brief Implementing classes must define the update method
          */
-        virtual void update(const float dt) = 0;
+        virtual void update(const sf::Time deltaTime) = 0;
     };
 } // namespace SlidingTiles

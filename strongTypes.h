@@ -1,5 +1,4 @@
-#ifndef SLIDING_TILES_STRONGTYPES_H
-#define SLIDING_TILES_STRONGTYPES_H
+#pragma once
 
 #include <string>
 
@@ -12,5 +11,3 @@ namespace SlidingTiles {
     };
 
 } // namespace SlidingTiles
-
-#endif //SLIDING_TILES_STRONGTYPES_HD

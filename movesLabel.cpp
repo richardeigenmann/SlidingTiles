@@ -24,11 +24,10 @@ SlidingTiles::MovesLabel::~MovesLabel() {
   UpdatingSingleton::getInstance().remove(*this);
 }
 
-void SlidingTiles::MovesLabel::update(
-    const float dt) { // NOLINT (misc-unused-parameters)
+void SlidingTiles::MovesLabel::update([[maybe_unused]] const sf::Time deltaTime) {
   auto msg = getZmqMessage();
   if (msg) {
-    handleMessage(msg.value());
+    handleMessage(*msg);
   }
 }
 
