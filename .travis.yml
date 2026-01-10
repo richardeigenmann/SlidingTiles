@@ -135,6 +135,8 @@ script:
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}
+  - pwd
+  - find .
 
   # 1. Determine the correct gcov tool based on the compiler used
   - |
@@ -147,7 +149,8 @@ after_success:
       export GCOV_TOOL="gcov"
     fi
 
-  - lcov --directory . --capture -gcov-tool $GCOV_TOOL --output-file coverage.info
+  #- lcov --directory . --capture -gcov-tool $GCOV_TOOL --output-file coverage.info
+  - lcov --directory build --base-directory . --capture --gcov-tool $GCOV_TOOL --output-file coverage.info
   - lcov --remove coverage.info '/usr/*' '*/googletest/*' '*/SFML/*' --output-file coverage.info
   # 3. Final safety: Clean any remaining absolute paths or ".." artifacts
   - sed -i "s|${TRAVIS_BUILD_DIR}/||g" coverage.info
