@@ -11,8 +11,8 @@ env:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
    #   via the "travis encrypt" command using the project repo's public key
    - secure: "SJuH+7HAl0lSxPl34Cy7DORiH5MGc4+r3R/jSECyQqud0S+aPv9Nvd905O4WiRGjetox9OWBmAgg6uUPPoYkiIrPFEUttJW8gFdc9qyJ2+Ar29t96G2vmWtdzQFdsBzdoLO/xySHDDOQcx0kBtynCf6kp0p5U13tWVRv0XBuScDzXSyZTGY9LmLkHRJnvo/K2rksHDl4mfQvdWLR2PhoOV8tXYG5OXfSNcyy/rQU9z2G0/Eea9GbTthPTomcHzm4OdWpsS7+mpcXH0HGULyL+wkFzc9IaNUMchugTXsqyMDN0P0uQsCXlDlwl+Zau9wDPKLcx1DUxXnE0tDonjWev0zg9xHUA6Davw570Dk7f20TF9tbjK+W/ghiO5SlzEornd2BBOedt7SVQe1yML2GGv4J/kZE0l/S3QEwa1a1Qc8lOBhneHPACuqfCl/hwGGm6aSTmXTDwv1ghoJVljJ51LQM0Gp8JxyR6tPqs/57Z2oDqylPjLZ86zqaFvMcbjPcRzLYS56OoRIqjSQ1Sg6Kq7I6BMeKfcoe04PBmy3+8yhIHLpN/aosyLDSzIro9vM7Q+c/kgRDDCSDhpsgtoyXQ7gBjlapL2tMyZJ3CxFIJEQy5U7Ii2KQqdhy51ZHMymq9+his/HeU+DTLuiU343iXvX3+aIlzp9RcNtMzgqDFbY="
-   - CMAKE_BUILD_PARALLEL_LEVEL=4
    - INSTALL_DIR=$HOME/install_prefix
+   - CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
 
 # Test with modern compiler versions
 jobs:
@@ -94,7 +94,7 @@ before_install:
     if [ ! -f "$INSTALL_DIR/lib/libgtest.a" ]; then
       git clone --depth=1 https://github.com/google/googletest.git
       cmake -S googletest -B googletest/build -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
-      cmake --build googletest/build -j4
+      cmake --build googletest/build
       cmake --install googletest/build
     fi
 
@@ -112,7 +112,7 @@ before_install:
           -DSFML_BUILD_EXAMPLES=OFF \
           -DSFML_BUILD_DOCS=OFF \
           -DSFML_INSTALL_PKGCONFIG_FILES=ON
-      cmake --build SFML/build -j4
+      cmake --build SFML/build
       cmake --install SFML/build
     fi
 
@@ -125,8 +125,11 @@ script:
   - |
     if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
       mkdir -p build && cd build
-      cmake .. -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_PREFIX_PATH=$INSTALL_DIR
-      make -j4
+      cmake .. -DCMAKE_CXX_COMPILER=$CXX \
+        -DCMAKE_PREFIX_PATH=$INSTALL_DIR \
+        -DCMAKE_CXX_FLAGS="--coverage" \
+        -DCMAKE_EXE_LINKER_FLAGS="--coverage"
+      make
       xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests --sfml-audio-mode=dummy
     fi
 
