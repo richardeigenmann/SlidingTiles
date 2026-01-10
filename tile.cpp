@@ -120,7 +120,7 @@ namespace {
 } // anonymous namespace
 
 void Tile::setMoveable(const TileType &newType) {
-  isMoveable = isMoveable = !isStaticTile(newType);
+  isMoveable = !isStaticTile(newType);
 };
 
 void Tile::transition(const sf::Vector2i &newGameBoardPosition) {

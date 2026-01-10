@@ -32,7 +32,7 @@ TEST(PuzzleSolver, possibleMovesOne) {
   int down{0};
   int left{0};
   int right{0};
-  for (auto moveNode : rootNode.possibleMoves) {
+  for (const auto &moveNode : rootNode.possibleMoves) {
     if (moveNode.direction == SlidingTiles::Direction::GoDown) {
       ++down;
     } else if (moveNode.direction == SlidingTiles::Direction::GoUp) {
@@ -60,7 +60,7 @@ TEST(PuzzleSolver, DISABLED_possibleMovesTwo) {
   int down{0};
   int left{0};
   int right{0};
-  for (auto moveNode : gameBoard.rootNode.possibleMoves) {
+  for (const auto &moveNode : gameBoard.rootNode.possibleMoves) {
     if (moveNode.direction == SlidingTiles::Direction::GoDown) {
       ++down;
     } else if (moveNode.direction == SlidingTiles::Direction::GoUp) {
@@ -119,7 +119,7 @@ TEST(PuzzleSolver, possibleMovesDontGoBack) {
   int down{0};
   int left{0};
   int right{0};
-  for (auto moveNode : rootNode.possibleMoves) {
+  for (const auto &moveNode : rootNode.possibleMoves) {
     if (moveNode.direction == SlidingTiles::Direction::GoDown) {
       ++down;
     } else if (moveNode.direction == SlidingTiles::Direction::GoUp) {
@@ -151,7 +151,7 @@ TEST(PuzzleSolver, addPossibleMoves) {
   int down{0};
   int left{0};
   int right{0};
-  for (auto node : onlyChild.possibleMoves) {
+  for (const auto &node : onlyChild.possibleMoves) {
     if (node.direction == SlidingTiles::Direction::GoDown) {
       ++down;
     } else if (node.direction == SlidingTiles::Direction::GoUp) {
@@ -189,21 +189,21 @@ TEST(PuzzleSolver, addPossibleMoves3Deep) {
   int right{0};
   SlidingTiles::MoveNode rightNode{sf::Vector2i{-1, -1},
                                    SlidingTiles::Direction::Unknown};
-  for (auto node : onlyChild.possibleMoves) {
+  for (const auto &node : onlyChild.possibleMoves) {
     if (node.direction == SlidingTiles::Direction::GoDown) {
       ++down;
       ASSERT_EQ(node.possibleMoves.size(), 3);
-      downNode = node;
+      downNode = std::move(node);
     } else if (node.direction == SlidingTiles::Direction::GoUp) {
       ++up;
     } else if (node.direction == SlidingTiles::Direction::GoLeft) {
       ++left;
       ASSERT_EQ(node.possibleMoves.size(), 1);
-      leftNode = node;
+      leftNode = std::move(node);
     } else if (node.direction == SlidingTiles::Direction::GoRight) {
       ++right;
       ASSERT_EQ(node.possibleMoves.size(), 2);
-      rightNode = node;
+      rightNode = std::move(node);
     }
   }
   ASSERT_EQ(up, 0);
@@ -216,7 +216,7 @@ TEST(PuzzleSolver, addPossibleMoves3Deep) {
   int down2{0};
   int left2{0};
   int right2{0};
-  for (auto node : downNode.possibleMoves) {
+  for (const auto &node : downNode.possibleMoves) {
     if (node.direction == SlidingTiles::Direction::GoDown) {
       ++down2;
       ASSERT_EQ(node.possibleMoves.size(), 2);
