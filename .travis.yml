@@ -149,15 +149,8 @@ after_success:
     fi
 
   #- lcov --directory . --capture -gcov-tool $GCOV_TOOL --output-file coverage.info
-  - lcov --directory build \
-        --base-directory . \
-        --capture \
-        --gcov-tool $GCOV_TOOL \
-        --output-file coverage.info \
-        --ignore-errors mismatch,unused,gcov
-  - lcov --remove coverage.info '/usr/*' '*/googletest/*' '*/SFML/*' \
-        --output-file coverage.info \
-        --ignore-errors mismatch,unused,gcov
+  - lcov --directory build --base-directory . --capture --gcov-tool $GCOV_TOOL --output-file coverage.info --ignore-errors mismatch,unused,gcov
+  - lcov --remove coverage.info '/usr/*' '*/googletest/*' '*/SFML/*' --output-file coverage.info --ignore-errors mismatch,unused,gcov
   # 3. Final safety: Clean any remaining absolute paths or ".." artifacts
   - sed -i "s|${TRAVIS_BUILD_DIR}/||g" coverage.info
   - sed -i "s|^\.\./||g" coverage.info
