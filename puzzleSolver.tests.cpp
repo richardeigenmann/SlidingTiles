@@ -88,7 +88,7 @@ TEST(PuzzleSolver, DISABLED_possibleMovesFour) {
   int down{0};
   int left{0};
   int right{0};
-  for (auto moveNode : gameBoard.rootNode.possibleMoves) {
+  for (const auto &moveNode : gameBoard.rootNode.possibleMoves) {
     if (moveNode.direction == SlidingTiles::Direction::GoDown) {
       ++down;
     } else if (moveNode.direction == SlidingTiles::Direction::GoUp) {
