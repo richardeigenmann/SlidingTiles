@@ -10,15 +10,18 @@ env:
   global:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
    #   via the "travis encrypt" command using the project repo's public key
-   - secure: "SJuH+7HAl0lSxPl34Cy7DORiH5MGc4+r3R/jSECyQqud0S+aPv9Nvd905O4WiRGjetox9OWBmAgg6uUPPoYkiIrPFEUttJW8gFdc9qyJ2+Ar29t96G2vmWtdzQFdsBzdoLO/xySHDDOQcx0kBtynCf6kp0p5U13tWVRv0XBuScDzXSyZTGY9LmLkHRJnvo/K2rksHDl4mfQvdWLR2PhoOV8tXYG5OXfSNcyy/rQU9z2G0/Eea9GbTthPTomcHzm4OdWpsS7+mpcXH0HGULyL+wkFzc9IaNUMchugTXsqyMDN0P0uQsCXlDlwl+Zau9wDPKLcx1DUxXnE0tDonjWev0zg9xHUA6Davw570Dk7f20TF9tbjK+W/ghiO5SlzEornd2BBOedt7SVQe1yML2GGv4J/kZE0l/S3QEwa1a1Qc8lOBhneHPACuqfCl/hwGGm6aSTmXTDwv1ghoJVljJ51LQM0Gp8JxyR6tPqs/57Z2oDqylPjLZ86zqaFvMcbjPcRzLYS56OoRIqjSQ1Sg6Kq7I6BMeKfcoe04PBmy3+8yhIHLpN/aosyLDSzIro9vM7Q+c/kgRDDCSDhpsgtoyXQ7gBjlapL2tMyZJ3CxFIJEQy5U7Ii2KQqdhy51ZHMymq9+his/HeU+DTLuiU343iXvX3+aIlzp9RcNtMzgqDFbY="
+   #- secure: "SJuH+7HAl0lSxPl34Cy7DORiH5MGc4+r3R/jSECyQqud0S+aPv9Nvd905O4WiRGjetox9OWBmAgg6uUPPoYkiIrPFEUttJW8gFdc9qyJ2+Ar29t96G2vmWtdzQFdsBzdoLO/xySHDDOQcx0kBtynCf6kp0p5U13tWVRv0XBuScDzXSyZTGY9LmLkHRJnvo/K2rksHDl4mfQvdWLR2PhoOV8tXYG5OXfSNcyy/rQU9z2G0/Eea9GbTthPTomcHzm4OdWpsS7+mpcXH0HGULyL+wkFzc9IaNUMchugTXsqyMDN0P0uQsCXlDlwl+Zau9wDPKLcx1DUxXnE0tDonjWev0zg9xHUA6Davw570Dk7f20TF9tbjK+W/ghiO5SlzEornd2BBOedt7SVQe1yML2GGv4J/kZE0l/S3QEwa1a1Qc8lOBhneHPACuqfCl/hwGGm6aSTmXTDwv1ghoJVljJ51LQM0Gp8JxyR6tPqs/57Z2oDqylPjLZ86zqaFvMcbjPcRzLYS56OoRIqjSQ1Sg6Kq7I6BMeKfcoe04PBmy3+8yhIHLpN/aosyLDSzIro9vM7Q+c/kgRDDCSDhpsgtoyXQ7gBjlapL2tMyZJ3CxFIJEQy5U7Ii2KQqdhy51ZHMymq9+his/HeU+DTLuiU343iXvX3+aIlzp9RcNtMzgqDFbY="
    - INSTALL_DIR=$HOME/install_prefix
    - CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
+   - COVERITY_SCAN_PROJECT_NAME="richardeigenmann/SlidingTiles"
+   - COVERITY_SCAN_NOTIFICATION_EMAIL="richard.eigenmann@gmail.com"
+   - COVERITY_SCAN_BUILD_COMMAND="make -j$(nproc)"
 
 # Test with modern compiler versions
 jobs:
   include:
     - compiler: gcc
-      env: SET_COMPILER="gcc-14"
+      env: SET_COMPILER="gcc-14" COVERITY_SCAN_BRANCH=1
     - compiler: clang
       env: SET_COMPILER="clang-18"
 
@@ -131,11 +134,33 @@ script:
         -DCMAKE_EXE_LINKER_FLAGS="--coverage"
       make -j$(nproc)
       xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests --sfml-audio-mode=dummy
+    else
+      echo "--- Starting Coverity Scan Build ---"
+      
+      # 1. Download Coverity Tool
+      wget https://scan.coverity.com/download/linux64 \
+        --post-data "token=$COVERITY_SCAN_TOKEN&project=$COVERITY_SCAN_PROJECT_NAME" \
+        -O coverity_tool.tgz
+      mkdir cov-analysis
+      tar -xzf coverity_tool.tgz -C cov-analysis --strip-components=1
+      
+      # 2. Build with Coverity Wrapper
+      mkdir -p build && cd build
+      cmake .. -DCMAKE_PREFIX_PATH=$INSTALL_DIR
+      ../cov-analysis/bin/cov-build --dir cov-int $COVERITY_SCAN_BUILD_COMMAND
+      
+      # 3. Upload Results
+      tar czf upload.tgz cov-int
+      curl --form token=$COVERITY_SCAN_TOKEN \
+        --form email=$COVERITY_SCAN_NOTIFICATION_EMAIL \
+        --form file=@upload.tgz \
+        --form version="Travis-$(date +%F)" \
+        --form description="SlidingTiles Periodic Scan" \
+        https://scan.coverity.com/builds?project=$COVERITY_SCAN_PROJECT_NAME    
     fi
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}
-  # - find .
 
   # 1. Determine the correct gcov tool based on the compiler used
   - |
@@ -155,8 +180,6 @@ after_success:
   - sed -i "s|${TRAVIS_BUILD_DIR}/||g" coverage.info
   - sed -i "s|^\.\./||g" coverage.info
   - lcov --list coverage.info --ignore-errors empty
-  - echo "cat coverage.info"
-  - cat coverage.info
   # Modern Codecov Uploader (Replacement for the bash script)
   - curl -Os https://uploader.codecov.io/latest/linux/codecov
   - chmod +x codecov
