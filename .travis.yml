@@ -129,14 +129,13 @@ script:
         -DCMAKE_PREFIX_PATH=$INSTALL_DIR \
         -DCMAKE_CXX_FLAGS="--coverage" \
         -DCMAKE_EXE_LINKER_FLAGS="--coverage"
-      make
+      make -j$(nproc)
       xvfb-run --server-args="-screen 0 1024x768x24" ./unit-tests --sfml-audio-mode=dummy
     fi
 
 after_success:
   - cd ${TRAVIS_BUILD_DIR}
-  - pwd
-  - find .
+  # - find .
 
   # 1. Determine the correct gcov tool based on the compiler used
   - |
@@ -150,12 +149,19 @@ after_success:
     fi
 
   #- lcov --directory . --capture -gcov-tool $GCOV_TOOL --output-file coverage.info
-  - lcov --directory build --base-directory . --capture --gcov-tool $GCOV_TOOL --output-file coverage.info
-  - lcov --remove coverage.info '/usr/*' '*/googletest/*' '*/SFML/*' --output-file coverage.info
+  - lcov --directory build \
+        --base-directory . \
+        --capture \
+        --gcov-tool $GCOV_TOOL \
+        --output-file coverage.info \
+        --ignore-errors mismatch,unused,gcov
+  - lcov --remove coverage.info '/usr/*' '*/googletest/*' '*/SFML/*' \
+        --output-file coverage.info \
+        --ignore-errors mismatch,unused,gcov
   # 3. Final safety: Clean any remaining absolute paths or ".." artifacts
   - sed -i "s|${TRAVIS_BUILD_DIR}/||g" coverage.info
   - sed -i "s|^\.\./||g" coverage.info
-  - lcov --list coverage.info
+  - lcov --list coverage.info --ignore-errors empty
   - echo "cat coverage.info"
   - cat coverage.info
   # Modern Codecov Uploader (Replacement for the bash script)
